@@ -222,7 +222,7 @@ then do:
     do on error undo:
 
         contrato.vlf_acrescimo = vvalorAcrescimo.
-        contrato.vlf_principal = vtitvlori.
+        contrato.vlf_principal = vtitvlori - vvlentra.
         contrato.nro_parcelas  = vqtdParcelas.     
         if vvlentra > 0
         then vqtdParcelas =  vqtdParcelas + 1.
