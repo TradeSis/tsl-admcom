@@ -1,0 +1,17 @@
+-T /tmp
+-d dmy
+-h 50
+-inp 32000
+-s 200
+-TB 31
+-TM 32
+
+-db ger     -N tcp -S sdrebger -H sv-ca-dbe
+-db com     -N tcp -S sdrebcom -H sv-ca-dbe
+-db fin     -N tcp -S sdrebfin -H sv-ca-dbe
+-db adm     -N tcp -S sadm     -H sv-ca-dbe
+
+## Antigo ##
+#-db /dados/bases/com
+#-db /dados/bases/ger
+#-db /dados/bases/fin

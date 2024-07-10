@@ -1,0 +1,9 @@
+		voper = esqcom1[esqpos1].
+		recin = recid(liped).
+		vrec2 = recid(pedid).
+		hide frame f-com1 no-pause.
+		hide frame f-dialogo no-pause.
+		run liped.p(input voper,
+			    input recin,
+			    input vrec2).
+		view frame f-com1.

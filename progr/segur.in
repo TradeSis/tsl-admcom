@@ -1,0 +1,29 @@
+
+def var i-sen           as int.
+def var vsenha          as char format "x(6)".
+def var vsenha1         like vsenha label "SENHA".
+
+i-sen = 0.
+repeat on endkey undo, return.
+
+    input from ../gener/paulo.d no-echo.
+    set vsenha.
+    input close.
+    vsenha1 = "".
+    update vsenha1 BLANK
+	   with frame fsenha overlay centered row 10 color
+		      black/red side-labels.
+    if vsenha <> vsenha1
+	then do:
+	message "Senha Invalida".
+	i-sen = i-sen + 1.
+	if i-sen > 3
+	    then do:
+	    pause 0.
+	    undo, return.
+	end.
+	next.
+    end.
+    leave.
+end.
+hide frame fsenha no-pause.

@@ -1,0 +1,106 @@
+if keyfunction(lastkey) = "GO"
+then do :
+    find first aplicativo where recid(aplicativo) = a-seerec[frame-line]. 
+    color disp messages aplicativo.aplinom.     pause 0.
+    p-aplicod = aplicativo.aplicod.
+    leave keys-loop.
+end. 
+     
+if keyfunction(lastkey) = "CLEAR"
+then do :
+    for each tt-aplicativo :
+        delete tt-aplicativo.
+    end.    
+    v-i = 2.
+    repeat :
+        v-recid = int(substr(a-seelst,v-i,10)).
+        if v-recid <> 0 
+        then do :
+            v-i = v-i + 11.
+            find first aplicativo where recid(aplicativo) = v-recid 
+                                  no-lock no-error.
+            if avail aplicativo
+            then do :
+                create tt-aplicativo.
+                buffer-copy aplicativo to tt-aplicativo.
+            end.
+        end.
+        else leave.
+    end.
+    for each aplicativo no-lock:
+    
+        disp "Atualizando ...       "  
+             skip
+             "                      " 
+             aplicativo.aplinom 
+             with frame f-11
+                centered 1 down
+                no-labels overlay row 10. pause 0.  
+        find first tt-aplicativo where
+                   tt-aplicativo.aplicod = aplicativo.aplicod
+                   no-error.
+        if not avail tt-aplicativo
+        then do:
+        for each tt-func :
+            find first aplifun where 
+                       aplifun.funcod = tt-func.funcod and
+                       aplifun.aplicod = aplicativo.aplicod
+                                   no-error.
+
+            if avail aplifun
+            then delete aplifun.
+            find first tt-aplifun where 
+                       tt-aplifun.funcod = tt-func.funcod and
+                       tt-aplifun.aplicod = aplicativo.aplicod
+                       no-error.
+            if avail tt-aplifun
+            then delete tt-aplifun.
+        end.
+        end.
+        else do:            
+        for each tt-func :
+            find first aplifun where 
+                       aplifun.funcod = tt-func.funcod and
+                       aplifun.aplicod = aplicativo.aplicod
+                                   no-error.
+            if not avail aplifun
+            then  find first aplifun where 
+                       aplifun.funcod = tt-func.funcod and
+                       aplifun.aplicod = "(D)" + aplicativo.aplicod
+                                   no-error.
+
+            if not avail aplifun
+            then do:
+                create aplifun.
+                assign
+                        aplifun.funcod    = tt-func.funcod
+                        aplifun.aplicod    = aplicativo.aplicod.
+            end.                
+            find first tt-aplifun where 
+                       tt-aplifun.funcod = tt-func.funcod and
+                       tt-aplifun.aplicod = aplicativo.aplicod
+                       no-error.
+            if not avail tt-aplifun
+            then do:
+                create tt-aplifun.
+                assign
+                    tt-aplifun.funcod = tt-func.funcod
+                    tt-aplifun.aplicod = aplicativo.aplicod
+                    tt-aplifun.situacao = no.
+            end.
+            /*
+            if avail tt-aplicativo
+            then assign
+                    aplifun.aplicod = "(D)" + aplicativo.aplicod
+                    tt-aplifun.situacao = no.
+            else assign
+                     aplifun.aplicod = aplicativo.aplicod
+                     tt-aplifun.situacao = yes.
+            */
+        end.
+        end.
+    end.
+    hide frame f-11.
+    a-seeid = -1.
+    next l1.
+end.                        

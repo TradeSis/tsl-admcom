@@ -1,0 +1,272 @@
+def input parameter wdec        as dec format "999,999,999,999,999.99".
+def input parameter tamlinhas   as c.
+def output parameter vextenso1 as char.
+def output parameter vextenso2 as char.
+def var wtxt       as c.
+
+def var ts as c extent 50 initial ["zero",
+                                   "hum",
+                                   "um",
+                                   "dois",
+                                   "tres",
+                                   "quatro",
+                                   "cinco",
+                                   "seis",
+                                   "sete",
+                       /* 10 */    "oito",
+                                   "nove",
+                                   "dez",
+                                   "onze",
+                                   "doze",
+                                   "treze",
+                                   "quatorze",
+                                   "quinze",
+                                   "dezesseis",
+                                   "dezessete",
+                       /* 20 */    "dezoito",
+                                   "dezenove",
+                                   "vinte",
+                                   "trinta",
+                                   "quarenta",
+                                   "cinquenta",
+                                   "sessenta",
+                                   "setenta",
+                                   "oitenta",
+                                   "noventa",
+                       /* 30 */    "cem",
+                                   "cento",
+                                   "duzentos",
+                                   "trezentos",
+                                   "quatrocentos",
+                                   "quinhentos",
+                                   "seiscentos",
+                                   "setecentos",
+                                   "oitocentos",
+                                   "novecentos",
+                        /* 40 */   "trilhao",
+                                   "trilhoes",
+                                   "bilhao",
+                                   "bilhoes",
+                                   "milhao",
+                                   "milhoes",
+                                   "mil",
+                                   "real",
+                                   "reais",
+                                   "centavo",
+                                   "centavos"].
+def var tquebra as c extent 50 initial ["2",
+                                   "",
+                                   "",
+                                   "",
+                                   "",
+                                   "3",
+                                   "3",
+                                   "",
+                                   "2",
+                       /* 10 */    "2",
+                                   "2",
+                                   "",
+                                   "2",
+                                   "2",
+                                   "3",
+                                   "36",
+                                   "4",
+                                   "35",
+                                   "357",
+                       /* 20 */    "35",
+                                   "36",
+                                   "3",
+                                   "4",
+                                   "36",
+                                   "37",
+                                   "36",
+                                   "25",
+                                   "25",
+                                   "25",
+                       /* 30 */    "",
+                                   "3",
+                                   "35",
+                                   "36",
+                                   "369",
+                                   "37",
+                                   "47",
+                                   "247",
+                                   "247",
+                                   "247",
+                        /* 40 */   "3",
+                                   "3",
+                                   "2",
+                                   "2",
+                                   "2",
+                                   "2",
+                                   "",
+                                   "2",
+                                   "2",
+                                   "35",
+                                   "35"].
+
+def var tam         as i extent 20.
+def var wnum        as c.
+def var wval        as c.
+def var wgrupo      as c extent 6.
+def var waux        as c.
+def var ptxt        as i.
+def var wstr        as c.
+def var i           as i.
+def var j           as i.
+def var k           as i.
+def var m           as i.
+def var linha       as i.
+
+/* Converto o parametro char tamlinhas no inteiro extent tam */
+
+do i = 1 to length(tamlinhas):
+   if substr(tamlinhas,i,1) = ","
+   then j = j + 1.
+end.
+tam = integer(entry(j + 1,tamlinhas)).
+do i = 1 to j while i < 21:
+   tam[i] = integer(entry(i,tamlinhas)).
+end.
+
+/* Calculo o valor de cada 3 digitos e guardo num dos 5 extents de wgrupo */
+
+wval = string(wdec,"999,999,999,999,999.99").
+do i = 1 to 21 by 4:
+    if integer(substr(wval,i,3)) > 0
+    then do:
+        wnum = if i = 21 then "0" + substr(wval,i,3) else substr(wval,i,3).
+        wstr = "".
+        if substr(wnum,1,1) > "0"
+        then wstr = ts[30 + integer(substr(wnum,1,1))].
+        if substr(wnum,2,1) = "1"
+        then wstr =
+             if wstr = "" then ts[12 + integer(substr(wnum,3))]
+                          else wstr + " e " + ts[12 + integer(substr(wnum,3))].
+        else do:
+            if substr(wnum,2,1) > "1"
+            then wstr =
+                 if wstr = "" then ts[20 + integer(substr(wnum,2,1))]
+                         else wstr + " e " + ts[20 + integer(substr(wnum,2,1))].
+            if substr(wnum,3) > "0"
+            then wstr =
+                 if wstr = "" then ts[2 + integer(substr(wnum,3))]
+                            else wstr + " e " + ts[2 + integer(substr(wnum,3))].
+        end.
+    if wnum = "100"
+    then wstr = ts[30].
+    wgrupo[integer((i + 3) / 4)] = wstr.
+    end.
+end.
+wtxt = "".
+
+/* Loop em que coloco as unidades (trilhao a milhar) e conectores (e ou ,) */
+do i = 1 to 5:
+    if wgrupo[i] <> ""
+    then ldo: do:
+        wtxt = wtxt + wgrupo[i].
+        if wtxt = "um"
+            then wtxt = "hum".
+        if i = 5   /* Se estou nas unidades caio fora para colocar real */
+            then leave ldo.
+        if wgrupo[i] = "um" or i = 4
+                    then wtxt = wtxt + " " + ts[40 + (i - 1) * 2].
+                    else wtxt = wtxt + " " + ts[41 + (i - 1) * 2].
+        lj: do j = i + 1 to 5:
+            if substr(wval,j * 4 - 3,3) <> "000"
+            then do:
+                if substr(wval,j * 4 - 3,1) = "0" or
+                   substr(wval,j * 4 - 2,2) = "00"
+                    then wtxt = wtxt + " e ".
+                    else wtxt = wtxt + ", ".
+                leave lj.
+             end.
+        end.
+        if i < 4 and j = 6
+            then wtxt = wtxt + " de".
+    end.
+end.
+
+/* Se o numero tem inteiros, coloco real ou reais */
+
+wtxt = if wtxt = "" then ""
+                    else if wtxt = "hum" then wtxt + " " + ts[47]
+                                         else wtxt + " " + ts[48].
+
+/* Trato os centavos */
+if wgrupo[6] <> ""
+then do:
+    wtxt = if wtxt = "" then wgrupo[6] else wtxt + " e " + wgrupo[6].
+    wtxt = if wgrupo[6] = "um" then wtxt + " " + ts[49]
+                               else wtxt + " " + ts[50].
+end.
+
+/* Primeira letra vai maiuscula e o string leva ponto no final */
+substr(wtxt,1,1) = caps(substr(wtxt,1,1)).
+wtxt = wtxt + "." .
+ldo: do linha = 1 to 20 while substr(wtxt,ptxt + 1) <> "":
+
+    /* Se tamanho da linha estiver zerado, nao quebro e caio fora */
+    if tam[linha] = 0
+        then do:
+        if linha = 1
+            then leave.
+        tam[linha] = tam[linha - 1].
+        end.
+    ptxt = ptxt + tam[linha].
+    
+    /* se ultimao posicao da linha eh branco, pulo de linha */
+    if substr(wtxt,ptxt,1) = " "
+        then next ldo.
+    /* se primeira posicao da proxima linha eh branco, shift 1 p/ esquerda */
+    if substr(wtxt,ptxt + 1,1) = " "
+        then do:
+        waux = substr(wtxt,ptxt + 2).
+        substr(wtxt,ptxt + 1) = waux + " ".
+        next ldo.
+        end.
+     
+     /* acho o inicio da palavra a ser quebrada */
+     do i = ptxt to ptxt - tam[linha] by -1 while substr(wtxt,i,1) <> " ":
+     end.
+
+     /* acho o final da palavra a ser quebrada */
+     do j = i + 1 to length(wtxt) while substr(wtxt,j,1) <> " " and
+                                        substr(wtxt,j,1) <> "," and
+                                        substr(wtxt,j,1) <> ".".
+     end.
+
+     /* localizo a palavra a quebrar na tabela de strings */
+     do k = 1 to 50 while ts[k] <> substr(wtxt,i + 1,j - 1 - i):
+     end.
+
+     /* seleciono em tquebra a maior posicao na palavra onde posso quebrar */
+     do m = length(tquebra[k]) to 1 by -1
+                          while integer(substr(tquebra[k],m,1)) > ptxt - i - 1:
+     end.
+
+     /* display ptxt i j m ts[k] tquebra[k] with frame far overlay. pause. */
+
+     /* se achei posicao, quebro a palavra senao jogo-a para a outra linha */
+     if m > 0
+         then do:
+         waux = substr(wtxt,1,i + integer(substr(tquebra[k],m,1))) + "-".
+         substr(waux,ptxt + 1) =
+                substr(wtxt,i + integer(substr(tquebra[k],m,1)) + 1).
+         end.
+         else do:
+         waux = substr(wtxt,1,i).
+         substr(waux,ptxt + 1) = substr(wtxt,i + 1).
+         end.
+     wtxt = waux.
+end.
+vextenso1 = substr(wtxt,1,int(tamlinhas)).
+vextenso2 = substr(wtxt,int(tamlinhas) + 1,length(wtxt)).
+if length(vextenso1) < int(tamlinhas)
+then do i = length(vextenso1) to int(tamlinhas):
+    vextenso1 = vextenso1 + "*".
+end.
+if length(vextenso2) < int(tamlinhas)
+then do i = length(vextenso2) to int(tamlinhas):
+    vextenso2 = vextenso2 + "*".
+end.    

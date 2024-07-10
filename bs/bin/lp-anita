@@ -1,0 +1,19 @@
+
+echo -e "c:/temp/$2@\c" >temp.def
+echo -e "$3 \c" >> temp.def
+
+pcname="C:/temp/anita.def"            
+echo -e "\033[13y${pcname}\033\0134\c" 
+echo -e "\033[3;1i\c"                  
+cat temp.def                                 
+echo -e "\033[4i\c"                    
+
+pcname="C:/temp/$2"            
+echo -e "\033[13y${pcname}\033\0134\c" 
+echo -e "\033[3;1i\c"                  
+cat $1                                
+echo -e "\033[4i\c"      
+              
+echo -e "\033[1yc:/custom/imp.exe c:/temp/anita.def \033\0134".
+
+

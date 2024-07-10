@@ -1,0 +1,123 @@
+if keyfunction(lastkey) = "CLEAR"
+then do :
+    for each tt-menu :
+        delete tt-menu.
+    end.
+    assign v-recid = 0 v-i = 2.
+    repeat :
+        v-recid = int(substr(a-seelst,v-i,10)).
+        if v-recid <> 0 
+        then do :
+            v-i = v-i + 11.
+            find first menu where recid(menu) = v-recid 
+                           no-lock no-error.
+            if avail menu
+            then do :
+                create tt-menu.
+                buffer-copy menu to tt-menu.
+            end.
+        end.
+        else leave.
+    end. 
+    for each menu where menu.menniv = 2
+                    and menu.aplicod = p-aplicod
+                    and menu.ordsup = p-mencod
+                  no-lock  :                  
+        disp "Atualizando ...               "  
+             skip
+             "              " 
+             menu.mentit 
+             with frame f-33 
+                centered 1 down
+                no-labels overlay row 10. pause 0.  
+        find first tt-menu where 
+                   tt-menu.menniv = menu.menniv and
+                   tt-menu.aplicod = menu.aplicod and
+                   tt-menu.ordsup = menu.ordsup and
+                   tt-menu.menord = menu.menord
+                           no-error.            
+        if not avail tt-menu
+        then do:
+        for each tt-func :
+            find admaplic where admaplic.cliente = string(tt-func.funcod) and
+                                admaplic.aplicod = menu.aplicod and
+                                admaplic.menniv  = menu.menniv and
+                                admaplic.ordsup  = menu.ordsup and
+                                admaplic.menord  = menu.menord
+                                no-error.
+            if avail admaplic
+            then delete admaplic.
+            
+            find first tt-admaplic1 where
+                               tt-admaplic1.cliente  = string(tt-func.funcod) and
+                               tt-admaplic1.aplicod = menu.aplicod and
+                               tt-admaplic1.menniv  = menu.menniv and
+                               tt-admaplic1.ordsup  = menu.ordsup and
+                               tt-admaplic1.menord  = menu.menord 
+                               no-error.
+            if avail tt-admaplic1
+            then delete tt-admaplic1.
+        end. 
+        end.
+        else do:
+        for each tt-func :
+            find admaplic where admaplic.cliente = string(tt-func.funcod) and
+                                admaplic.aplicod = menu.aplicod and
+                                admaplic.menniv  = menu.menniv and
+                                admaplic.ordsup  = menu.ordsup and
+                                admaplic.menord  = menu.menord
+                                no-lock no-error.
+            if not avail admaplic
+            then find admaplic where 
+                        admaplic.cliente = string(tt-func.funcod) and
+                                admaplic.aplicod = "(D)" + menu.aplicod and
+                                admaplic.menniv  = menu.menniv and
+                                admaplic.ordsup  = menu.ordsup and
+                                admaplic.menord  = menu.menord
+                                no-lock no-error.
+            if not avail admaplic
+            then do:
+                create admaplic.
+                assign
+                        admaplic.ordsup    = menu.ordsup
+                        admaplic.menniv    = menu.menniv
+                        admaplic.menord    = menu.menord
+                        admaplic.aplicod   = menu.aplicod
+                        admaplic.cliente = string(tt-func.funcod).
+            end.
+            find first tt-admaplic1 where
+                               tt-admaplic1.cliente  = string(tt-func.funcod) and
+                               tt-admaplic1.aplicod = menu.aplicod and
+                               tt-admaplic1.menniv  = menu.menniv and
+                               tt-admaplic1.ordsup  = menu.ordsup and
+                               tt-admaplic1.menord  = menu.menord 
+                               no-error.
+            if not avail tt-admaplic1
+            then do:
+                create tt-admaplic1.
+                assign
+                tt-admaplic1.cliente = string(tt-func.funcod) 
+                tt-admaplic1.aplicod = menu.aplicod
+                tt-admaplic1.menniv  = menu.menniv
+                tt-admaplic1.ordsup  = menu.ordsup 
+                tt-admaplic1.menord  = menu.menord
+                tt-admaplic1.situacao = no
+                .
+            end.    
+       
+            /**
+            if avail tt-menu
+            then assign
+                    admaplic.aplicod = "(D)" + menu.aplicod
+                    tt-admaplic1.situacao = no.
+            else assign
+                     admaplic.aplicod = menu.aplicod
+                     tt-admaplic1.situacao = yes.
+            **/
+        end.
+        end. 
+    end.
+    hide frame f-33. 
+    a-seeid = -1.
+    next l3.
+end.                        

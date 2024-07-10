@@ -1,0 +1,445 @@
+/*
+*
+*    pdvcons.p    -    Esqueleto de Programacao    com esqvazio
+
+
+            substituir    pdvmov
+                          <tab>
+*
+*/
+def var vi as int.
+def var vnome as char.
+def var vformanome as char.
+def var vdown as int.
+def var vdownforma as int.
+def var vdownmoeda as int.
+def var vlistagem as log.
+def buffer bfunc for func.
+def var vfunape  like func.funape.
+
+def var recatu1         as recid.
+def var recatu2         as recid.
+def var reccont         as int.
+def var esqpos1         as int.
+def var esqpos2         as int.
+def var esqregua        as log.
+def var esqvazio        as log.
+def var esqascend     as log initial yes.
+def var esqcom1         as char format "x(12)" extent 5
+    initial [" Consulta "," Moedas "," ", "  ","  "].
+def var esqcom2         as char format "x(12)" extent 5
+            initial [" "," ","","",""].
+def var esqhel1         as char format "x(80)" extent 5.
+def var esqhel2         as char format "x(12)" extent 5
+   initial ["  ",
+            " ",
+            " ",
+            " ",
+            " "].
+
+def var crelatorios     as char format "x(30)" extent 5 initial
+           [
+            "Vendas",
+            "Recebimentos",
+            "Moedas",
+            ""].
+
+{admcab.i}
+
+def input parameter  par-recid-pdvdoc   as recid.
+def var par-data as date.
+
+def var vcmopevlr   as dec.
+def var vjurodesc   as dec format "(>>>>9.99)".
+def var vestorno    as char.
+def var vdata       as date format "99/99/9999".
+
+find pdvdoc where recid(pdvdoc) = par-recid-pdvdoc no-lock.
+find pdvmov of pdvdoc no-lock.
+find cmon of pdvmov no-lock.
+par-data  = pdvmov.datamov.
+find cmtipo of cmon no-lock.
+
+    vdown = 0.
+    for each pdvdoc of pdvmov no-lock.
+        vdown = vdown + 1.
+    end.                            
+    vdownforma = 0.
+    for each pdvforma of pdvmov no-lock.
+        vdownforma = vdownforma + 1.
+    end.
+    if vdownforma > 8 then vdownforma = 8.
+
+    vdownmoeda = 0.
+    for each pdvmoeda of pdvmov no-lock.
+        vdownmoeda = vdownmoeda + 1.
+    end.
+    if vdownmoeda > 8 then vdownmoeda = 8.
+
+
+
+def var vforma as char.
+def var vtitnum as char format "x(15)".
+form        
+     pdvforma.seqforma  format "->>9"  
+     vforma format "x(12)" column-label "Forma"
+     vtitnum column-label "Titulo"
+     pdvforma.fincod column-label "Plano" 
+     vformanome  format "x(12)"            column-label ""
+     pdvforma.valor column-label "Valor"
+     with frame frame-a vdownforma down row 9 + vdown                         
+                 width 80 no-underline overlay
+                 title " Formas ".
+
+form        
+     pdvmoeda.seqfp  format "->>9"  column-label "SF"
+     pdvmoeda.moecod column-label "Moe" format "x(03)"
+     moeda.moenom   format "x(12)" column-label "Moeda"
+     vtitnum column-label "Titulo"
+     pdvmoeda.titdtven column-label "Venc"
+     pdvmoeda.valor column-label "Valor"
+     with frame frame-moeda vdownmoeda down row 12 + vdown +  vdownforma                                    width 80 no-underline overlay
+                 title " Moedas ".
+
+
+
+def var par-dtini as date.
+
+if par-data <> ?
+then vdata = par-data.
+
+form
+    esqcom1
+    with frame f-com1
+                 row 21 no-box no-labels side-labels column 1 centered.
+form
+    esqcom2
+    with frame f-com2
+                 row screen-lines no-box no-labels side-labels column 1
+                 centered.
+
+assign
+    esqregua = yes
+    esqpos1  = 1
+    esqpos2  = 1.
+          
+        find pdvtmov of pdvmov no-lock.
+        
+recatu1 = ?.
+        
+bl-princ:
+repeat:
+    hide frame frelatorios no-pause.
+    hide frame fcolor      no-pause.
+    disp esqcom1 with frame f-com1.
+    if recatu1 = ?
+    then
+        if esqascend
+        then
+            find first pdvforma of pdvmov
+                                        no-lock no-error.
+        else
+            find last pdvforma of pdvmov
+                                        no-lock no-error.
+    else
+        find pdvforma where recid(pdvforma) = recatu1 no-lock.
+    if not available pdvforma
+    then esqvazio = yes.
+    else esqvazio = no.
+    clear frame frame-a all no-pause.
+    if not esqvazio
+    then do:
+        run frame-a.
+    end.
+    else do:
+        message "Nenhuma Movimento".
+        pause 1 no-message.
+        leave bl-princ.
+    end.
+
+    recatu1 = recid(pdvforma).
+    if esqregua
+    then color display message esqcom1[esqpos1] with frame f-com1.
+    /*else color display message esqcom2[esqpos2] with frame f-com2.**/
+    if not esqvazio
+    then repeat:
+        if esqascend
+        then
+            find next pdvforma of pdvmov
+                                        no-lock no-error.
+        else
+            find prev pdvforma of pdvmov
+                                        no-lock no-error.
+        if not available pdvforma
+        then leave.
+        if frame-line(frame-a) = frame-down(frame-a)
+        then leave.
+        down
+            with frame frame-a.
+        run frame-a.
+                    
+    end.
+    if not esqvazio
+    then up frame-line(frame-a) - 1 with frame frame-a.
+
+    repeat with frame frame-a:
+
+        if not esqvazio
+        then do:
+            find pdvforma where recid(pdvforma) = recatu1 no-lock.
+
+            status default
+                if esqregua
+                then esqhel1[esqpos1] + if esqpos1 > 1 and
+                                           esqhel1[esqpos1] <> ""
+                                        then  string(pdvforma.datamov)
+                                        else ""
+                else esqhel2[esqpos2] + if esqhel2[esqpos2] <> ""
+                                        then string(pdvforma.datamov)
+                                        else "".
+
+            clear frame frame-esquerda all no-pause.
+            clear frame frame-direita  all no-pause.
+            hide frame frame-esquerda  no-pause.
+            hide frame frame-direita   no-pause.
+            find pdvtmov of pdvforma no-lock.
+
+            display esqcom1
+                    with frame f-com1.
+
+            color display message pdvforma.seqforma
+                                  pdvforma.valor
+                                  with frame frame-a.
+
+            clear frame frame-moeda all no-pause.
+            pause 0.
+            vi = 0.
+            if pdvmov.statusoper <> "CAN"
+            then
+            for each pdvmoeda of pdvforma no-lock.
+                vi = vi + 1 .
+                if vi > 8 then leave.
+                run frame-moeda. 
+            end.
+            
+            choose field pdvforma.seqforma help ""
+                go-on(cursor-down cursor-up
+                      cursor-left cursor-right
+                      page-down   page-up
+                      /*tab*/ PF4 F4 ESC return) .
+
+            color display normal  pdvforma.seqforma
+                                  pdvforma.valor
+                                  with frame frame-a.
+
+            status default "".
+
+
+        end.
+        {esquema.i &tabela = "pdvforma"
+                   &campo  = "pdvforma.seqforma"
+                   &where  = "of pdvmov"
+                   &frame  = "frame-a"}
+
+        if keyfunction(lastkey) = "end-error"
+        then leave bl-princ.
+
+        if keyfunction(lastkey) = "return" or esqvazio
+        then do:
+            form pdvforma
+                 with frame f-pdvforma color black/cyan
+                      centered side-label row 5 .
+            if esqregua
+            then do:
+                display caps(esqcom1[esqpos1]) @ esqcom1[esqpos1]
+                        with frame f-com1.
+                
+                if esqcom1[esqpos1] = " Consulta "
+                then do.
+                    /*
+                    find plani where plani.etbcod = pdvforma.etbcod and
+                                     plani.placod = pdvforma.placod
+                                     no-lock no-error.
+                    if avail plani
+                    then do:
+                        hide frame frame-a no-pause.
+                        hide frame frame-moeda no-pause.
+                        run not/consnota.p (recid(plani)).
+                        leave.
+                    end.
+                    else do:
+                        find titulo where titulo.evecod = pdvforma.titcod
+                            no-lock no-error. 
+                        if avail titulo
+                        then do:
+                            hide frame frame-a no-pause.
+                            hide frame frame-moeda no-pause.
+                            run fqtitulo.p (input recid(titulo)).
+                            leave.
+                        end.
+                    end.                            
+                    */
+                    
+                end.
+                
+                if esqcom1[esqpos1] = " Totais "
+                then do.
+                    pause 0.
+                    display skip(11)
+                            with frame fcolor row 10 col 5 width 37 overlay
+                                    no-label color message no-box.
+                    pause 0.
+                    disp skip(1) crelatorios skip(1)
+                            with frame frelatorios no-labels 1 col row 11
+                                            overlay
+                            col 7 width 32
+                            title " Relatorios " .
+                    choose field crelatorios
+                        with frame frelatorios.
+                    hide frame fcolor no-pause.
+                    hide frame frelatorios no-pause.
+                    
+                    if frame-index = 1    
+                    then
+                        run dpdv/pdvtmoe.p (cmon.etbcod,recid(cmon),
+                                       par-data,
+                                       "VEN").
+                    if frame-index = 2    
+                    then
+                        run dpdv/pdvtmoe.p (cmon.etbcod,recid(cmon),
+                                       par-data,
+                                       "REC").
+                    if frame-index = 3    
+                    then
+                        run dpdv/pdvtmoe.p (cmon.etbcod,recid(cmon),
+                                       par-data,
+                                       "").
+
+                end.
+                if esqcom1[esqpos1] = " Listagem "
+                then do.
+                    run listagem.
+                    leave.
+                end.    
+                
+            end.
+            else do:
+                display caps(esqcom2[esqpos2]) @ esqcom2[esqpos2]
+                        with frame f-com2.
+                if esqcom2[esqpos2] = "  "
+                then do:
+                    hide frame f-com1  no-pause.
+                    hide frame f-com2  no-pause.
+                    /* run programa de relacionamento.p (input ). */
+                    view frame f-com1.
+                    view frame f-com2.
+                end.
+                leave.
+            end.
+        end.
+        if not esqvazio
+        then do:
+            run frame-a.
+        end.
+        if esqregua
+        then display esqcom1[esqpos1] with frame f-com1.
+        /*else display esqcom2[esqpos2] with frame f-com2.*/
+        recatu1 = recid(pdvforma).
+    end.
+    if keyfunction(lastkey) = "end-error"
+    then do:
+        view frame fc1.
+        view frame fc2.
+    end.
+end.
+hide frame f-com1           no-pause.
+hide frame f-com2           no-pause.
+hide frame frame-a          no-pause.
+hide frame frame-esquerda   no-pause.
+hide frame frame-direita    no-pause.
+hide frame f-banco          no-pause.
+hide frame f-cmon           no-pause.
+hide frame separa           no-pause.
+hide frame separa2          no-pause.
+hide frame frelatorios      no-pause.
+hide frame fcolor           no-pause.
+
+PROCEDURE frame-moeda.
+
+                    
+        find moeda of pdvmoeda no-lock no-error.
+        vtitnum = pdvmoe.titnum +
+                    (if pdvmoeda.titpar = 0
+                     then ""
+                     else ("/" + string(pdvmoeda.titpar))).
+        display
+            pdvmoeda.seqfp
+            pdvmoe.moecod
+            moeda.moenom when avail moeda
+            vtitnum
+            pdvmoeda.titdtven
+            pdvmoeda.valor
+                    with frame frame-moeda.
+        down with frame frame-moeda.                    
+            
+end procedure.
+
+
+procedure listagem.
+/***
+vlistagem = yes.
+varqsai = "../impress/pdvcmov." + string(time).
+{mdadmcab.i
+    &Saida     = "value(varqsai)"
+    &Page-Size = "64"
+    &Cond-Var  = "80"
+    &Page-Line = "66"
+    &Nom-Rel   = ""pdvcmov""
+    &Nom-Sis   = """BSSHOP"""
+    &Tit-Rel   = " ""MOVIMENTOS - "" +
+                    string(cmtipo.cmtnom) + "" ""
+                    + cmon.cxanom + "" "" +
+                    "" "" + string(par-data,""99/99/9999"")  "
+    &Width     = "80"
+    &Form      = "frame f-cabcab"}
+
+for each pdvmov of cmon where 
+        pdvmov.datamov = par-data
+        no-lock.
+    run frame-a.
+end.
+
+{mdadmrod.i
+    &Saida     = "value(varqsai)"
+    &NomRel    = """LISCMD"""
+    &Page-Size = "64"
+    &Width     = "80"
+    &Traco     = "80"
+    &Form      = "frame f-rod3"}.
+vlistagem = no.
+**/
+
+end procedure.
+
+
+
+PROCEDURE frame-a.
+            
+        find pdvtforma of pdvforma no-lock no-error.
+        
+        vforma = pdvforma.pdvtfcod + "-" + if avail pdvtforma
+                                   then pdvtforma.pdvtfnom
+                                   else "".
+
+        disp
+            pdvforma.seqforma  
+            vforma
+            vtitnum 
+            pdvforma.fincod 
+            vformanome 
+            pdvforma.valor 
+                    with frame frame-a.
+        
+end procedure.
+
+

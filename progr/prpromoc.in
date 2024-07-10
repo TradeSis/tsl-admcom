@@ -1,0 +1,23 @@
+/*if bctpromoc.situacao <> "M" or setbcod = 101 
+                then do:
+  message color red/with "Nenhum registro encontrado." view-as alert-box. lea~ve bl-princ1.
+                end.*/ sresp = no. message
+                "Nenhum produto encontrado para Promocao. Deseja Incluir ?" u~pdate sresp. if not sresp then leave bl-princ1.
+                repeat on endkey undo, leave:
+        find last dctpromoc where dctpromoc.sequencia = bctpromoc.sequencia 
+                    no-lock no-error. scroll from-current down with frame f-lin~ha.
+        create ctpromoc. assign ctpromoc.promocod = bctpromoc.promocod
+            ctpromoc.sequencia = bctpromoc.sequencia ctpromoc.situacao = "A"
+            ctpromoc.linha     = dctpromoc.linha + 1 ctpromoc.fincod = ? .
+        do on error undo: update  ctpromoc.procod  with frame f-linha.
+            find produ where produ.procod = ctpromoc.procod no-lock no-error.
+            if not avail produ then do: message color red/with
+                    "Produto " ctpromoc.procod " nao cadastrado." 
+                    view-as alert-box. undo. end.
+            disp produ.pronom with frame f-linha.
+            update ctpromoc.precosugerido with frame f-linha.
+            update ctpromoc.situacao  with frame f-linha.
+   end.  
+   end. 
+
+ 

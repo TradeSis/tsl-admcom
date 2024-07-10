@@ -1,0 +1,428 @@
+{admcab.i}
+
+{setbrw.i}.
+
+/*********** DEFINICAO DE VARIAVEIS *************/
+def var rec-tit     as recid.
+def var vpednum     like pedid.pednum.
+
+def workfile wcupom
+    field wetb      like estab.etbcod
+    field wcxa      like caixa.cxacod.
+    
+def var vreccont    as recid.
+def var vgera       like contrato.contnum.
+def var vcgc        like clien.ciccgc.
+def var vcpf        like clien.ciccgc.
+def var vtroco      as dec format ">,>>9.99".
+def var vvalor      like vtroco.
+def var par-certo   as log.
+def var vtitvlpag   as dec.
+def var vtotpag     as dec.
+def var v-letra     as char.
+def var v-ult       as char format "x(4)".
+def var vletra      as char.
+def var vdata       as date.
+def var a           as int.
+def var vdia        as int.
+def var v-impnf     as log format "Sim/Nao".
+def var vltabjur    as dec.
+def var vldesc      as dec.
+def var zzz         as int format  "999999".
+def var yyy         as char format "999999999".
+def var vche        as log initial no.
+def var vacre       like plani.platot.
+def var valor       like plani.platot.
+def var vparcela    as int.
+def var v-div1      like titulo.titvlcob.
+def var v-div2      like titulo.titvlcob.
+def var vpercentual as dec.
+def var sub99       like plani.platot.
+def var indice      as decimal format "9999.9999".
+def var vprotot     like plani.platot.
+def var vplacod     like plani.placod.
+def var vnumero     like plani.numero.
+def var    vperc    as decimal.
+def var vserie      like plani.serie.
+def var    vmovseq  like movim.movseq.
+def var ventrada    like titulo.titvlcob no-undo.
+def var v           as int format "99" no-undo.
+def var vi          as int format "99" no-undo.
+def var v-i         as int.
+def var vbon        like plani.numero.
+def var vfunc       like func.funcod.
+def var vnome1      like clien.clinom.
+def var vsaida      as char format "x(9)" extent 2
+                    initial ["  Lx300  ","  ARGOX  "].
+
+/************* DEFINICAO DE WORKFILES E TEMP-TABLES **************/
+
+def workfile wtabjur
+    field jrec as recid
+    field tabjur    like titulo.titvljur
+    field wdesc     like titulo.titvldes.
+
+def workfile tt-cheque
+    field titnum    like titulo.titnum
+    field titpar    like titulo.titpar
+    field titdtven  like titulo.titdtven
+    field rec       as recid
+    field titvlcob  like titulo.titvlcob
+    field bancod    as i format "999" label "Banco".
+
+def workfile wletra
+    field letra     like moeda.moecod
+    field nome      like moeda.moenom.
+
+def workfile wftit
+    field rec       as recid.
+
+def shared workfile wbonus
+    field bonus     like plani.numero.
+
+def shared workfile wfunc
+    field procod    like produ.procod
+    field funcod    like func.funcod.
+
+def shared workfile wf-movim
+    field wrec      as   recid
+    field movqtm    like movim.movqtm
+    field movalicms like movim.movalicms
+    field desconto  like movim.movdes
+    field movpc     like movim.movpc
+    field precoori  like movim.movpc
+    field vencod    like func.funcod.
+
+def new shared workfile wf-plani    like plani.
+def new shared workfile wf-titulo   like titulo.
+def new shared workfile wf-contrato like contrato.
+def new shared workfile wf-contnf   like contnf.
+
+/************* DEFINICAO DE BUFFERS ***************/
+def buffer bwf-titulo   for wf-titulo.
+def buffer bplani       for plani.
+def buffer ass-plani    for plani.
+def buffer btitulo      for titulo.
+def buffer ctitulo      for titulo.
+def buffer cplani       for plani.
+def buffer bliped       for liped.
+
+/************* DEFINICAO DE FORMS ****************/
+
+form
+    titulo.titdtpag      colon 20 label "Data Pagamento"
+    vtitvlpag            label "Total a Pagar"
+    titulo.moecod        colon 20 label "Moeda"
+    moeda.moenom         no-label
+    vtroco               label "Troco"
+    with frame fpag1 side-label row 14 color white/cyan
+         overlay centered title " Pagamento " .
+
+form
+    wletra.letra
+    wletra.nome   format "x(10)"
+    with frame f-letra
+        column 1 row 14  overlay
+        5 down title  " TIPOS  "
+        color white/cyan.
+
+
+form vsaida with frame fsaida
+                 centered no-label title "Imprimir na ..." row 8.
+
+/*********** DEFINICAO DE PARAMETROS **************/
+
+def input  parameter par-cre    as recid.
+def input  parameter par-clf    as recid.            /** recid do Ag.Com. **/
+def input  parameter par-bon    like plani.platot.  /** recid opcom **/
+def input  parameter par-num    like plani.numero.    /** numero da nota **/
+def input  parameter vsubtot2   like titulo.titvlcob.
+def input  parameter vdev       like titulo.titvlcob.
+def input  parameter vdevval    like plani.vlserv.
+def input  parameter par-ser    like plani.serie.   /** serie da nota **/
+
+def output parameter par-rec    as recid.
+def input  parameter vnome      like clien.clinom.
+def input  parameter v-fone     as char.
+
+
+vnome1 = vnome.
+
+find finan where recid(finan)   = par-cre no-lock.
+find clien where recid(clien) = par-clf no-lock.
+if finan.fincod = 0
+then find crepl where crepl.crecod = 1 no-lock.
+else find crepl where crepl.crecod = 2 no-lock.
+
+if par-bon = ?
+then par-bon = 0.
+
+for each wf-plani: delete wf-plani. end.
+
+do transaction:
+    do on error undo:
+        create wf-plani.
+        assign
+            wf-plani.placod   = int(string("1") + string(setbcod,">>9") +
+                                    string(par-num,"999999")     +
+                                    substring(string(time),5,1))
+            wf-plani.etbcod   = estab.etbcod
+            wf-plani.numero   = par-num
+            wf-plani.cxacod   = scxacod
+            wf-plani.emite    = estab.etbcod
+            wf-plani.pedcod   = vfunc
+            wf-plani.vlserv   = vdevval
+            wf-plani.descprod = par-bon
+            wf-plani.serie    = par-ser
+            wf-plani.movtdc   = 5
+            wf-plani.desti    = clien.clicod
+            wf-plani.pladat   = today
+            wf-plani.horincl  = time
+            wf-plani.crecod   = crepl.crecod
+            wf-plani.notsit   = no
+            wf-plani.datexp   = today
+            vacre             = 0.
+        if crepl.crecod = 2
+        then wf-plani.modcod   = "CRE".
+        else wf-plani.modcod   = "VVI".
+        vacre = vsubtot2.
+        wf-plani.platot = wf-plani.platot + vacre.
+        vacre = vacre - (vsubtot2 - vdev).
+        if vacre < 0
+        then vacre = 0.
+    end.
+end.
+
+find first wbonus no-error.
+if avail wbonus
+then vbon = wbonus.bonus.
+else vbon = 0.
+
+if wf-plani.crecod = 2
+then do:
+   create wf-contrato.
+   assign wf-contrato.contnum   = ?
+          wf-contrato.clicod    = wf-plani.desti
+          wf-contrato.dtinicial = wf-plani.pladat
+          wf-contrato.etbcod    = wf-plani.etbcod
+          wf-contrato.datexp    = today
+          wf-contrato.crecod    = finan.fincod
+          wf-contrato.vltotal   = wf-plani.platot * finan.finfat
+          wf-contrato.vlentra   = ventrada.
+
+   create wf-contnf.
+   assign wf-contnf.contnum = wf-contrato.contnum
+          wf-contnf.etbcod  = wf-plani.etbcod
+          wf-contnf.placod  = wf-plani.placod
+          wf-contnf.notanum = wf-plani.numero
+          wf-contnf.notaser = wf-plani.serie.
+end.
+
+if wf-plani.crecod = 1
+then run gerafin1.p (input recid(wf-plani)).
+else run gerafin2.p (input recid(wf-plani)).
+
+if keyfunction( lastkey ) = "end-error"
+then undo, leave.
+
+message "Confirma a Venda?" update sresp.
+if not sresp
+then undo, leave.
+
+
+/***** Criacao de titulo, plani, movim, contrato e contnf *******/
+do transaction :
+    create plani.
+
+    {l:\progloja\tt-plani.i plani wf-plani}.
+    if plani.crecod = 2
+    then do:
+        do for geranum on error undo on endkey undo:
+            find geranum where geranum.etbcod = setbcod.
+            vgera = geranum.contnum.
+            assign geranum.contnum = geranum.contnum + 1.
+        end.
+
+        assign plani.pedcod = wf-contrato.crecod
+               plani.biss   = wf-contrato.vltotal.
+
+        create contrato.
+        assign contrato.contnum =
+                        int(string(string(vgera,"999999") +
+                            string(setbcod,">>9"))).
+
+        assign contrato.clicod    = wf-contrato.clicod
+               contrato.dtinicial = wf-contrato.dtinicial
+               contrato.etbcod    = wf-contrato.etbcod
+               contrato.datexp    = wf-contrato.datexp
+               contrato.crecod    = wf-contrato.crecod
+               contrato.vltotal   = wf-contrato.vltotal
+               contrato.vlentra   = wf-contrato.vlentra.
+
+        create contnf.
+        assign contnf.contnum = contrato.contnum
+               contnf.etbcod  = wf-contnf.etbcod
+               contnf.placod  = wf-contnf.placod
+               contnf.notanum = wf-contnf.notanum
+               contnf.notaser = wf-contnf.notaser.
+        /*
+        plani.placod = int(string(string(vgera,"999999") +
+                            string(setbcod,">>9"))).
+        */
+    end.
+    for each wf-titulo:
+        create titulo.
+        {wftitulo.i titulo wf-titulo}.
+        output to value("/usr/admcom/backup/tit" + string(month(today),"99")
+                            + ".txt") append.
+            export titulo.
+        output close.
+    end.
+    for each wf-movim:
+        vmovseq = vmovseq + 1.
+        find produ where recid(produ) = wf-movim.wrec no-lock.
+        plani.protot = plani.protot + (wf-movim.movqtm * wf-movim.movpc).
+        plani.vencod = wf-movim.vencod.
+
+        create movim.
+        ASSIGN
+            movim.movtdc    = plani.movtdc
+            movim.PlaCod    = plani.placod
+            movim.etbcod    = plani.etbcod
+            movim.emite     = plani.emite
+            movim.desti     = plani.desti
+            movim.movseq    = vmovseq
+            movim.procod    = produ.procod
+            movim.movqtm    = wf-movim.movqtm
+            movim.movpc     = wf-movim.movpc
+            movim.movalicms = wf-movim.movalicms
+            movim.movdat    = plani.pladat
+            movim.MovHr     = int(time)
+            movim.datexp     = today.
+        run atuest.p (input recid(movim),
+                      input "I",
+                      input 0).
+    
+    end.
+end.
+
+if plani.etbcod = 17 
+then do :
+    for each wf-movim :
+        find produ where recid(produ) = wf-movim.wrec no-lock.
+        
+        if produ.catcod = 31 
+        then do :
+            find last bliped where bliped.pedtdc = 3             
+                               and bliped.etbcod = plani.etbcod
+                             no-error.
+            if avail bliped
+            then vpednum = bliped.pednum + 1.
+            else vpednum = 1.
+
+            create liped.
+            assign 
+                liped.pednum    = vpednum
+                liped.pedtdc    = 3
+                liped.predt     = today
+                liped.etbcod    = plani.etbcod
+                liped.procod    = produ.procod
+                liped.lippreco  = wf-movim.movpc
+                liped.lipqtd    = wf-movim.movqtm
+                liped.lipsit    = "Z"
+                liped.predt     = today.
+        end.
+    end.
+end.
+
+do on error undo, retry:
+    find caixa where caixa.etbcod = plani.etbcod and
+                     caixa.cxacod = plani.cxacod no-lock.
+
+
+    for each contnf where contnf.etbcod = plani.etbcod 
+                      and contnf.placod = plani.placod no-lock:
+        find contrato of contnf no-lock.
+        vreccont = recid(contrato).
+    end.
+    if vreccont <> ?
+    then do:
+        if contrato.vlentra > 0
+        then run l:\progr\opetit.andre(input recid(clien),
+                          input recid(caixa)).
+    end.
+    else run l:\progr\opetit.andre(input recid(clien),
+                      input recid(caixa)).
+    pause 0.
+    if vreccont <> ?
+    then
+      message "Vc Confirma a Emissao do Controle de Vencimentos ?" update sresp.
+    hide message.
+    if sresp
+    then do:
+        /*
+        if caixa.moecod = "barra"
+            if plani.crecod = 2
+            then run carne.p ( input recid(plani), input vreccont).
+        else
+        */
+        if plani.crecod = 2
+        then run revecto.p (input vreccont,
+                           input scxacod).
+    end.  
+
+    for each wcupom:
+        delete wcupom.
+    end.
+    if search("../import/sprint.txt") <> ?
+    then do:
+        input from ../import/sprint.txt.
+        repeat:
+            create wcupom.
+            import wcupom.
+        end.
+        input close.
+
+        for each wcupom.
+            if wcupom.wetb <> setbcod or
+               wcupom.wcxa <> scxacod
+            then delete wcupom.
+        end.
+        find first wcupom where wcupom.wetb = setbcod and
+                                wcupom.wcxa = scxacod no-error.
+        if avail wcupom
+        then do:
+            run imppri.p (input recid(plani),
+                           input plani.crecod).
+        end.                   
+
+        else do:
+            
+            if plani.etbcod = 17
+            then run impecf2.p (input recid(plani),
+                                input plani.crecod).
+            else do:
+                run impecf.p (input recid(plani),
+                               input plani.crecod).
+                pause 0.
+            end.
+            pause 0.
+        end.
+    end.
+    else do:
+        if plani.etbcod = 17
+        then do:
+            
+            run impecf2.p (input recid(plani),
+                            input plani.crecod).
+            pause 0.                
+        end.
+        else do:
+            run impecf.p (input recid(plani),
+                           input plani.crecod).
+            pause 0.               
+        end.                   
+    end.
+end.
+
+par-rec = recid(plani).

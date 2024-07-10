@@ -1,0 +1,52 @@
+autoriza;Observacoes
+bairro;Bairro
+cep;Cep
+Cpf/CNPJ;CPF/CNPJ
+cidade;Cidade
+ciinsc;Ident/Insc.Est.
+classe;Classe
+clicod;Cod.Cliente
+clinom;Nome
+compl;Complemento
+conjmae;Mae Conjuge
+conjpai;Pai Conjuge
+conjuge;Nome Conjuge
+datexp;Data Export
+dtnasc;Dt.Nascimento
+endereco;Endereco - Rua
+entbairro;Cob. Bairro
+entcep;Cob Cep
+entcidade;Cidade Cob
+entcompl;Compl Cob
+entendereco;End Cob
+entrefcom;Ref.Comercial
+estciv;Estado Civil
+etbcad;Estabelecimento
+email;EMail
+fone;Telefone
+mae;Mae
+nacion;Nacionalidade
+nascon;Dt.Nascimento
+natur;Naturalidade
+numdep;Dependentes
+numero;Numero
+optinSMS;optinSMS
+optinWhatsApp;optinWhatsApp
+pai;Filiacao - Pai
+prodta;Data Admissao
+proemp;Empresa
+proprof;Profissao
+prorenda;Renda mensal
+protel;Telefone
+refcom;Ref.Comercial
+refnome;Referencia
+reftel;Telefone
+sexo;Sexo
+temres;Tempo residencia
+tipocod;Tipo
+tippes;Tipo Pessoa
+tipres;Tipo Residencia
+ufecod;Estado
+celular;Celular
+
+

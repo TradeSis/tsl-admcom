@@ -1,0 +1,115 @@
+if keyfunction(lastkey) = "CLEAR"
+then do :
+/*
+    find first func where func.funcod = sfuncod no-lock no-error.
+    if func.etbcod <> 0
+    then do:
+          message "Funcionario nao autorizado".
+          undo, retry.
+    end.      
+  */  
+   
+   if opsys = "UNIX"
+   then do:
+        varquivo = "/admcom/relat/convloj." + string(time).
+        find first impress where impress.codimp = setbcod no-lock no-error. 
+        if avail impress
+        then do: 
+            run acha_imp.p (input recid(impress),  
+                            output recimp). 
+            find impress where recid(impress) = recimp no-lock no-error.
+            assign fila = string(impress.dfimp).
+        end. 
+
+   end.
+   else varquivo = "c:\temp\convloj." + string(month(vdti)).
+    
+    {mdad.i
+        &Saida     = "value(varquivo)"
+        &Page-Size = "66"
+        &Cond-Var  = "80"
+        &Page-Line = "66"
+        &Nom-Rel   = ""CONVGER""
+        &Nom-Sis   = """SISTEMA COMERCIAL"""
+        &Tit-Rel   = """ RELATORIO DE VENDAS POR LOJA "" +
+                      string(vdti) + "" ate "" + string(vdtf) "
+        &Width     = "80"
+        &Form      = "frame f-cabcab"
+    }.
+
+    for each ttloja where ttloja.etbcod <> 0 : 
+        assign  v-totdia = v-totdia + ttloja.pladia
+                v-totger = v-totger + ttloja.platot.
+    end.    
+
+    v-totperc = 0.
+    for each ttloja where ttloja.etbcod <> 0 
+                          break by ttloja.etbcod :
+
+        
+        find first estab where estab.etbcod = ttloja.etbcod no-lock.
+
+        assign v-perc = ttloja.platot * 100 / ttloja.metlj.
+                  assign v-perc = ttloja.platot * 100 / v-totger
+                       v-perdia = (if ttloja.platot <> 0
+                                    then (ttloja.platot / ttloja.metlj) * 100
+                                         else 0)
+                       v-perdia2 =  (if ttloja.etbcod = 0 then
+                                     (if ttloja.platot <> 0
+                                     then (ttloja.platot / v-totsem0) * 100    ~                                        else 0)
+                                     else   (if ttloja.platot <> 0
+                                     then (ttloja.platot / (if ttloja.metlj = 0 
+                                                            then ttloja.platot ~                                                            else ttloja.metlj))~                                                             * 100             ~                                                               else 0))
+
+        v-totperc = v-totperc + v-perc.
+
+
+
+        disp
+            ttloja.etbcod
+            estab.etbnom
+      
+             ttloja.platot ttloja.metlj
+                        ttloja.pladia v-perc v-perdia v-perdia2
+            
+            with frame f-lojaimp.
+            
+        down
+            with frame f-lojaimp.
+    end.
+
+    if vetbcod = 0
+    then do:
+
+          find first ttloja where ttloja.etbcod = 0 no-lock.
+          v-totperc = ttloja.platot * 100 / ttloja.metlj.
+          down 1 with frame f-lojaimp.
+          disp
+              ttloja.etbcod
+              "TOTAL" @ estab.etbnom
+              ttloja.metlj
+              ttloja.pladia
+              ttloja.platot
+              v-totperc  @ v-perc
+              with frame f-lojaimp.
+
+    end.    
+    output close.
+    
+    if opsys = "UNIX"
+    then do:
+        /*
+        os-command silent lpr value(fila + " " + varquivo).
+        */
+
+        run visurel.p(varquivo,"").
+
+    end.
+    else do:
+        {mrod.i}
+    end.
+    
+    an-seeid = -1.
+    next keys-loop.
+end.
+     

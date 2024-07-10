@@ -1,0 +1,5 @@
+def var vmoeda    as log  format "Sim/Nao"  init yes.
+def var cmoeda    as char format "x(40)".
+def temp-table wfmoeda
+    field moecod        like moeda.moecod init "".
+def buffer bwfmoeda    for wfmoeda.

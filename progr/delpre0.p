@@ -1,0 +1,33 @@
+
+
+
+def var vetbcod like estab.etbcod.
+def var ip   as char format "x(15)".
+def var vdti as date format "99/99/9999" initial today.
+def var vdtf as date format "99/99/9999" initial today.
+
+repeat:
+
+    if connected ("comloja")
+    then disconnect comloja.
+    
+
+
+    update  vetbcod label "filial"
+            ip  label "IP - Filial" with frame f1 side-label width 80.
+    
+    message "Conectando...".
+    connect com -H value(ip) -S sdrebcom -N tcp -ld comloja no-error.
+    
+    if not connected ("comloja")
+    then do:
+        
+        message "Banco nao conectado".
+        undo, retry.
+        
+    end.
+
+    run delpre.p (input vetbcod).
+    
+
+end.

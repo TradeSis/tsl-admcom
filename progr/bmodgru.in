@@ -1,0 +1,48 @@
+scroll from-current down with frame f-linha1. 
+def buffer cmodgru for modgru.
+find last cmodgru no-lock no-error.
+create bmodgru.
+bmodgru.mogsup = t-modgru.mogcod.
+bmodgru.mogcod = if avail cmodgru
+                 then cmodgru.mogcod + 1 else 1
+                 .
+update bmodgru.modcod with frame f-linha1.
+find first  cmodgru where 
+            cmodgru.mogcod <> bmodgru.mogcod and
+            cmodgru.modcod = bmodgru.modcod no-lock no-error.
+if avail cmodgru
+then do:
+    find first dmodgru where dmodgru.mogcod = cmodgru.mogsup
+                no-lock no-error.
+    if avail dmodgru
+    then do:  
+        bell.
+        message color red/with
+        "Modalidade ja cadastrada no gurpo " dmodgru.mognom
+        view-as alert-box.
+        undo.
+    end.
+end.
+find modal where modal.modcod = bmodgru.modcod no-lock no-error.
+if not avail modal
+then do:
+    create modal.
+    modal.modcod = bmodgru.modcod.
+    update modal.modnom with frame f-linha1.
+end.
+disp modal.modnom with frame f-linha1.
+find first lanaut where lanaut.etbcod = ? and
+                        lanaut.forcod = ? and
+                        lanaut.modcod = modal.modcod
+                        no-error.
+if not avail lanaut
+then do:
+    create lanaut.
+    lanaut.etbcod = ?.
+    lanaut.forcod = ?.
+    lanaut.modcod = modal.modcod.
+end.
+/*
+update lanaut.lancod lanaut.lanhis with frame f-linha1.
+*/
+/*next l2.*/

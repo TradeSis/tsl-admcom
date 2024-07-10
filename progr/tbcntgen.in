@@ -1,0 +1,32 @@
+do transaction:
+    
+    create tbcntgen.
+    assign
+        tbcntgen.tipcon = 1
+        tbcntgen.numini = p-tipo
+        tbcntgen.datini = ?
+        tbcntgen.datfim = ?.
+
+    update tbcntgen.etbcod       label "Codigo    "             skip
+           tbcntgen.campo1[1]    label "Descricao " format "x(30)" skip
+           tbcntgen.campo1[2]    label "Processa  " format "x(30)" skip
+           tbcntgen.valor        label "Valor     " skip
+           tbcntgen.datini       label "Periodo de"
+           tbcntgen.datfim       label "       Ate" skip
+           tbcntgen.validade     label "Validade  "                skip
+           tbcntgen.campo1[3]    label "Programa  "  format "x(15)"
+           tbcntgen.campo2[1]    label "Texto     "
+           tbcntgen.campo2[2]    label "          "
+           with frame f-add centered 1 down side-label
+           color message row 6 title "     INCLUSAO    ".
+    
+end.
+/*
+output to value(varq) .
+for each btbcntgen where
+         btbcntgen.tipcon > 0 no-lock.
+    export btbcntgen.
+end. 
+output close.        
+*/
+next l1.       

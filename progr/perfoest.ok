@@ -1,0 +1,7 @@
+pause.
+
+if keyfunction(lastkey) = "F" or
+   keyfunction(lastkey) = "f"
+then do:
+    pause.
+end.

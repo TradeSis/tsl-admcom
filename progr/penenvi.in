@@ -1,0 +1,47 @@
+    CREATE pendencia.
+    pendencia.funemi = v-funcod.
+    pendencia.dtmens = today.
+    pendencia.hrmens = time.
+
+    disp v-op with frame f-opcao.
+    choose field v-op with frame f-opcao.
+    if frame-index = 1 
+    then pendencia.prior = 0.
+    if frame-index = 2 
+    then pendencia.prior = 1.
+    if frame-index = 3 
+    then pendencia.prior = 2.
+    if frame-index = 4 
+    then pendencia.prior = 3.
+
+    clear frame f-altera1 all. hide frame f-altera1.
+    
+    update 
+        pendencia.solic
+        pendencia.assunto
+        pendencia.mens1[1] pendencia.mens1[2] pendencia.mens1[3]
+        pendencia.mens1[4] pendencia.mens1[5] pendencia.mens1[6]
+        pendencia.mens1[7] pendencia.mens1[8] pendencia.mens1[9]
+        pendencia.mens1[10] pendencia.mens1[11] pendencia.mens1[12]
+        pendencia.mens1[13] pendencia.mens1[14] pendencia.mens1[15]
+         with frame f-altera3.
+
+    assign
+        pendencia.mens1[1] = caps(pendencia.mens1[1])
+        pendencia.mens1[2] = caps(pendencia.mens1[2])
+        pendencia.mens1[3] = caps(pendencia.mens1[3])
+        pendencia.mens1[4] = caps(pendencia.mens1[4])
+        pendencia.mens1[5] = caps(pendencia.mens1[5])
+        pendencia.mens1[6] = caps(pendencia.mens1[6])
+        pendencia.mens1[7] = caps(pendencia.mens1[7])
+        pendencia.mens1[8] = caps(pendencia.mens1[8])
+        pendencia.mens1[9] = caps(pendencia.mens1[9])
+        pendencia.mens1[10] = caps(pendencia.mens1[10])
+        pendencia.mens1[11] = caps(pendencia.mens1[11])
+        pendencia.mens1[12] = caps(pendencia.mens1[12])
+        pendencia.mens1[13] = caps(pendencia.mens1[13])
+        pendencia.mens1[14] = caps(pendencia.mens1[14])
+        pendencia.mens1[15] = caps(pendencia.mens1[15])
+        pendencia.funcod = 999.
+    an-seeid = -1.
+    next keys-loop.

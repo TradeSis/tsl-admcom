@@ -1,0 +1,7 @@
+/* filtro-estab.def */
+def var vEstab     as log  format "Sim/Nao"  init yes.
+def var cestab     as char format "x(40)".
+def temp-table wfestab
+    field etbcod        like estab.etbcod init 0.
+def buffer bwfestab    for wfestab.
+

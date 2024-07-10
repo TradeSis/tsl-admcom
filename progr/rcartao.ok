@@ -1,0 +1,141 @@
+/**
+if keyfunction(lastkey) = "CLEAR"
+then do :
+    update v-datini
+           v-datfim with frame f-datas.
+    if v-datini = ? or v-datfim = ? or v-datini > v-datfim
+    then do :
+        bell. message "Datas informadas invalidas".
+        pause. clear frame f-datas all.
+        hide frame f-datas.
+        next keys-loop.
+    end.
+
+    {mdadmcab.i
+        &Saida     = "pprinter"
+        &Page-Size = "64"
+        &Cond-Var  = "100"
+        &Page-Line = "66"
+        &Nom-Rel   = ""RCARTAO""
+        &Nom-Sis   = """ADMINISTRACAO"""
+        &Tit-Rel   = """RELATORIO DE CARTOES DE "" +
+                        string(v-datini,""99/99/9999"") + "" A "" +
+                        string(v-datfim,""99/99/9999"") "
+        &Width     = "120"
+        &Form      = "frame f-cabcab"}
+
+    assign v-totdesc = 0 v-totvl = 0 v-totliq = 0.
+    vtotvlcob = 0.
+    vtotvldes = 0.
+    vtotvlpag = 0.      
+
+    for each reccar where reccar.datrec >= v-datini
+                      and reccar.datrec <= v-datfim
+                      and reccar.rede = convenio.convcod
+                      no-lock break by reccar.datrec:
+
+        
+        disp
+            reccar.datrec
+            reccar.numres
+            reccar.numpar
+            reccar.titdtven
+            reccar.titvlcob
+            reccar.titvldes
+            reccar.titvlpag
+            with frame f-impre.
+            
+        down
+            with frame f-impre.
+
+       assign vtotvlcob = vtotvlcob + reccar.titvlcob
+              vtotvldes = vtotvldes + reccar.titvldes
+              vtotvlpag = vtotvlpag + reccar.titvlpag
+              v-totdesc = v-totdesc + reccar.titvldes
+              v-totliq = v-totliq + reccar.titvlpag
+              v-totvl = v-totvl + reccar.titvlcob.
+
+       if last-of(reccar.datrec)
+       then do:
+            put skip(1).
+            put "=> TOTAL DIA " reccar.datrec
+                 vtotvlcob format ">>>,>>9.99" at 26
+                 vtotvldes format ">,>>9.99" at 37
+                 vtotvlpag format ">>>,>>9.99" at 47 skip(1).  
+
+            vtotvlcob = 0.
+            vtotvldes = 0.
+            vtotvlpag = 0.      
+       end.
+            
+    end.
+    down 2 with frame f-impre.
+
+    disp
+        "TOTAL GERAL " @ reccar.datrec
+        v-totvl @ reccar.titvlcob
+        v-totdesc @ reccar.titvldes
+        v-totliq @ reccar.titvlpag
+        with frame f-impre.
+
+    output close.
+    i-seeid = -1.
+    next keys-loop.
+end.
+**/
+
+if keyfunction(lastkey) = "CUT"  or
+   keyfunction(lastkey) = "delete-line"
+then do :
+    vnumres = "" .
+    vnumlote = 0.
+    update  vnumlote
+            vnumres
+           with frame f-exc.
+    find first reccar where /*reccar.etbcod = estab.etbcod and  */
+                            reccar.rede = vindex and 
+                            reccar.numres = vnumres and
+                            reccar.lote = vnumlote
+                            no-lock no-error.
+    if not avail reccar
+    then do:
+        bell.
+        message "Nenhum Registro Encontrado".
+        pause.
+        hide frame f-exc no-pause.
+        next keys-loop.
+    end.    
+    hide frame f-exc no-pause.
+    sresp = no.
+    message "Confirma Exclusao do Documento " vnumres " ? "
+        update sresp.
+    if not sresp
+    then next keys-loop.
+    
+    for each reccar where  /* reccar.etbcod = estab.etbcod and*/
+                            reccar.rede = vindex and
+                            reccar.numres = vnumres and
+                            reccar.lote   = vnumlote :
+        delete reccar.
+    end.
+    assign v-totdesc = 0 v-totliq = 0 v-totvl = 0.
+
+    for each reccar where   reccar.etbcod = estab.etbcod and
+                            reccar.rede   = vindex
+                      no-lock :
+
+        assign
+            v-totdesc = v-totdesc + reccar.titvldes
+            v-totliq = v-totliq + reccar.titvlpag
+            v-totvl = v-totvl + reccar.titvlcob.
+    end.
+    disp
+        v-totvl
+        v-totdesc
+        v-totliq
+        with frame f-totais.
+
+    a-seeid = -1.
+    leave keys-loop.
+end.
+

@@ -1,0 +1,3 @@
+DEFINE VARIABLE vcHost     AS CHARACTER    INITIAL "portaldeprodutos.lebes.com.br"   NO-UNDO.
+DEFINE VARIABLE vcPortCore AS CHARACTER    INITIAL "3000"        NO-UNDO.
+DEFINE VARIABLE vcPort     AS CHARACTER    INITIAL "1337"        NO-UNDO.

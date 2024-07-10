@@ -1,0 +1,92 @@
+if keyfunction(lastkey) = "CLEAR"
+then do :
+    find first correio where recid(correio) = an-seerec[frame-line].
+    
+    varqsai = "/u/custom/impress/corr." + string(day(today)).
+                                        
+    {mdadmcab.i
+        &Saida     = "value(varqsai)"
+        &Page-Size = "60"
+        &Cond-Var  = "80"
+        &Page-Line = "66"
+        &Nom-Rel   = ""RELCORR""
+        &Nom-Sis   = """SISTEMA COMERCIAL"""
+        &Tit-Rel   = """ RELATORIO DE CORREIO """
+        &Width     = "80"
+        &Form      = "frame f-cabcab"
+    }.
+
+    find first func where func.funcod = correio.funemi no-lock.
+    put unformatted chr(27) + "G".
+    put
+        "Emitente: "  
+        correio.funemi
+        " "
+        func.funape         skip(1).
+
+    find first func where func.funcod = correio.funcod no-lock.
+    vhora = string(correio.hrmens,"hh:mm:ss").
+    
+    put
+        "Assunto: "
+        correio.assunto     
+        skip
+        "    Data Emissao: "
+        correio.dtmens  
+        skip
+        "       Hora de Envio: " 
+        vhora   
+        skip(1).
+
+    put
+        "Destinatario: "
+         func.funcod 
+         " " 
+         func.funape
+         skip(1).
+         
+    put unformatted chr(27) + "G".
+    put
+         "                          MENSAGEM RECEBIDA   "
+         skip(1).
+    put unformatted chr(27) + "H".
+         
+    put
+        correio.mens[1] skip
+        correio.mens[2] skip
+        correio.mens[3] skip
+        correio.mens[4] skip
+        correio.mens[5] skip
+        correio.mens[6] skip
+        correio.mens[7] skip
+        correio.mens[8] skip
+        correio.mens[9] skip
+        correio.mens[10] skip
+        correio.mens[11] skip 
+        correio.mens[12] skip
+        correio.mens[13] skip
+        correio.mens[14] skip
+        correio.mens[15].
+
+end.
+
+if keyfunction(lastkey) = "DELETE-LINE"
+then do :
+    find first correio where recid(correio) = an-seerec[frame-line] .
+    if correio.situacao <> "L"
+    then do :
+        bell. bell. bell.
+        message "Mensagem ainda nao Lida, Arquivamento impossivel".
+        pause.  an-seeid = -1. next keys-loop.
+    end.
+    MESSAGE "Confirma Arquivamento do E-mail " UPDATE sresp.
+    IF NOT sresp
+    THEN next keys-loop.
+    correio.situacao = "X".
+    an-seeid = -1.
+    next keys-loop.
+end.
+
+
+
+

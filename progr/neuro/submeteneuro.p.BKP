@@ -1,0 +1,175 @@
+def input parameter p-etbcod    as int.
+def input parameter p-politica  as char.
+def input parameter p-clicod    as int.
+def input parameter p-vlrvenda  as dec.
+def output parameter par-lojaneuro as log.
+def output parameter par-neurotech as log.
+
+{neuro/varcomportamento.i}
+
+def var var-diasultimacompra as dec.
+
+find first agfilcre where
+        agfilcre.tipo = "NEUROTECH" and
+        agfilcre.etbcod = p-etbcod
+    no-lock no-error.
+if not avail agfilcre
+then do:
+    par-neurotech = no.
+    par-lojaneuro = no.
+end.
+else do:
+    par-lojaneuro = yes.
+    par-neurotech = yes.
+end.    
+
+
+if par-neurotech = yes
+then do:
+    /* outros Testes */
+
+
+    find first neuclien where neuclien.clicod = p-clicod no-lock no-error.
+    
+    
+    if avail neuclien
+    then do:
+        run neuro/comportamento.p (p-clicod,
+                               ?,
+                               output var-propriedades).
+
+        var-atrasoatual = int(pega_prop("ATRASOATUAL")).
+        var-salaberto = dec(pega_prop("LIMITETOM")).
+        if var-salaberto = ? then var-salaberto = 0.
+        var-sallimite  = neuclien.vlrlimite - var-salaberto.
+        if var-sallimite = ? then var-sallimite = 0.
+
+    end. 
+    
+    if p-politica = "P1"
+    then do:
+        find first tabparam where
+            tabparam.tipo      = agfilcre.tipo  and 
+            tabparam.grupo     = agfilcre.codigo and
+            tabparam.aplicacao = trim(p-politica)     and
+            tabparam.parametro = "QUANTIDADE CONTRATOS EXISTENTES"
+            no-lock no-error.
+        if not avail tabparam
+        then par-neurotech = no.                    
+    end.
+    if p-politica = "P2"
+    then do:
+        find first tabparam where
+            tabparam.tipo      = agfilcre.tipo  and 
+            tabparam.grupo     = agfilcre.codigo and
+            tabparam.aplicacao = p-politica     and
+            tabparam.parametro = "QUANTIDADE CONTRATOS EXISTENTES"
+            no-lock no-error.
+        if not avail tabparam
+        then par-neurotech = no.                    
+    
+    end.
+    if p-politica = "P3"
+    then do:
+        par-neurotech = no.
+    end.
+    if p-politica = "P4"
+    then do:
+    
+    end.
+    if p-politica = "P5"
+    then do:
+        find first tabparam where
+            tabparam.tipo      = agfilcre.tipo  and 
+            tabparam.grupo     = agfilcre.codigo and
+            tabparam.aplicacao = p-politica     and
+            tabparam.parametro = "VALOR VENDA"
+            no-lock no-error.
+        if avail tabparam
+        then do:
+            if tabparam.condicao = "="
+            then do:
+                if p-vlrvenda = tabparam.valor    
+                then par-neurotech = tabparam.bloqueio.
+                else par-neurotech = not tabparam.bloqueio.
+            end.
+            else 
+            if tabparam.condicao = "<" 
+            then do: 
+                if p-vlrvenda < tabparam.valor    
+                then par-neurotech = tabparam.bloqueio.
+                else par-neurotech = not tabparam.bloqueio.
+            end. 
+            else 
+            if tabparam.condicao = ">" 
+            then do: 
+                if p-vlrvenda > tabparam.valor    
+                then par-neurotech = tabparam.bloqueio.
+                else par-neurotech = not tabparam.bloqueio.
+            end. 
+        end.                    
+        if par-neurotech = no
+        then do:
+            find first tabparam where
+                tabparam.tipo      = agfilcre.tipo  and 
+                tabparam.grupo     = agfilcre.codigo and
+                tabparam.aplicacao = p-politica     and
+                tabparam.parametro = "VALOR VENDA > SALDO LIMITE"
+                no-lock no-error.
+            if avail tabparam
+            then do:
+                if var-sallimite - p-vlrvenda < 0 
+                then par-neurotech = tabparam.bloqueio.
+                else par-neurotech = not tabparam.bloqueio.
+            end.                    
+        end.            
+        if par-neurotech = no
+        then do:
+            find first tabparam where
+                tabparam.tipo      = agfilcre.tipo  and 
+                tabparam.grupo     = agfilcre.codigo and
+                tabparam.aplicacao = p-politica     and
+                tabparam.parametro = "SALDO ABERTO"
+                no-lock no-error.
+            if avail tabparam
+            then do:
+                if tabparam.condicao = "="
+                then do:
+                    if var-salaberto = tabparam.valor    
+                    then par-neurotech = tabparam.bloqueio.
+                    else par-neurotech = not tabparam.bloqueio.
+                end.
+                else 
+                if tabparam.condicao = "<" 
+                then do: 
+                    if var-salaberto < tabparam.valor    
+                    then par-neurotech = tabparam.bloqueio.
+                    else par-neurotech = not tabparam.bloqueio.
+                end. 
+                else 
+                if tabparam.condicao = ">" 
+                then do: 
+                    if var-salaberto > tabparam.valor    
+                    then par-neurotech = tabparam.bloqueio.
+                    else par-neurotech = not tabparam.bloqueio.
+                end. 
+            end.                    
+        end.            
+    end.
+    if p-politica = "P6"
+    then do:
+    
+    end.
+    if p-politica = "P7"
+    then do:
+    
+    end.
+    if p-politica = "P8"
+    then do:
+    
+    end.
+    
+    
+    
+    
+end.

@@ -1,0 +1,112 @@
+                   BILHETE DE SEGURO DE
+                APARELHOS ELETRONICOS
+            Seguro Roubo Furto e Quebra
+     RAMO DE SEGURO: 0171   RISCOS DIVERSOS
+
+SEGURADORA: Zurich Minas Brasil Seguros S.A.
+CNPJ: 17.197.385/0001-21 REGISTRO SUSEP 05495
+PROCESSO SUSEP: 15414.900970/2014-26
+REPRESENTANTE DE SEGUROS: DREBES E CIA LTDA - LOJAS LEBES
+CNPJ: 96.662.168/0001-31
+
+BILHETE No: LBRQ.#SAFE_CERTIFICADO#
+DATA EMISSAO: #DT_EMISSAO#
+SEGURADO: #CLIENTE_NOME#
+CPF: #CLIENTE_CPF_CNPJ#
+LOGRADOURO: #CLIENTE_ENDERECO#,NUMERO: #CLIENTE_END_NR#
+COMPLEMENTO: 
+CIDADE: #CLIENTE_CIDADE#
+UF: #CLIENTE_UF#      CEP: #CLIENTE_CEP# 
+
+MARCA:#PRODUTO#
+MODELO: #PRODUTO_FORNECEDOR#
+
+IDENTIFICACAO DO BEM SEGURADO
+
+COBERTURA: ROUBO OU FURTO QUALIFICADO DE BENS   
+ELEGIBILIDADE: NOVOS
+CARENCIA: NAO HA
+FRANQUIA: 25%
+LIMITE MAXIMO DE INDENIZACAO: REPOSICAO DE NOVO APARELHO ATE 
+O VALOR MAXIMO DE R$ #VALOR_BASE_PRODUTO#
+PREMIO LIQUIDO DE IOF POR COBERTURA: R$ #PREMIO_LIQUIDO_60#
+IOF POR COBERTURA: R$ #IOF_COBERTURA_60#
+PREMIO BRUTO POR COBERTURA: R$ #PREMIO_BRUTO_COBERTURA_60#
+PERIODICIDADE DO PREMIO: UNICO
+
+COBERTURA: DANOS MATERIAIS ACIDENTAIS PLANO II  
+ELEGIBILIDADE: NOVOS   
+CARENCIA: NAO HA            
+FRANQUIA: 25%   
+LIMITE MAXIMO DE INDENIZACAO: ATE 3 REPAROS. 
+A SOMA DOS REPAROS NAO PODERA ULTRAPASSAR R$ #VALOR_BASE_PRODUTO#    
+PREMIO LIQUIDO DE IOF POR COBERTURA: R$ #PREMIO_LIQUIDO_36#
+IOF POR COBERTURA: R$  #IOF_COBERTURA_36#
+PREMIO BRUTO POR COBERTURA: R$ #PREMIO_BRUTO_COBERTURA_36#
+
+PREMIO TOTAL LIQUIDO DE IOF: R$ #PREMIO_LIQUIDO#
+IOF TOTAL: R$ #VALOR_IOF_GE#
+PREMIO TOTAL A SER PAGO: R$ #VALOR_GE#
+FORMA DE PAGAMENTO DO PREMIO:
+PERIODICIDADE DO PREMIO: UNICO
+-----------------------------------------------------------
+INICIO DE VIGENCIA: #INICIO_GARANTIA# 
+TERMINO DE VIGENCIA: #FIM_GARANTIA#
+-----------------------------------------------------------
+Sera pago a remuneracao do representante no valor de R$ #VALOR_COMISSAO_REPRESENTANTE_RF# 
+equivalente a #PERCENTUAL_COMISSAO_REPRESENTANTE_RF#% sobre o premio total de seguro liquido de 
+IOF.
+
+PARA SINISTROS:
+Para avisar e acompanhar seu sinistro acesse o Espaco Cliente, 
+espacoclientes.zurich.com.br, ou fale com a 
+Laiz, nossa assistencia virtual, pelo chat on-line, 
+zurich.com.br/chatonline, ou ainda pelo WhatsApp (11) 
+2890 2121. Se preferir, ligue para a central de atendimento 
+Zurich. Para capitais e regioes 
+metropolitanas:
+
+4020 4848 PARA CAPITAIS/REGIOES METROPOLITANAS
+0800 285 4141 PARA DEMAIS REGIOES
+SAC: 0800 284 4345
+DEFICIENTES AUDITIVOS OU DE FALA: 0800 725 8585
+OUVIDORIA: 0800 770 1061 CASO JA TENHA REGISTRADO SUA RECLAMACAO 
+E NAO ESTEJA SATISFEITO.
+
+O Representante informa que ha contrato de exclusividade com a 
+seguradora para a comercializacao e oferta deste produto. 
+
+Em atendimento a Lei 12.741/12 informamos que incidem as 
+aliquotas de 0,65% de PIS/PASEP e de 4% de COFINS sobre 
+os premios de seguros, deduzidos do estabelecido em legislacao 
+especifica. Link da plataforma digital oficial 
+para registro de reclamacoes dos consumidores dos 
+mercados  supervisionados (www.consumidor.gov.br).
+
+
+   #LOJA_CIDADE#, #DT_EMISSAO#
+   __________________________________
+   (Assinatura do Segurado)
+
+-----------------------------------------------------------------------
+
+TERMO DE AUTORIZACAO DE COBRANCA
+   DE PREMIO DE SEGURO
+
+Eu, #NOME_CLIENTE#, inscrito no CPF/CNPJ sob o No 
+#CLIENTE_CPF_CNPJ#, proponente 
+do seguro (#TIPO_GARANTIA#), descrito no bilhete de Seguro n LBGE. 
+#SAFE_CERTIFICADO#,  autorizo que o pagamento do premio de seguro no 
+valor de R$ #VALOR_GE#  seja realizado em conjunto com o pagamento 
+do(s) produtos(s)/servico(s) ora adquirido(s).
+
+   #LOJA_CIDADE#, #DT_EMISSAO#
+   __________________________________
+   (Assinatura do Segurado)
+
+
+Seguro Roubo, Furto e Quebra:
+Início de vigência da cobertura do risco: #INICIO_GARANTIA#
+Término de vigência da cobertura do risco: #FIM_GARANTIA#
+condicoes gerais do seguro:
+www.lebes.com.br/zurich-roubo-furto-ou-quebra

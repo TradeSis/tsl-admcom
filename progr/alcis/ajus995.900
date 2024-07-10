@@ -1,0 +1,14 @@
+bdes_bloq.p:                        prodistr.etbabast = 995                  
+conf_acao_nf.p:    run manager_nfe.p (input "995_5152",
+conf_acao.p:setbcod = 995.
+consulta-inve.p:for each estoq where estoq.etbcod = 995 no-lock.
+crec.p:               prodistr.etbcod   = 995                            
+expcliente.p:def var vPROPRIETaRIO as char init "995".
+fcgl_acao_it.p:setbcod = 995.
+fcgl.p:def var vPROPRIETaRIO       as char init "995".
+nfgl.p:    "995"                   format "x(12)"
+ordvh.p:def var vPROPRIETaRIO       as char init "995".
+orech.p:def var vPROPRIETaRIO       as char init "995".
+orech-pack.p:def var vPROPRIETaRIO       as char init "995".
+pedch.p:    "995"                   format "x(12)" /* Proprietario */
+prodistr.p:                    prodistr.etbcod       = 995          and

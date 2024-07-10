@@ -1,0 +1,336 @@
+/*
+*
+*
+*/
+{admcab.i}
+
+def input param par-abatipo like abastipo.abatipo.
+def input param par-etbcod  like abascompra.etbcod.
+def input param par-forcod  like abascompra.forcod.
+
+def var recatu1         as recid.
+def var reccont         as int.
+def var esqpos1         as int.
+def var esqvazio        as log.
+def var esqascend       as log initial yes.
+def var esqcom1         as char format "x(12)" extent 5
+    initial [" Inclusao "," Alteracao "," ", " ",""].
+
+form
+    esqcom1
+    with frame f-com1 row 4 no-box no-labels side-labels column 1 centered.
+assign
+    esqpos1  = 1.
+
+def var pabccod like abascompra.abccod.
+def temp-table ttabascompra no-undo
+    field abccod    like abascompra.abccod
+    field etbcod    like abascompra.etbcod
+    field dtpreventrega  like abascompra.dtpreventrega
+    field procod    like abascompra.procod
+    field abcqtd    like abascompra.abcqtd
+    field lipcor    like abascompra.lipcor
+    field lippreco  like abascompra.lippreco
+    index idx is unique primary abccod asc.
+
+for each abascompra where 
+            abascompra.etbcod  = par-etbcod  and
+            abascompra.abatipo = par-abatipo and
+            abascompra.abcsit  = "AB"
+            no-lock.
+    create ttabascompra.            
+    ttabascompra.abccod = abascompra.abccod.
+    ttabascompra.etbcod = abascompra.etbcod.
+    ttabascompra.dtpreventrega = abascompra.dtpreventrega.
+    ttabascompra.procod = abascompra.procod.
+    ttabascompra.abcqtd = abascompra.abcqtd.
+    ttabascompra.lipcor = abascompra.lipcor.
+    ttabascompra.lippreco = abascompra.lippreco.
+    
+end.
+
+bl-princ:
+repeat:
+    disp esqcom1 with frame f-com1.
+    if recatu1 = ?
+    then run leitura (input "pri").
+    else find ttabascompra where recid(ttabascompra) = recatu1 no-lock.
+    if not available ttabascompra
+    then esqvazio = yes.
+    else esqvazio = no.
+    clear frame frame-a all no-pause.
+    if not esqvazio
+    then run frame-a.
+
+    recatu1 = recid(ttabascompra).
+    color display message esqcom1[esqpos1] with frame f-com1.
+    if not esqvazio
+    then repeat:
+        run leitura (input "seg").
+        if not available ttabascompra
+        then leave.
+        if frame-line(frame-a) = frame-down(frame-a)
+        then leave.
+        down with frame frame-a.
+        run frame-a.
+    end.
+    if not esqvazio
+    then up frame-line(frame-a) - 1 with frame frame-a.
+
+    repeat with frame frame-a:
+
+        if not esqvazio
+        then do:
+            find ttabascompra where recid(ttabascompra) = recatu1 no-lock.
+            find abascompra   where 
+                    abascompra.etbcod = ttabascompra.etbcod and
+                    abascompra.abccod = ttabascompra.abccod no-lock.
+
+            status default "".
+            run color-message.
+            choose field ttabascompra.abccod help ""
+                go-on(cursor-down cursor-up
+                      cursor-left cursor-right
+                      page-down   page-up
+                      PF4 F4 ESC return) .
+            run color-normal.
+            status default "".
+
+        end.
+            if keyfunction(lastkey) = "cursor-right"
+            then do:
+                    color display normal esqcom1[esqpos1] with frame f-com1.
+                    esqpos1 = if esqpos1 = 5 then 5 else esqpos1 + 1.
+                    color display messages esqcom1[esqpos1] with frame f-com1.
+                next.
+            end.
+            if keyfunction(lastkey) = "cursor-left"
+            then do:
+                    color display normal esqcom1[esqpos1] with frame f-com1.
+                    esqpos1 = if esqpos1 = 1 then 1 else esqpos1 - 1.
+                    color display messages esqcom1[esqpos1] with frame f-com1.
+                next.
+            end.
+            if keyfunction(lastkey) = "page-down"
+            then do:
+                do reccont = 1 to frame-down(frame-a):
+                    run leitura (input "down").
+                    if not avail ttabascompra
+                    then leave.
+                    recatu1 = recid(ttabascompra).
+                end.
+                leave.
+            end.
+            if keyfunction(lastkey) = "page-up"
+            then do:
+                do reccont = 1 to frame-down(frame-a):
+                    run leitura (input "up").
+                    if not avail ttabascompra
+                    then leave.
+                    recatu1 = recid(ttabascompra).
+                end.
+                leave.
+            end.
+            if keyfunction(lastkey) = "cursor-down"
+            then do:
+                run leitura (input "down").
+                if not avail ttabascompra
+                then next.
+                color display white/red ttabascompra.abccod with frame frame-a.
+                if frame-line(frame-a) = frame-down(frame-a)
+                then scroll with frame frame-a.
+                else down with frame frame-a.
+            end.
+            if keyfunction(lastkey) = "cursor-up"
+            then do:
+                run leitura (input "up").
+                if not avail ttabascompra
+                then next.
+                color display white/red ttabascompra.abccod with frame frame-a.
+                if frame-line(frame-a) = 1
+                then scroll down with frame frame-a.
+                else up with frame frame-a.
+            end.
+ 
+        if keyfunction(lastkey) = "end-error"
+        then leave bl-princ.
+
+        if keyfunction(lastkey) = "return" or esqvazio
+        then do:
+            form
+                with frame f-ttabascompra color black/cyan
+                      centered side-label row 5.
+            display caps(esqcom1[esqpos1]) @ esqcom1[esqpos1]
+                        with frame f-com1.
+            hide frame frame-a no-pause.
+            
+            if esqcom1[esqpos1] = " Inclusao " or esqvazio
+            then do:
+                clear frame frame-a all no-pause.
+                down with frame frame-a.
+                
+                repeat with frame frame-a on error undo, leave on endkey undo, leave transaction.
+                    create ttabascompra.
+                    ttabascompra.abccod = ?.
+                    
+                    ttabascompra.etbcod = if par-etbcod = 0 then setbcod else par-etbcod.
+
+                    disp ttabascompra.etbcod.                    
+                    
+                    if par-etbcod = 0
+                    then update ttabascompra.etbcod.
+                    
+                    update 
+                        ttabascompra.procod label "Codigo".
+                    find produ where produ.procod = ttabascompra.procod no-lock no-error.
+                    if not avail produ
+                    then do:
+                        message "produto nao cadastrado.".
+                        pause. 
+                        undo.
+                    end.
+                    disp produ.pronom.
+                                    
+                    if produ.proipival = 1
+                    then do:
+                        message  "Bloqueado pedido manual para produto de pedido especial.".
+                        pause.
+                        undo.
+                    end.
+        
+                    update ttabascompra.abcqtd.
+                    update ttabascompra.lipcor.
+                    update ttabascompra.lippreco.
+                    update ttabascompra.dtpreventrega.
+                    
+                    
+                    run abas/compracreate.p (par-abatipo,
+                                                ttabascompra.etbcod,
+                                                ttabascompra.procod,
+                                                ttabascompra.abcqtd,
+                                                ttabascompra.lipcor,
+                                                ttabascompra.lippreco,
+                                                par-forcod,
+                                                ttabascompra.dtpreventrega,
+                                                "DIGITADO",  /* ORIGEM DIGITADO,MOVIM,EXTERNO*/
+                                                "",
+                                                output pabccod).
+                                             
+                    
+                    ttabascompra.abccod = pabccod.
+
+                    recatu1 = recid(ttabascompra).
+                    down with frame frame-a.
+                end.
+                for each ttabascompra where ttabascompra.abccod = ?.
+                    delete ttabascompra.
+                end.    
+                recatu1 = ?.
+
+                leave.
+            end.
+            /*
+            if esqcom1[esqpos1] = " Alteracao " 
+            then do with frame frame-a on error undo.
+                find abascompra where abascompra.abccod = ttabascompra.abccod exclusive.
+                disp abascompra.etbcod.
+                disp abascompra.procod.
+                find produ of abascompra no-lock.
+                disp produ.pronom. 
+                disp abascompra.abcqtd. 
+                disp abascompra.lipcor. 
+                if abascompra.abcsit = "AB"
+                then do:
+                    update abascompra.abcqtd.
+                    update abascompra.lipcor.
+                end.
+            end.
+            */
+        end.
+        if not esqvazio
+        then run frame-a.
+        display esqcom1[esqpos1] with frame f-com1.
+        recatu1 = recid(ttabascompra).
+    end.
+    if keyfunction(lastkey) = "end-error"
+    then do:
+        view frame fc1.
+        view frame fc2.
+    end.
+end.
+hide frame f-com1  no-pause.
+hide frame frame-a no-pause.
+hide frame f-sub   no-pause.
+hide frame f-sub2  no-pause.
+
+
+procedure frame-a.
+
+    find abascompra where 
+            abascompra.etbcod = ttabascompra.etbcod and
+            abascompra.abccod = ttabascompra.abccod no-lock no-error.
+    
+    if avail abascompra
+    then do:
+    find produ of abascompra no-lock.
+
+    display 
+
+        abascompra.dtpreventrega @ ttabascompra.dtpreventrega  format "99/99/9999"
+        
+        ttabascompra.abccod
+        abascompra.abatipo 
+        abascompra.etbcod  @ ttabascompra.etbcod
+
+        abascompra.procod  @ ttabascompra.procod
+        produ.pronom       format "x(07)" column-label "Nome"
+        abascompra.abcqtd  @ ttabascompra.abcqtd 
+        abascompra.lipcor  @ ttabascompra.lipcor
+        abascompra.lippreco @ ttabascompra.lippreco 
+
+        abascompra.abcsit
+
+        with frame frame-a 10 down centered row 5.
+
+    end.
+end procedure.
+
+
+procedure color-message.
+    color display message
+        ttabascompra.abccod
+        with frame frame-a.
+end procedure.
+
+
+procedure color-normal.
+    color display normal
+        ttabascompra.abccod
+        with frame frame-a.
+end procedure.
+
+
+procedure leitura.
+
+def input parameter par-tipo as char.
+
+if par-tipo = "pri" 
+then
+    if esqascend
+    then   find first ttabascompra where true no-lock no-error.
+    else   find last ttabascompra  where true no-lock no-error.
+                                             
+if par-tipo = "seg" or par-tipo = "down" 
+then
+    if esqascend
+    then   find next ttabascompra  where true no-lock no-error.
+    else   find prev ttabascompra  where true no-lock no-error.
+             
+if par-tipo = "up" 
+then
+    if esqascend
+    then   find prev ttabascompra where true  no-lock no-error.
+    else   find next ttabascompra where true  no-lock no-error.
+
+end procedure.
+

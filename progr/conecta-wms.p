@@ -1,0 +1,1 @@
+connect -db wms   -N tcp -S sdrebwms -H server.dep93 -cache /dados/bases/wms.csh

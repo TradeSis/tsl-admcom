@@ -1,0 +1,34 @@
+
+scroll from-current down with frame f-etiqseq.
+repeat transaction on error undo 
+        /*on endkey undo, next l1 */
+        with frame f-etiqseq:
+    message "Criar" update sresp.
+    if not sresp then leave.
+    find last betiqseq where 
+        betiqseq.etopecod = p-etiqope
+        exclusive no-error.
+        
+    create etiqseq.
+    ASSIGN
+        etiqseq.EtOpeCod = p-etiqope
+        etiqseq.EtOpeSeq = if avail betiqseq
+                       then betiqseq.EtOpeSeq + 1
+                       else 1
+        etiqseq.EtOpeSup = p-etiqseq.
+    update etiqseq.EtOpeSup.
+    update
+        etiqseq.EtMovCod.
+    find etiqmov of etiqseq no-lock.
+    disp etiqmov.etmovnom.
+    update
+        etiqseq.etseqclf
+        etiqseq.opccod.
+    find opcom where opcom.opccod = string(etiqseq.opccod) no-lock.
+    
+    scroll from-current down with frame f-etiqseq.
+    
+end.
+
+/*leave keys-loop.*/
+    

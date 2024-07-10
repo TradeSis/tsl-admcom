@@ -1,0 +1,14 @@
+scroll from-current down with frame f-linha.
+find last bmodgru where bmodgru.mogsup = 0 no-lock no-error.
+create t-modgru.
+t-modgru.mogcod = if avail bmodgru
+            then bmodgru.mogcod + 1 else 1.
+UPDATE t-modgru.modcod with frame f-linha.
+find modal where modal.modcod = t-modgru.modcod no-lock no-error.
+if avail modal
+then t-modgru.mognom = modal.modnom.
+
+update t-modgru.mognom with frame f-linha.
+create modgru.
+buffer-copy t-modgru to modgru.
+

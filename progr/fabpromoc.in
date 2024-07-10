@@ -1,0 +1,27 @@
+        if bctpromoc.situacao <> "M"
+                then do: message color red/with "Nenhum registro encontrado."
+                    view-as alert-box. leave bl-princ4.
+                end.
+                sresp = no. message
+                "Nenhum Fabricante encontrado para Promocao. Deseja Incluir ?"
+                update sresp. if not sresp then leave bl-princ4.
+                repeat on endkey undo, next bl-princ4:
+        find last dctpromoc where dctpromoc.sequencia = bctpromoc.sequencia 
+                    no-lock no-error.
+        scroll from-current down with frame f-linha3.
+        create ctpromoc.
+        assign ctpromoc.promocod = bctpromoc.promocod
+            ctpromoc.sequencia = bctpromoc.sequencia ctpromoc.situacao = "A"
+            ctpromoc.linha     = dctpromoc.linha + 1 ctpromoc.fincod = ?.
+        do on error undo, next bl-princ4:
+            update  ctpromoc.fabcod  with frame f-linha3.
+            find fabri where fabri.fabcod = ctpromoc.fabcod no-lock no-error.
+            if not avail fabri
+            then do: message color red/with
+                    "Fabricante " ctpromoc.fabcod " nao cadastrado." 
+                    view-as alert-box. undo.
+            end.
+            disp fabri.fabnom with frame f-linha3.
+        end.
+    end.
+ 

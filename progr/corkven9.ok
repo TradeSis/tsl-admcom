@@ -1,0 +1,53 @@
+
+/*
+if keyfunction(lastkey) = "GET"
+then do: 
+
+    sfuncod = 48.
+    find first func where func.funcod = sfuncod no-error.
+      
+    varquivo = "..\relat\corkven".
+    hide frame f-regua1.    
+   
+    {mdad.i
+        &Saida     = "value(varquivo)"
+        &Page-Size = "60"
+        &Cond-Var  = "80"
+        &Page-Line = "66"
+        &Nom-Rel   = ""CORKVEN9""
+        &Nom-Sis   = """SISTEMA COMERCIAL"""
+        &Tit-Rel   = """RANKING DE VENDEDORES "" +
+                        ""DATA: "" + string(vdti,""99/99/9999"") +
+                        "" A "" +    string(vdtf,""99/99/9999"")"
+        &Width     = "80"
+        &Form      = "frame f-cabcab"
+    }.
+
+    for each ttvend:
+
+       find first func where func.funcod = ttvend.funcod no-lock.
+       if not avail func 
+       then next.
+
+       assign   v-perc = ttvend.platot * 100 / v-totger
+                v-perdia = ttvend.platot * 100 / ttvend.vlmeta.
+                         
+       disp ttvend.numseq
+            ttvend.numloj
+            ttvend.etbcod
+            ttvend.funcod
+            func.funnom
+            ttvend.qtd
+            ttvend.pladia
+            ttvend.platot
+            ttvend.vlmeta
+            v-perdia
+            v-perc
+            with frame f-vend.
+            
+            down with frame f-vend.
+    end.
+    {mrod.i}
+    output close.            
+end. 
+*/

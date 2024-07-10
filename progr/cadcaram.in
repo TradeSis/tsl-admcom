@@ -1,0 +1,72 @@
+/*************************INFORMA€OES DO PROGRAMA******************************
+***** Nome do Programa             : cadcaram.in
+***** Diretorio                    : cadas
+***** Autor                        : Caludir Santolin
+***** Descri‡ao Abreviada da Funcao: Include de cadastro de caracteristicas
+***** Data de Criacao              : 28/08/2000
+
+                                ALTERACOES
+***** 1) Autor     :
+***** 1) Descricao : 
+***** 1) Data      :
+
+***** 2) Autor     :
+***** 2) Descricao : 
+***** 2) Data      :
+
+***** 3) Autor     :
+***** 3) Descricao : 
+***** 3) Data      :
+*******************************************************************************/
+
+scroll from-current down with frame f-linha.
+
+l-inclui:
+repeat TRANSACTION with frame f-linha:
+    find last bcaract no-lock no-error.
+    prompt-for caract.cardes.
+    
+    find first caract where 
+               caract.cardes = input frame f-linha caract.cardes
+               no-error.
+
+    if not available caract
+    then do:
+        create caract.
+        assign 
+           caract.cardes = caps(input frame f-linha caract.cardes)
+           caract.carcod = if avail bcaract then bcaract.carcod + 1
+                                            else 1    
+           .
+    end.
+    else do:
+        bell.
+        message color red/withe
+                "Ja' existe a ocorrencia no Sistema"
+                view-as alert-box.
+         
+        undo, next l-inclui.
+    end.
+
+    display caract.carcod
+            caract.cardes.
+
+    /*update caract.ordem
+           caract.logcli.*/
+                
+/*    if senha_sis = senha_cli
+    then */
+/*        update 
+            caract.logsis.
+                           */
+    scroll from-current down with frame f-linha.
+end.
+
+clear frame f-linha all.
+if not can-find(first caract)
+then
+    leave keys-loop.
+else
+    a-seeid = -1.
+
+next keys-loop.

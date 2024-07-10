@@ -1,0 +1,90 @@
+
+clear frame f-linha2 all.
+
+find last blancxa no-lock no-error.
+if not avail blancxa
+then vnumlan = 1.
+else vnumlan = blancxa.numlan + 1.
+
+create lancxa.
+lancxa.numlan = vnumlan.
+lancxa.lansit = "F".
+update 
+    lancxa.datlan
+    lancxa.cxacod
+    lancxa.lancod
+    lancxa.vallan 
+    lancxa.lanhis with frame f-linha2.
+    
+repeat :
+    update    
+        lancxa.forcod 
+        lancxa.titnum
+        with frame f-linha2.
+
+    find first forne where forne.forcod = lancxa.forcod no-lock no-error.
+    if avail forne
+    then do :
+        disp forne.fornom with frame f-linha2.
+    end.
+
+    lancxa.comhis = string(lancxa.titnum) + "-" + string(forne.fornom).
+    update lancxa.comhis with frame f-linha2.
+    leave.
+end.
+
+assign lancxa.etbcod = 996 lancxa.lantip = "E" 
+       lancxa.livre1 = vlivre a-seeid =-1.
+       
+sresp = no.
+                
+message "Vai usar Credito de ICMS ? " update sresp.
+if sresp = yes
+then do :
+    update
+        vetbcod  vopfcod  vmovtdc  vbicms
+        valicms vicms vipi vobs
+        with frame f-altera1 .
+                        
+    find first fiscal where fiscal.emite = lancxa.forcod
+                        and fiscal.desti = vetbcod
+                        and fiscal.movtdc = vmovtdc
+                        and fiscal.numero = int(lancxa.titnum)
+                        and fiscal.serie = "U"
+                      no-error.
+    if not avail fiscal
+    then do :                          
+        create fiscal.
+        assign
+            fiscal.desti    = vetbcod
+            fiscal.emite    = lancxa.forcod
+            fiscal.plaemi   = lancxa.datlan
+            fiscal.serie    = "U"
+            fiscal.outras   = 0
+            fiscal.plarec   = lancxa.datlan
+            fiscal.movtdc   = vmovtdc
+            fiscal.numero   = int(lancxa.titnum).
+        
+        if   vopfcod = 5102
+        then vopfcod = 1102.
+        if   vopfcod = 6102
+        then vopfcod = 2102.
+        if   vopfcod = 5101
+        then vopfcod = 1102.
+        if   vopfcod = 6101
+        then vopfcod = 2102.
+
+        
+        fiscal.opfcod   = vopfcod.
+
+            
+    end.
+    fiscal.bicms    = vbicms.
+    fiscal.icms     = vicms.
+    fiscal.ipi      = vipi.
+    fiscal.alicms   = valicms.
+    fiscal.platot   = lancxa.vallan.
+    fiscal.plaobs[1] = vobs.
+end.         
+       
+next keys-loop.

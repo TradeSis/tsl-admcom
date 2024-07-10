@@ -1,0 +1,192 @@
+def stream debug .
+def stream total.
+
+def new shared temp-table tt-movim like movim
+    field movtot    like plani.platot 
+    field chpres    like plani.platot
+    field bonus     like plani.platot
+    field vencod    like func.funcod
+    field vendedor  like func.funnom
+    field acr-fin   as dec
+    field tipmov    as char 
+    field crecod    as integer
+    field planobiz  as character
+    field clicod    as integer
+    field serie     as char
+    field planumero as integer
+      index idx01 etbcod                
+      index idx02 etbcod procod
+      index idx03 etbcod asc placod asc movtot desc
+      index idx04 etbcod movdat
+      index idx05 etbcod placod movdat movtdc
+      index idx_pk is primary unique etbcod placod procod movdat tipmov.        
+
+def new shared temp-table tt-plani like plani
+    field chpres like plani.platot
+    field bonus  like plani.platot
+    field tipmov as char   
+    field clicod like plani.desti   
+    field qtd-total as int
+      index idx01 etbcod
+      index idx_pk is primary unique etbcod placod serie.
+
+def new shared temp-table tt-planobiz
+    field crecod as integer
+            index idx01 crecod.
+            
+for each tabaux where tabaux.tabela = "PlanoBiz" no-lock:
+
+    create tt-planobiz.
+    assign tt-planobiz.crecod = integer(tabaux.valor_campo).    
+      
+end.
+
+def temp-table tt-fabri
+    field fabcod like fabri.fabcod
+    field fabnom like fabri.fabnom.
+    
+def temp-table tt-subClase
+    field clacod like Clase.clacod
+    field clasup like Clase.clasup
+    field clanom like Clase.clanom
+    index x is unique primary clacod .
+
+def temp-table tt-Clase
+    field clacod like Clase.clacod
+    field clasup like Clase.clasup
+    field clanom like Clase.clanom
+    index x is unique primary clacod.
+
+def temp-table tt-grupo
+    field clacod like Clase.clacod
+    field setcod as int
+    field clanom like Clase.clanom
+    index x is unique primary clacod.
+
+def temp-table tt-setor
+    field setcod like Clase.clacod
+    field setnom like Clase.clanom
+    field setsup like Clase.clasup
+    index x is unique primary setcod.
+
+def temp-table tt-departamento
+    field catcod like categoria.catcod
+    field catnom like categoria.catnom
+    index x is unique primary catcod.
+    
+
+def temp-table tt-produ
+    field procod like produ.procod
+    field pronom like produ.pronom
+    field clacod like Clase.clacod
+    field catcod like produ.catcod
+    
+    field fabcod like produ.fabcod
+    field estcusto like estoq.estcusto
+    field etccod as int
+    field subcod as char
+    field etcnom as character
+    
+    field precocusto like estoq.estcusto
+    field precovenda like estoq.estvenda
+    
+    field comcod      like compr.comcod  /* Cód Comprador */
+    field comnom      like compr.comnom  /* Nome do Comprador */
+
+    index iprodu is primary unique procod.
+
+def buffer grupo for Clase.
+def buffer sClase for Clase.
+def buffer setClase for Clase.
+
+procedure pega-categoria:
+
+    find tt-subClase where tt-subClase.clacod = produ.clacod no-error.
+        find sClase      where sClase.clacod      = produ.clacod no-lock
+                                                                    no-error.
+        if not avail tt-subClase
+        then do:
+            create tt-subClase.
+            tt-subClase.clacod = produ.clacod.
+            tt-subClase.clasup = if avail sClase
+                                 then sClase.clasup
+                                 else -1.
+            tt-subClase.clanom = if avail sClase
+                                 then sClase.clanom
+                                 else "SUB Clase DESCONHECIDA". 
+        end.
+        find tt-Clase    where tt-Clase.clacod    = tt-subClase.clasup no-error.
+        find Clase       where Clase.clacod       = tt-subClase.clasup no-lock
+                                                                       no-error.
+        if not avail tt-Clase
+        then do:
+            create tt-Clase.
+            tt-Clase.clacod = tt-subClase.clasup.
+            tt-Clase.clasup = if avail Clase
+                              then Clase.clasup
+                              else -2.
+            tt-Clase.clanom = if avail Clase
+                              then Clase.clanom
+                              else "Clase DESCONHECIDA".
+        end.
+        find tt-grupo    where tt-grupo.clacod    = tt-Clase.clasup no-error.
+        find grupo       where grupo.clacod       = tt-Clase.clasup no-lock
+                                                                       no-error.
+        if not avail tt-grupo
+        then do:
+            create tt-grupo.
+            tt-grupo.clacod = tt-Clase.clasup.
+            tt-grupo.setcod = if avail grupo
+                              then grupo.clasup
+                              else -2.
+            tt-grupo.clanom = if avail grupo
+                              then grupo.clanom
+                              else "GRUPO DESCONHECIDO".
+        end.
+        find tt-setor    where tt-setor.setcod    = tt-grupo.setcod no-error.
+        find setClase    where setClase.clacod    = tt-grupo.setcod no-lock
+                                                               no-error.
+        if not avail tt-setor
+        then do:
+            create tt-setor.
+            tt-setor.setcod = tt-grupo.setcod.
+            tt-setor.setsup = if avail setClase
+                              then setClase.claper
+                              else produ.catcod.
+            tt-setor.setnom = if avail setClase
+                              then setClase.clanom
+                              else "SETOR DESCONHECIDO".
+        end.
+        
+        find last categoria where categoria.catcod = integer(produ.catcod)
+                            no-lock no-error.
+                            
+        find last tt-departamento where 
+                  tt-departamento.catcod = integer(produ.catcod)
+                            no-lock no-error.
+                            
+        if not avail tt-departamento
+        then do:
+        
+           create tt-departamento.
+           assign tt-departamento.catcod = integer(produ.catcod)
+                  tt-departamento.catnom = if avail categoria
+                                  then categoria.catnom
+                                  else "DEPTO DESCONHECIDO".
+
+        
+        end.
+
+            find fabri of produ no-lock no-error.
+            find first tt-fabri where tt-fabri.fabcod = produ.fabcod 
+                    no-lock no-error.
+            if not avail tt-fabri
+            then do:
+                create tt-fabri.
+                tt-fabri.fabcod = produ.fabcod.
+                tt-fabri.fabnom = if avail fabri
+                                  then fabri.fabfant
+                                  else "FABRICANTE DESCONHECIDO".
+            end.
+
+end procedure. 

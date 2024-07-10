@@ -1,0 +1,120 @@
+
+if keyfunction(lastkey) = "GO"
+then do:
+   find tt-pro where recid(tt-pro) = a-seerec[frame-line] no-lock no-error.
+
+    vaux = 0. vano = 0.
+    vaux    = month(today).
+    vano    = year(today).
+    do i = 1 to 12:
+        vaux = vaux - 1.
+        if vaux = 0
+        then do:
+            vmes2[i] = "DEZ".
+            vaux = 12.
+            vano = vano - 1.
+        end.
+        vmes2[i] = vmes[vaux].
+        vnummes[i] = vaux.
+        vnumano[i] = vano.
+    end.
+    vmes2[13] = "TOTAL".       
+    disp
+    skip(1)
+    vmes2[1] no-label space(1)
+    vmes2[2] no-label space(1)
+    vmes2[3] no-label space(1)
+    vmes2[4] no-label space(1)
+    vmes2[5] no-label space(1)
+    vmes2[6] no-label space(1)
+    vmes2[7] no-label space(1)
+    vmes2[8] no-label space(1)
+    vmes2[9] no-label space(1)
+    vmes2[10] no-label space(1)
+    vmes2[11] no-label space(1)
+    vmes2[12] no-label space(1) 
+    vmes2[13] no-label space(1) /*
+    fill("-",80) format "x(80)"  skip*/ with frame f-comp
+    title     " C O M P R A  M E S E S  A N T E R I O R E S ".
+
+    for each produ where produ.procod = tt-pro.procod no-lock:
+    vtotcomp[13] = 0.
+    do i = 1 to 12: 
+        vtotcomp[i] = 0.
+    
+        for each estab where estab.etbcod >= 94 no-lock:
+            find himov where himov.etbcod = estab.etbcod and
+                             himov.procod = produ.procod and
+                             himov.movtdc = 4            and
+                             himov.himmes = vnummes[i]   and
+                             himov.himano = vnumano[i] no-lock no-error.
+            if not avail himov
+            then next.
+            vtotcomp[i] = vtotcomp[i] + himov.himqtm.
+            vtotcomp[13] = vtotcomp[13] + himov.himqtm.
+        end.
+    
+    end.
+
+    disp skip                     
+        vtotcomp[1] format ">>>>9" no-label
+        vtotcomp[2] format ">>>>9" no-label
+        vtotcomp[3] format ">>>>9" no-label
+        vtotcomp[4] format ">>>>9" no-label
+        vtotcomp[5] format ">>>>9" no-label
+        vtotcomp[6] format ">>>>9" no-label
+        vtotcomp[7] format ">>>>9" no-label
+        vtotcomp[8] format ">>>>9"  no-label
+        vtotcomp[9] format ">>>>9"  no-label
+        vtotcomp[10] format ">>>>9" no-label
+        vtotcomp[11] format ">>>>9" no-label
+        vtotcomp[12] format ">>>>9" no-label 
+        vtotcomp[13] format ">>>>9" no-label with frame f-comp.
+   
+   
+   
+   end.
+   do on endkey undo.
+       if keyfunction(lastkey) = "end-error"
+       then do:
+            hide frame f-comp no-pause.
+            next.
+       end.
+       pause.
+       hide frame f-comp no-pause.
+       next .
+   end.
+   
+/*   find tt-pro where recid(tt-pro) = a-seerec[frame-line] no-lock no-error.
+
+   for each estoq where estoq.procod = tt-pro.procod no-lock
+                                                    :
+   
+       disp estoq.etbcod label "Estab" 
+            estoq.estatual format "->>>>9" label "Estoque"
+            with side-label.
+   
+   
+   end.*/
+   
+   /*
+   assign a-seeid  = -1 a-recid  = -1  a-seerec = ?.
+    
+   {sklcls.i
+       &file         = estoq
+       &help         =  " F4=Retorna "
+       &cfield       = tt-pro.pronom
+       &ofield       = " tt-pro.procod
+                         estoq.etbcod
+                         estoq.estatual"
+       &where        = " estoq.procod = tt-pro.procod "
+       &color        = withe
+       &color1       = red
+       &locktype     = " use-index estoq no-lock "
+       &aftselect1   = " leave keys-loop. "
+       &form         = " frame f-est row 7 down centered
+                         title "" ESTOQUE "" overlay 
+                         color with/cyan " }
+   */
+end.
+

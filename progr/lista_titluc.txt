@@ -1,0 +1,16 @@
+folha.p
+folha_p.p
+lncredsp.p
+lucper.p
+pagdesp.p
+promod01.p
+promod02.p
+promtitl.p
+relmont.p
+relpcel1.p
+relpcel2.p
+relpsel1.p
+titluc1.old
+titluc1.p
+titluclj.p
+titluc.p

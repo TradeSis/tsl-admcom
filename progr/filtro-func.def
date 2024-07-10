@@ -1,0 +1,9 @@
+/* filtro-func.def	*/
+def var vfunc     as log  format "Sim/Nao"  init yes.
+def var cfunc     as char format "x(40)".
+def temp-table wffunc
+    field etbcod        like func.etbcod init 0
+    field funcod        like func.funcod init 0
+    .
+def buffer bwffunc    for wffunc.
+

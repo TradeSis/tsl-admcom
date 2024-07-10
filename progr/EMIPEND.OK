@@ -1,0 +1,88 @@
+if keyfunction(lastkey) = "CLEAR"
+then do :
+    find first pendencia where recid(pendencia) = an-seerec[frame-line].
+
+    
+    {mdadmcab.i
+            &Saida     = "value(varquivo)"
+            &Page-Size = "64"
+            &Cond-Var  = "150"
+            &Page-Line = "66"
+            &Nom-Rel   = ""relpend""
+            &Nom-Sis   = """SISTEMA DE PENDENCIA"""
+            &Tit-Rel   = """RELATORIO DE PENDENCIA"""
+            &Width     = "150"
+            &Form      = "frame f-cabcab"}
+
+    find first func where func.funcod = pendencia.funemi no-lock.
+    put unformatted chr(27) + "G".
+    put
+        "Emitente: "  
+        pendencia.funemi
+        " "
+        func.funnom         skip(1).
+
+    find first func where func.funcod = pendencia.funcod no-lock.
+    vhora = string(pendencia.hrmens,"hh:mm:ss").
+    
+    put
+        "Data Emissao: "
+        pendencia.dtmens  
+        skip
+        "     Hora de Envio: " 
+        vhora   
+        skip(1).
+
+    put
+        "Destinatario: "
+         func.funcod 
+         " " 
+         func.funnom
+         skip(1).
+         
+    put unformatted chr(27) + "G".
+    put
+         "                          PENDENCIA    "
+         skip(1).
+    put unformatted chr(27) + "H".
+         
+    put
+        pendencia.mens1[1] skip
+        pendencia.mens1[2] skip
+        pendencia.mens1[3] skip
+        pendencia.mens1[4] skip
+        pendencia.mens1[5] skip
+        pendencia.mens1[6] skip
+        pendencia.mens1[7] skip
+        pendencia.mens1[8] skip
+        pendencia.mens1[9] skip
+        pendencia.mens1[10] skip
+        pendencia.mens1[11] skip
+        pendencia.mens1[12] skip
+        pendencia.mens1[13] skip
+        pendencia.mens1[14] skip
+        pendencia.mens1[15] skip(1)
+        "        RELATO TECNICO " 
+        skip
+        pendencia.mens[1] skip
+        pendencia.mens[2] skip
+        pendencia.mens[3] skip
+        pendencia.mens[4] skip
+        pendencia.mens[5] skip
+        pendencia.mens[6] skip. 
+    
+end.
+    OUTPUT CLOSE.
+if keyfunction(lastkey) =  "CUT"
+then do :
+    find first pendencia where recid(pendencia) = an-seerec[frame-line].
+    message "Confirma Exclusao da Pendencia ? " update sresp.
+    if sresp = yes
+    then do :
+        delete pendencia.
+    end.
+    an-seeid = -1.
+    next keys-loop.
+end.  
+
+

@@ -1,0 +1,46 @@
+
+scroll from-current down with frame f-linha.
+
+l-inclui:
+repeat TRANSACTION with frame f-linha:
+    
+    find last bprefcli no-lock no-error.
+
+    prompt-for prefcli.cardes.
+    
+    find first prefcli where 
+               prefcli.cardes = input frame f-linha prefcli.cardes
+               no-error.
+
+    if not available prefcli
+    then do:
+        create prefcli.
+        assign 
+           prefcli.cardes = caps(input frame f-linha prefcli.cardes)
+           prefcli.carcod = if avail bprefcli
+                            then bprefcli.carcod + 1 
+                            else 1.
+    end.
+    else do:
+        bell.
+        message color red/withe
+                "Ja' existe a ocorrencia no Sistema"
+                view-as alert-box.
+         
+        undo, next l-inclui.
+    end.
+
+    display prefcli.carcod
+            prefcli.cardes.
+
+    scroll from-current down with frame f-linha.
+end.
+
+clear frame f-linha all.
+if not can-find(first prefcli)
+then
+    leave keys-loop.
+else
+    a-seeid = -1.
+
+next keys-loop.

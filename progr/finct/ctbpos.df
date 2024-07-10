@@ -1,0 +1,240 @@
+ADD TABLE "ctbposcart"
+  AREA "dados"
+  DUMP-NAME "ctbposcart"
+
+ADD FIELD "modcod" OF "ctbposcart" AS character 
+  FORMAT "x(5)"
+  INITIAL ""
+  MAX-WIDTH 10
+  ORDER 50
+
+ADD FIELD "tpcontrato" OF "ctbposcart" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  MAX-WIDTH 2
+  ORDER 60
+
+ADD FIELD "etbcod" OF "ctbposcart" AS integer 
+  FORMAT "9999"
+  INITIAL "0"
+  MAX-WIDTH 4
+  ORDER 80
+
+ADD FIELD "dtref" OF "ctbposcart" AS date 
+  FORMAT "99/99/9999"
+  INITIAL ?
+  MAX-WIDTH 4
+  ORDER 90
+
+ADD FIELD "emissao" OF "ctbposcart" AS decimal 
+  FORMAT "->>>>>>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 110
+
+ADD FIELD "pagamento" OF "ctbposcart" AS decimal 
+  FORMAT "->>>>>>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 120
+
+ADD FIELD "entradas" OF "ctbposcart" AS decimal 
+  FORMAT "->>>>>>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 130
+
+ADD FIELD "saidas" OF "ctbposcart" AS decimal 
+  FORMAT "->>>>>>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 140
+
+ADD FIELD "saldoanterior" OF "ctbposcart" AS decimal 
+  FORMAT "->>>>>>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "saldo" OF "ctbposcart" AS decimal 
+  FORMAT "->>>>>>>>>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 160
+
+ADD FIELD "cobcod" OF "ctbposcart" AS integer 
+  FORMAT ">9"
+  INITIAL ?
+  LABEL "Prop"
+  MAX-WIDTH 4
+  COLUMN-LABEL "Pr"
+  ORDER 170
+
+ADD INDEX "ctbposcart" ON "ctbposcart" 
+  AREA "indices"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "cobcod" ASCENDING 
+  INDEX-FIELD "modcod" ASCENDING 
+  INDEX-FIELD "tpcontrato" ASCENDING 
+  INDEX-FIELD "etbcod" ASCENDING 
+  INDEX-FIELD "dtref" ASCENDING 
+
+ADD INDEX "ctbdtref" ON "ctbposcart" 
+  AREA "indices"
+  INDEX-FIELD "dtref" ASCENDING 
+  INDEX-FIELD "cobcod" ASCENDING 
+  INDEX-FIELD "modcod" ASCENDING 
+  INDEX-FIELD "tpcontrato" ASCENDING 
+  INDEX-FIELD "etbcod" ASCENDING 
+
+ADD TABLE "ctbposhiscart"
+  AREA "dados"
+  DUMP-NAME "ctbposhiscart"
+
+ADD FIELD "dtref" OF "ctbposhiscart" AS date 
+  FORMAT "99/99/9999"
+  INITIAL ?
+  MAX-WIDTH 4
+  ORDER 20
+
+ADD FIELD "Valor" OF "ctbposhiscart" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 40
+
+ADD FIELD "dtinc" OF "ctbposhiscart" AS date 
+  FORMAT "99/99/9999"
+  INITIAL ?
+  MAX-WIDTH 4
+  ORDER 50
+
+ADD FIELD "hrinc" OF "ctbposhiscart" AS integer 
+  FORMAT "->>>>>>9"
+  INITIAL "0"
+  MAX-WIDTH 4
+  ORDER 60
+
+ADD FIELD "cobcod" OF "ctbposhiscart" AS integer 
+  FORMAT ">9"
+  INITIAL "0"
+  LABEL "Prop"
+  MAX-WIDTH 4
+  COLUMN-LABEL "Pr"
+  ORDER 70
+
+ADD FIELD "contnum" OF "ctbposhiscart" AS integer 
+  FORMAT ">>>>>>999"
+  INITIAL "0"
+  LABEL "Contrato"
+  MAX-WIDTH 4
+  HELP "Numero do Contrato."
+  ORDER 80
+
+ADD FIELD "titpar" OF "ctbposhiscart" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  LABEL "Parcela"
+  MAX-WIDTH 4
+  COLUMN-LABEL "PC"
+  VALEXP "titpar > 0"
+  VALMSG "Numero da Parcela do Titulo nao pode ser zero."
+  HELP "Informe o Numero da Parcela do Titulo."
+  ORDER 90
+
+ADD FIELD "etbcod" OF "ctbposhiscart" AS integer 
+  FORMAT "9999"
+  INITIAL "0"
+  MAX-WIDTH 4
+  ORDER 100
+
+ADD FIELD "modcod" OF "ctbposhiscart" AS character 
+  FORMAT "x(5)"
+  INITIAL ""
+  MAX-WIDTH 10
+  ORDER 110
+
+ADD FIELD "tpcontrato" OF "ctbposhiscart" AS character 
+  FORMAT "x(1)"
+  INITIAL ""
+  MAX-WIDTH 2
+  ORDER 120
+
+ADD FIELD "dtrefSAIDA" OF "ctbposhiscart" AS date 
+  FORMAT "99/99/9999"
+  INITIAL ?
+  MAX-WIDTH 4
+  ORDER 130
+
+ADD FIELD "qtdtitulos" OF "ctbposhiscart" AS integer 
+  FORMAT ">>9"
+  INITIAL "0"
+  MAX-WIDTH 4
+  ORDER 140
+
+ADD FIELD "ValorSAIDA" OF "ctbposhiscart" AS decimal 
+  FORMAT "->>,>>9.99"
+  INITIAL "0"
+  MAX-WIDTH 17
+  DECIMALS 2
+  ORDER 150
+
+ADD FIELD "trecid" OF "ctbposhiscart" AS recid 
+  FORMAT ">>>>>>>>>>>>>9"
+  INITIAL ?
+  MAX-WIDTH 8
+  ORDER 160
+
+ADD FIELD "operacaoENTRADA" OF "ctbposhiscart" AS character 
+  FORMAT "x(15)"
+  INITIAL ""
+  MAX-WIDTH 30
+  ORDER 170
+
+ADD FIELD "operacaoSAIDA" OF "ctbposhiscart" AS character 
+  FORMAT "x(15)"
+  INITIAL ""
+  MAX-WIDTH 30
+  ORDER 180
+
+ADD INDEX "ctbposhiscart4" ON "ctbposhiscart" 
+  AREA "indices"
+  UNIQUE
+  PRIMARY
+  INDEX-FIELD "contnum" ASCENDING 
+  INDEX-FIELD "titpar" ASCENDING 
+  INDEX-FIELD "trecid" ASCENDING 
+  INDEX-FIELD "dtinc" ASCENDING 
+  INDEX-FIELD "hrinc" ASCENDING 
+
+ADD INDEX "RELposcart" ON "ctbposhiscart" 
+  AREA "indices"
+  INDEX-FIELD "cobcod" ASCENDING 
+  INDEX-FIELD "modcod" ASCENDING 
+  INDEX-FIELD "tpcontrato" ASCENDING 
+  INDEX-FIELD "etbcod" ASCENDING 
+  INDEX-FIELD "dtrefSAIDA" ASCENDING 
+  INDEX-FIELD "dtref" ASCENDING 
+
+ADD INDEX "SALposcart" ON "ctbposhiscart" 
+  AREA "indices"
+  INDEX-FIELD "dtrefSAIDA" ASCENDING 
+  INDEX-FIELD "dtref" ASCENDING 
+  INDEX-FIELD "cobcod" ASCENDING 
+  INDEX-FIELD "modcod" ASCENDING 
+  INDEX-FIELD "tpcontrato" ASCENDING 
+  INDEX-FIELD "etbcod" ASCENDING 
+
+.
+PSC
+cpstream=ISO8859-1
+.
+0000004795

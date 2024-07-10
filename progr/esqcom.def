@@ -1,0 +1,15 @@
+def var esqcom1 as char extent 5 format "x(15)"
+        init["","","","",""].
+
+def var esqcom2 as char extent 5 format "x(15)"
+        init["","","","",""].
+
+def var esqregua as log.
+def var esqpos1 as int.
+def var esqpos2 as int.
+
+form esqcom1 with frame f-esqcom1 
+        no-box no-labels side-labels column 1 row 6.
+
+form esqcom2 with frame f-esqcom2
+        row screen-lines no-box no-labels side-labels column 1.

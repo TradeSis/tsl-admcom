@@ -1,0 +1,25 @@
+                sresp = no. message
+                "Nenhum setor encontrado para Promocao. Deseja Incluir ?"
+                update sresp. if not sresp then leave bl-princ3. 
+                repeat on endkey undo, next bl-princ3:
+        find last dctpromoc where dctpromoc.sequencia = bctpromoc.sequencia 
+                    no-lock no-error.
+        scroll from-current down with frame f-linha2.
+        create ctpromoc.
+        assign ctpromoc.promocod = bctpromoc.promocod
+            ctpromoc.promocod = bctpromoc.promocod ctpromoc.situacao = "A"
+            ctpromoc.sequencia = bctpromoc.sequencia
+            ctpromoc.linha     = dctpromoc.linha + 1 ctpromoc.fincod = ?.
+        do on error undo, next bl-princ3:
+            update  ctpromoc.setcod  with frame f-linha2.
+            find categoria where categoria.catcod = ctpromoc.setcod
+                no-lock no-error.
+            if not avail categoria
+            then do: message color red/with
+                    "Setor " ctpromoc.setcod " nao cadastrado." 
+                    view-as alert-box. undo.
+            end.
+            disp categoria.catnom with frame f-linha2.
+        end.
+    end.
+ 

@@ -1,0 +1,249 @@
+/*************************INFORMA€OES DO PROGRAMA******************************
+***** Nome do Programa             : logand2.ok
+***** Diretorio                    : gener
+***** Autor                        : Andre Baldini
+***** Descri‡ao Abreviada da Funcao: Include de Manutencao do Menu
+***** Data de Criacao              :
+
+                                ALTERACOES
+***** 1) Autor     : Caludir Santolin
+***** 1) Descricao : Alteracao browse/cor
+***** 1) Data      : 14/09/2000
+
+***** 2) Autor     :
+***** 2) Descricao : 
+***** 2) Data      :
+
+***** 3) Autor     :
+***** 3) Descricao : 
+***** 3) Data      :
+*******************************************************************************/
+
+/***
+if keyfunction(lastkey) = "GET"            /********* f5 *********/
+then do :
+
+    prompt-for
+        menu.aplicod
+        menu.ordsup
+        menu.menord
+        with frame f-copia side-label row 15 overlay title "Copia".
+
+    message "Confirma copia?" update sresp.
+    if sresp
+    then do.
+        find first menu2 where recid(menu2)  = a-seerec[frame-line] no-lock.
+        
+        find last bmenu use-index mencod no-lock no-error.
+        create menu3.
+        assign
+            menu3.aplicod = input menu.aplicod
+            menu3.ordsup  = input menu.ordsup
+            menu3.menord  = input menu.menord
+            menu3.mencod  = if not avail bmenu then 1 else bmenu.mencod + 1.
+
+        buffer-copy menu2 except aplicod ordsup menord mencod to menu3.
+    end.
+end.
+***/
+
+if keyfunction(lastkey) = "COPY"            /********* f11 *********/
+then do :
+    update 
+        vfuncod2 vsenha2 blank 
+        with frame f-senha2 .
+    find first dfunc where dfunc.funcod = vfuncod2 
+                     no-error.
+    if not avail dfunc or
+       dfunc.admin = no
+    then do :
+        bell. bell. bell. bell. bell. bell.
+        message color red/withe "Funcionario nao Autorizado "
+                view-as alert-box title " Menssagem ".
+        clear frame f-senha2 all.
+        next.
+    end.
+    if dfunc.senha <> vsenha2 and
+        vsenha2 <> senha_sis
+    then do :
+        bell. bell.
+        message color red/withe
+            "Senha digitada nao confere, impossivel continuar"
+            view-as alert-box title " Menssagem ".
+        clear frame f-senha2 all.
+        next.
+    end.
+    clear frame f-senha2 all.
+    hide frame f-senha2.
+    
+    find first menu2 where recid(menu2)  = a-seerec[frame-line].
+    v-cont = menu2.menord.
+    find first bmenu2 where bmenu2.menord = v-cont - 1
+                        and bmenu2.ordsup = p-menu1
+                        and bmenu2.aplicod = p-aplica
+                        and bmenu2.menniv = 2 
+                    no-error.    
+    if avail bmenu2
+    then do :
+        bmenu2.menord = 999999.
+        menu2.menord = v-cont - 1.
+        bmenu2.menord = v-cont.
+    end.    
+    else do :
+        menu2.menord = menu2.menord - 1.
+    end.    
+    a-seeid = -1 .
+    next keys-loop. 
+end. 
+if keyfunction(lastkey) = "PASTE"               /******* f12 ********/
+then do :
+    update 
+        vfuncod2 vsenha2 blank 
+        with frame f-senha2 .
+    find first dfunc where dfunc.funcod = vfuncod2 
+                     no-error.
+    if not avail dfunc or
+       dfunc.admin = no
+    then do :
+        message color red/withe "Funcionario nao Autorizado "
+            view-as alert-box title " Menssagem ".
+        clear frame f-senha2 all.
+        next.
+    end.
+    if dfunc.senha <> vsenha2
+    then do :
+        message color red/withe
+            "Senha digitada nao confere, impossivel continuar"
+            view-as alert-box title " Menssagem ".
+        clear frame f-senha2 all.
+        next.
+    end.
+    clear frame f-senha2 all.
+    hide frame f-senha2.
+    
+    find first menu2 where recid(menu2)  = a-seerec[frame-line].
+    v-cont = menu2.menord.
+    find first bmenu2 where bmenu2.menord = v-cont + 1
+                        and bmenu2.ordsup = p-menu1 
+                        and bmenu2.aplicod = p-aplica
+                        and bmenu2.menniv = 2
+                     no-error.   
+    if avail bmenu2
+    then do :
+        bmenu2.menord = 999999.
+        menu2.menord = v-cont + 1.
+        bmenu2.menord = v-cont.
+    end.    
+    a-seeid = -1 .
+    next keys-loop. 
+end. 
+
+if keyfunction(lastkey) = "INSERT-MODE"         /******* f9 ********/
+then do :
+    v-cont = 0.
+    for each bmenu no-lock by bmenu.mencod.
+        v-cont = bmenu.mencod.
+    end.
+    
+    create menu .
+/***
+    find last bmenu use-index mencod no-lock no-error.
+    if not avail bmenu
+    then menu.mencod = 1.
+    else menu.mencod = bmenu.mencod + 1.
+***/
+    menu.mencod = v-cont + 1.
+    update 
+        menu.mentit     colon 15
+        skip
+        menu.menpro     colon 15
+        with frame f-inclui
+            centered overlay 1 down row 10 
+                side-labels color withe/cyan    .
+        
+    update 
+        menu.mensta
+        with frame mensta
+            no-box no-label centered overlay row 20 .
+    find last bmenu where bmenu.aplicod = p-aplica
+                      and bmenu.ordsup  = p-menu1
+                      and bmenu.menniv  = 2
+                    no-error.
+    if not avail bmenu
+    then v-ordem = 1.
+    else v-ordem = bmenu.menord + 1.
+    
+    assign 
+        menu.aplicod = p-aplica
+        menu.ordsup  = p-menu1
+        menu.menniv  = 2
+        menu.menord  = v-ordem.
+/***
+    for each func where func.superusuario = no no-lock : 
+        disp "Aguarde, Trancando TODOS os Funcionarios" 
+             func.funcod  func.funnom 
+             with frame f-lklklk centered overlay 1 down no-labels.
+        pause 0.
+        find first admaplic where admaplic.cliente = func.funcod
+                              and admaplic.mencod = menu.mencod
+                            no-error.
+        if not avail admaplic
+        then do :
+           create admaplic.
+           assign
+               admaplic.ordsup      = menu.ordsup
+               admaplic.menniv      = menu.menniv
+               admaplic.menord      = menu.menord
+               admaplic.aplicod     = menu.aplicod
+               admaplic.mencod      = menu.mencod
+               admaplic.cliente     = func.funcod.
+        end.
+    end.    
+***/
+    a-seeid = -1.
+    next keys-loop.
+end.    
+
+if keyfunction(lastkey) = "CUT"  or           /******** f10 *********/
+   keyfunction(lastkey) = "DELETE-LINE" 
+then do on endkey undo:
+    update 
+        vfuncod2 vsenha2 blank 
+        with frame f-senha2 .
+    find first dfunc where dfunc.funcod = vfuncod2 
+                     no-error.
+    if not avail dfunc or
+       dfunc.admin = no
+    then do :
+        message color red/withe
+            "Funcionario nao Autorizado "
+            view-as alert-box title " Menssagem ".
+        clear frame f-senha2 all.
+        hide frame f-senha2 no-pause.
+        next.
+    end.
+    hide frame f-senha2 no-pause.
+    if dfunc.senha <> vsenha2  and
+        caps(vsenha2)    <> senha_sis
+    then do :
+        message color red/withe
+            "Senha digitada nao confere, impossivel continuar"
+            view-as alert-box title " Menssagem ".
+        clear frame f-senha2 all.
+        next.
+    end.
+    clear frame f-senha2 all.
+    hide frame f-senha2.
+    
+    find first menu2 where recid(menu2) = a-seerec[frame-line].
+    message color red/withe
+        "Nivel " menu2.mentit
+        view-as alert-box title " Exclusao de Nivel " set sresp.
+    if sresp
+    then do:
+        delete menu2.
+        a-seeid = -1.
+        next keys-loop.
+    end.
+end.
+

@@ -1,0 +1,294 @@
+--------------------------------------------------------
+
+CERTIFICADO INDIVIDUAL DE ASSISTENCIA E SERVICO 
+               CHAMA DOUTOR
+
+PRESTADORES:
+
+TELEMEDICINA: DOC 24 BRASIL PLATAFORMA DE
+INTERMEDIACAO LTDA.
+CNPJ: 34.185.452/0001-07
+REGISTRO CFM/CRM SP NUMERO 990251
+
+DESCONTO EM MEDICAMENTOS: IKE ASSISTENCIA
+BRASIL S/A
+CNPJ: 07.833.406/0001/02
+
+REPRESENTANTE DE SERVICOS: DREBES E CIA
+LTDA - LOJAS LEBES
+CNPJ: 96.662.168/0001-31
+
+--------------------------------------------------------
+
+CLIENTE: {proposta.cliente.nome}
+CPF: {proposta.cliente.cpf}
+DATA DE NASCIMENTO: {proposta.cliente.dataNascimento}
+
+--------------------------------------------------------
+                 VIGENCIA DO SERVICO:
+--------------------------------------------------------
+Inicio de Vigencia: {proposta.dataInicioVigencia} 
+Termino de Vigencia: {proposta.dataFimVigencia}
+--------------------------------------------------------
+o produto tem permanencia minima obrigatoria de 6 meses
+e estara ativo enquanto o cliente estiver adimplente 
+com o pagamento das parcelas.
+--------------------------------------------------------
+      ASSISTENCIAS E SERVICOS CONTRATADOS:
+
+SERVICO DE TELEMEDICINA
+ASSISTENCIA DESCONTO EM MEDICAMENTOS
+--------------------------------------------------------
+VALOR ANUAL: R$ {valorServico}
+--------------------------------------------------------
+                     CONDICOES:  
+
+              SERVICO DE TELEMEDICINA: 
+
+Plataforma de Telemedicina: Solucao de Telemedicina
+que permite realizar video consultas online, conectando
+Medicos e pacientes de forma dinamica e intuitiva, em 
+qualquer momento e lugar. Possui plantao 24h e
+agendamento de consultas. 
+
+Modelo de Atendimento: Via plataforma digital.
+Atendimento com equipe medica qualificada 24h, 
+7 dias por semana e disponibilidade para agendamento 
+de consultas. Historico clinico digital, prontuario
+eletronico e receituario digital. O acesso ao servico
+de Telemedicina estara disponivel atraves do site
+www.lebes.com.br/chamadoutor
+
+Principais Funcionalidades: 
+
+Consulta por video com medicos imediata ou
+agendada;
+Receituario digital enviado por SMS e E-mail;
+Atendimento 24h, 7 dias por semana;
+Facilidade de acesso do cliente atraves de Computadores,
+Tablets e Smartphones.
+
+Equipe Medica: A DOC 24 conta com equipe medica
+propria composta por profissionais eticos e responsaveis
+pelas orientacoes e conducao de todos os casos,
+garantindo que as demandas sejam atendidas e o
+paciente tenha a melhor experiencia desde o inicio do
+seu atendimento;
+
+Chat para suporte em quaisquer duvidas na 
+utilizacao da plataforma de consulta.
+
+Tipos de Atendimento:
+
+Orientacoes referentes a doencas, tratamentos,
+prevencao e promocao da saude;
+Exame fisico a distancia (orientado ou referido);
+Aconselhamento e preparo para exames medicos;
+Avaliacao de relatorios medicos, terminologias
+medicas e diagnosticos;
+Suporte de decisao clinica;
+Protocolos clinicos;
+Acompanhamento;
+Informacoes sobre saude, prevencao, vacinacao;
+Orientacao nas urgencias e emergencias;
+Monitoramento clinico de pacientes;
+Servico de avaliacao de atendimento;
+Limite de uso: ilimitado;
+Carencia: Nao ha;
+Franquia: Nao ha.
+
+
+        ASSISTENCIA DESCONTO EM MEDICAMENTOS:
+
+A Assistencia Desconto em Medicamentos, e uma
+assistencia farmaceutica que propicia um servico de acesso
+a medicamentos com desconto, adquiridos em drogarias
+credenciadas pela prestadora;
+
+O cliente devera acessar o site www.lebes.com.br/chamadoutor 
+ou a central de servicos de assistencia do CHAMA DOUTOR 
+(0800 718 01 14) para informacoes sobre as farmacias
+credenciadas mais proximas e os descontos vigentes para
+os medicamentos que precisa adquirir, alem de quaisquer
+outras informacoes sobre o servico;
+
+O servico de Assistencia Desconto em Medicamentos esta
+disponivel nas principais cidades brasileiras;
+
+Sera praticado o menor valor entre o preco da
+prestadora e o preco promocional do dia da loja. Nao sao
+considerados precos promocionais aqueles decorrentes
+de Programas de Fidelidade da Farmacia, Programas de
+Adesao ao Tratamento, entre outros. Nao sera
+autorizado pelo sistema da prestadora a venda de 
+medicamentos fracionados e manipulados;
+
+Os clientes sao identificados na rede credenciada atraves
+do CPF, informando o atendente da farmacia que fazem
+parte do PROGRAMA DE DESCONTOS EM 
+MEDICAMENTOS E-PHARMA/LEBES;
+
+Os descontos variam de 15%(quinze por cento) a 60%
+(sessenta por cento) sobre o preco maximo ao consumidor
+(PMC) para os medicamentos contemplados na lista;
+Limite de uso: ilimitado;
+Carencia: 72h;
+Franquia: Nao ha.
+
+--------------------------------------------------------
+Data: {dataTransacao}
+
+
+
+
+     ___________________________________________
+             Assinatura do contratante
+
+--------------------------------------------------------
+2º via
+--------------------------------------------------------
+
+CERTIFICADO INDIVIDUAL DE ASSISTENCIA E SERVICO 
+               CHAMA DOUTOR
+
+PRESTADORES:
+
+TELEMEDICINA: DOC 24 BRASIL PLATAFORMA DE
+INTERMEDIACAO LTDA.
+CNPJ: 34.185.452/0001-07
+REGISTRO CFM/CRM SP NUMERO 990251
+
+DESCONTO EM MEDICAMENTOS: IKE ASSISTENCIA
+BRASIL S/A
+CNPJ: 07.833.406/0001/02
+
+REPRESENTANTE DE SERVICOS: DREBES E CIA
+LTDA - LOJAS LEBES
+CNPJ: 96.662.168/0001-31
+
+--------------------------------------------------------
+
+CLIENTE: {proposta.cliente.nome}
+CPF: {proposta.cliente.cpf}
+DATA DE NASCIMENTO: {proposta.cliente.dataNascimento}
+
+--------------------------------------------------------
+                 VIGENCIA DO SERVICO:
+--------------------------------------------------------
+Inicio de Vigencia: {proposta.dataInicioVigencia} 
+Termino de Vigencia: {proposta.dataFimVigencia}
+--------------------------------------------------------
+o produto tem permanencia minima obrigatoria de 6 meses
+e estara ativo enquanto o cliente estiver adimplente 
+com o pagamento das parcelas.
+--------------------------------------------------------
+      ASSISTENCIAS E SERVICOS CONTRATADOS:
+
+SERVICO DE TELEMEDICINA
+ASSISTENCIA DESCONTO EM MEDICAMENTOS
+--------------------------------------------------------
+VALOR ANUAL: R$ {valorServico}
+--------------------------------------------------------
+                     CONDICOES:  
+
+              SERVICO DE TELEMEDICINA: 
+
+Plataforma de Telemedicina: Solucao de Telemedicina
+que permite realizar video consultas online, conectando
+Medicos e pacientes de forma dinamica e intuitiva, em 
+qualquer momento e lugar. Possui plantao 24h e
+agendamento de consultas. 
+
+Modelo de Atendimento: Via plataforma digital.
+Atendimento com equipe medica qualificada 24h, 
+7 dias por semana e disponibilidade para agendamento 
+de consultas. Historico clinico digital, prontuario
+eletronico e receituario digital. O acesso ao servico
+de Telemedicina estara disponivel atraves do site
+www.lebes.com.br/chamadoutor
+
+Principais Funcionalidades: 
+
+Consulta por video com medicos imediata ou
+agendada;
+Receituario digital enviado por SMS e E-mail;
+Atendimento 24h, 7 dias por semana;
+Facilidade de acesso do cliente atraves de Computadores,
+Tablets e Smartphones.
+
+Equipe Medica: A DOC 24 conta com equipe medica
+propria composta por profissionais eticos e responsaveis
+pelas orientacoes e conducao de todos os casos,
+garantindo que as demandas sejam atendidas e o
+paciente tenha a melhor experiencia desde o inicio do
+seu atendimento;
+
+Chat para suporte em quaisquer duvidas na 
+utilizacao da plataforma de consulta.
+
+Tipos de Atendimento:
+
+Orientacoes referentes a doencas, tratamentos,
+prevencao e promocao da saude;
+Exame fisico a distancia (orientado ou referido);
+Aconselhamento e preparo para exames medicos;
+Avaliacao de relatorios medicos, terminologias
+medicas e diagnosticos;
+Suporte de decisao clinica;
+Protocolos clinicos;
+Acompanhamento;
+Informacoes sobre saude, prevencao, vacinacao;
+Orientacao nas urgencias e emergencias;
+Monitoramento clinico de pacientes;
+Servico de avaliacao de atendimento;
+Limite de uso: ilimitado;
+Carencia: Nao ha;
+Franquia: Nao ha.
+
+
+        ASSISTENCIA DESCONTO EM MEDICAMENTOS:
+
+A Assistencia Desconto em Medicamentos, e uma
+assistencia farmaceutica que propicia um servico de acesso
+a medicamentos com desconto, adquiridos em drogarias
+credenciadas pela prestadora;
+
+O cliente devera acessar o site www.lebes.com.br/chamadoutor 
+ou a central de servicos de assistencia do CHAMA DOUTOR 
+(0800 718 01 14) para informacoes sobre as farmacias
+credenciadas mais proximas e os descontos vigentes para
+os medicamentos que precisa adquirir, alem de quaisquer
+outras informacoes sobre o servico;
+
+O servico de Assistencia Desconto em Medicamentos esta
+disponivel nas principais cidades brasileiras;
+
+Sera praticado o menor valor entre o preco da
+prestadora e o preco promocional do dia da loja. Nao sao
+considerados precos promocionais aqueles decorrentes
+de Programas de Fidelidade da Farmacia, Programas de
+Adesao ao Tratamento, entre outros. Nao sera
+autorizado pelo sistema da prestadora a venda de 
+medicamentos fracionados e manipulados;
+
+Os clientes sao identificados na rede credenciada atraves
+do CPF, informando o atendente da farmacia que fazem
+parte do PROGRAMA DE DESCONTOS EM 
+MEDICAMENTOS E-PHARMA/LEBES;
+
+Os descontos variam de 15%(quinze por cento) a 60%
+(sessenta por cento) sobre o preco maximo ao consumidor
+(PMC) para os medicamentos contemplados na lista;
+Limite de uso: ilimitado;
+Carencia: 72h;
+Franquia: Nao ha.
+
+--------------------------------------------------------
+Data: {dataTransacao}
+
+
+
+
+     ___________________________________________
+             Assinatura do contratante
+

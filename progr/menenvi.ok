@@ -1,0 +1,187 @@
+if keyfunction(lastkey) = "DELETE-LINE"
+then do :
+    find first correio where recid(correio) = an-seerec[frame-line] .
+    MESSAGE "Confirma Exclusao do E-mail" UPDATE sresp.
+    IF NOT sresp
+    THEN next keys-loop.
+    delete correio.
+    an-seeid = -1.
+    next keys-loop.
+end.
+
+if keyfunction(lastkey) = "INSERT-MODE"
+then do:
+    CREATE correio.
+    correio.funemi = sfuncod.
+    correio.dtmens = today.
+    correio.hrmens = time.
+    correio.situacao = "E".
+    UPDATE 
+        correio.assunto
+        with frame f-altera1.
+    correio.assunto = caps(correio.assunto).
+    clear frame f-altera1 all.
+    hide frame f-altera1.
+    for each tt-cor :   delete tt-cor. end.
+
+    disp v-opc2 with frame f-opc2.
+    choose field v-opc2 with frame f-opc2.
+    if frame-index = 2
+    then do :
+        update vetbcod with frame f-lojafunc.
+        find first estab where estab.etbcod = vetbcod no-lock no-error.
+        if not avail estab
+        then do :
+            bell. bell.
+            message "Codigo da Loja informado invalido".
+            pause. clear frame f-lojafunc all.
+            next.
+        end.
+        hide frame f-opc2.
+        assign
+            an-seeid = -1
+            an-recid = -1
+            an-seerec = ?.
+            
+        {anbrowse.i
+            &File   = func
+            &CField = func.funape    
+            &Ofield = " func.funcod"
+            &Where  = "func.funcod <> sfuncod and
+                       func.etbcod = estab.etbcod "
+            &UsePick = "*" 
+            &PickFld = "func.funcod" 
+            &PickFrm = "9999" 
+            &LockType = "use-index func1" 
+            &Form = " frame f-nome " 
+        }.                  
+        hide frame f-nome.
+        v-cont = 2.             
+        repeat :
+            v-cod = 0.
+            v-cod = int(substr(an-seelst,v-cont,4)).
+            v-cont = v-cont + 5.
+            if v-cod = 0
+            then leave.
+            create tt-cor.
+            tt-cor.funcod = v-cod.
+            tt-cor.etbcod = estab.etbcod.
+        end.
+    end.
+    else do :
+        update vetbcod with frame f-lojafunc.
+        find first estab where estab.etbcod = vetbcod no-lock no-error.
+        if not avail estab
+        then do :
+            bell. bell.
+            message "Codigo da Loja informado invalido".
+            pause. clear frame f-lojafunc all.
+            next.
+        end.
+        hide frame f-opc2.
+        assign
+            an-seeid = -1
+            an-recid = -1
+            an-seerec = ?.
+            
+        {anbrowse.i
+            &File   = func
+            &CField = func.funfunc
+            &Ofield = " func.funcod func.funape"
+            &Where  = "func.funcod <> sfuncod and 
+                       func.etbcod = estab.etbcod "
+            &UsePick = "*" 
+            &PickFld = "func.funcod" 
+            &PickFrm = "9999" 
+            &LockType = "use-index func2" 
+            &Form = " frame f-funcao " 
+        }. 
+        hide frame f-funcao.
+        v-cont = 2.
+        repeat :
+            v-cod = 0.
+            v-cod = int(substr(an-seelst,v-cont,4)).
+            v-cont = v-cont + 5.
+            if v-cod = 0
+            then leave.
+            create tt-cor.
+            tt-cor.funcod = v-cod.
+            tt-cor.etbcod = estab.etbcod.
+        end.
+    end.
+    clear frame f-altera2 all.
+    status default "  F1 = CONFIRMA    -   OU ENTER ATE O FIM " .
+    
+    update 
+        correio.mens[1]
+        correio.mens[2]
+        correio.mens[3]
+        correio.mens[4]
+        correio.mens[5]
+        correio.mens[6]
+        correio.mens[7]
+        correio.mens[8]
+        correio.mens[9]
+        correio.mens[10]
+        correio.mens[11]
+        correio.mens[12]
+        correio.mens[13]
+        correio.mens[14]
+        correio.mens[15] with frame f-altera3.
+
+    assign
+        correio.mens[1] = caps(correio.mens[1])
+        correio.mens[2] = caps(correio.mens[2])
+        correio.mens[3] = caps(correio.mens[3])
+        correio.mens[4] = caps(correio.mens[4])
+        correio.mens[5] = caps(correio.mens[5])
+        correio.mens[6] = caps(correio.mens[6])
+        correio.mens[7] = caps(correio.mens[7])
+        correio.mens[8] = caps(correio.mens[8])
+        correio.mens[9] = caps(correio.mens[9])
+        correio.mens[10] = caps(correio.mens[10])
+        correio.mens[11] = caps(correio.mens[11])
+        correio.mens[12] = caps(correio.mens[12])
+        correio.mens[13] = caps(correio.mens[13])
+        correio.mens[14] = caps(correio.mens[14])
+        correio.mens[15] = caps(correio.mens[15]).
+        
+    find first tt-cor no-error.
+    correio.funcod = tt-cor.funcod.
+    correio.etbcod = tt-cor.etbcod.
+    correio.etbemi = setbcod.
+    
+    for each tt-cor :
+        if tt-cor.funcod <> correio.funcod 
+        then  do :
+            CREATE bcorreio.
+            assign          
+            bcorreio.funemi     = sfuncod
+            bcorreio.mens[1]    =  correio.mens[1]
+            bcorreio.mens[2]    =  correio.mens[2]
+            bcorreio.mens[3]    =  correio.mens[3]
+            bcorreio.mens[4]    =  correio.mens[4]
+            bcorreio.mens[5]    =  correio.mens[5]
+            bcorreio.mens[6]    =  correio.mens[6]
+            bcorreio.mens[7]    =  correio.mens[7]
+            bcorreio.mens[8]    =  correio.mens[8]
+            bcorreio.mens[9]    =  correio.mens[9]
+            bcorreio.mens[10]   =  correio.mens[10]
+            bcorreio.mens[11]   =  correio.mens[11]
+            bcorreio.mens[12]   =  correio.mens[12]
+            bcorreio.mens[13]   =  correio.mens[13]
+            bcorreio.mens[14]   =  correio.mens[14]
+            bcorreio.mens[15]   =  correio.mens[15]
+            bcorreio.dtmens     = today
+            bcorreio.hrmens     = time
+            bcorreio.situacao   = "E"
+            bcorreio.assunto    = correio.assunto
+            bcorreio.funcod     = tt-cor.funcod.
+            bcorreio.etbcod     = tt-cor.etbcod.
+            bcorreio.etbemi     = setbcod.
+        end.
+    end.                    
+    an-seeid = -1.
+    next keys-loop.
+end.
+

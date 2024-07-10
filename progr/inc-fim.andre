@@ -1,0 +1,108 @@
+        def var vpassa as log.
+        do on error undo.
+            do with frame f-desti:
+                if clien.clicod <> 1
+                then update vfincod go-on (C c).
+
+                if ( vfincod = 0 and clien.clicod <> 1 ) or
+                   ( vfincod <> 0 and clien.clicod = 1)
+                then do:
+                    message "Plano Invalido".
+                    undo, retry.
+                end.
+
+
+                if lastkey = keycode("c") or lastkey = keycode("C")
+                then do:
+                    hide frame f-opcom  no-pause.
+                    hide frame f-desti  no-pause.
+                    hide frame f-produ  no-pause.
+                    hide frame f-produ1 no-pause.
+                    run gercpg.p( input ( if ((vprotot - vdevval) < 0)
+                                          then 0
+                                          else ( vprotot - vdevval )),
+                                  input  1,
+                                  output par-fincod ).
+                    view frame f-finan.
+                    view frame f-desti.
+                    view frame f-produ.
+                    view frame f-produ1.
+                    undo, retry.
+                end.
+                find finan where finan.fincod = vfincod no-lock.
+                disp finan.fincod @ vfincod
+                     finan.finnom with frame f-desti.
+                if clien.clicod <> 1      /***** em 27/01/98 *****/
+                then do:
+                    vpassa = yes.
+                    for each wf-movim:
+                        find produ where recid(produ) = wf-movim.wrec
+                                        no-lock.
+
+                        if (produ.catcod = 31 or
+                            produ.catcod = 35) and
+                           (finan.fincod <> 72 and
+                            finan.fincod <> 73 and
+                            finan.fincod <> 74 and
+                            finan.fincod <> 75 and
+                            finan.fincod <> 97)
+                        then do:
+                            if finan.fincod >= 50
+                            then vpassa = no.
+                        end.
+                        if (produ.catcod = 41 or
+                            produ.catcod = 45) and
+                           (finan.fincod <> 72 and
+                            finan.fincod <> 73 and
+                            finan.fincod <> 74 and
+                            finan.fincod <> 75 and
+                            finan.fincod <> 97)
+                        then do:
+                            if finan.fincod < 50
+                            then vpassa = no.
+                        end.
+                        if finan.fincod = 14
+                        then do:
+                            if produ.procod <> 401796 and
+                               produ.procod <> 401380 and
+                               produ.procod <> 401610 and
+                               produ.procod <> 401446 and
+                               produ.procod <> 400388 and
+                               produ.procod <> 401408 and
+                               produ.procod <> 400109 and
+                               produ.procod <> 401711 and
+                               produ.procod <> 400077 and
+                               produ.procod <> 401720 and
+                               produ.procod <> 401664 and
+                               produ.procod <> 400092 and
+                               produ.procod <> 400388
+                            then vpassa = no.
+                        end.
+                    end.
+                    if vpassa = no
+                    then do:
+                        bell.
+                        message "Plano Invalido".
+                        undo, retry.
+                    end.
+                end.
+                vmens = "Digite o Codigo do Cliente".
+                disp vmens with frame f-mensagem.
+            end.
+            bell.
+            sresp = yes.
+        end.
+        run l:\progr\gerpla.andre (input recid(finan),
+                      input recid(clien),
+                      input vbonus,
+                      input v-numero,
+                      input vprotot,
+                      input ( if vdevval > vprotot
+                              then vprotot
+                              else vdevval ),
+                      input vdevval,
+                      input v-serie,
+                      output rec-plani,
+                      input  vnome,
+                      input  vfone).
+        find plani where recid(plani) = rec-plani no-lock.

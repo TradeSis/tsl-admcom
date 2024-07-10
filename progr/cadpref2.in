@@ -1,0 +1,52 @@
+scroll from-current down with frame f-linha.
+
+l-inclui:
+repeat TRANSACTION with frame f-linha:
+
+    find last bsubpref no-lock no-error.
+    prompt-for 
+       subpref.subdes
+      .
+
+    find first subpref where 
+               subpref.subdes = input frame f-linha subpref.subdes
+               no-error.
+
+    if not available subpref
+    then do:
+        create subpref.
+        assign 
+           subpref.subdes = caps(input frame f-linha subpref.subdes)
+           subpref.subcod = if avail bsubpref
+                              then bsubpref.subcod + 1 else 1.
+           subpref.carcod = prefcli.carcod.
+
+    end.
+    else do:
+        bell.
+        message "Ja' existe a ocorrencia no Sistema"
+                view-as alert-box. 
+        undo, next l-inclui.
+    end.
+    find last bsubpref where
+              bsubpref.carcod = subpref.carcod
+              no-lock no-error.
+    if avail bsubpref
+    then subpref.subcar = bsubpref.subcar + 1.
+    else subpref.subcar = 1.          
+
+    display subpref.subcar
+            subpref.subdes.
+
+    scroll from-current down with frame f-linha.
+end.
+
+clear frame f-linha all.
+if not can-find(first subpref where
+                      subpref.carcod = subpref.carcod)
+then
+    leave keys-loop.
+else
+    a-seeid = -1.
+
+next keys-loop.

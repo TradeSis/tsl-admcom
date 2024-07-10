@@ -1,0 +1,16 @@
+if lastkey = keycode ("F8")  or
+   keyfunction(lastkey) = "CLEAR"
+then do :
+    find first indic where recid(indic) = a-seerec[frame-line] .
+    sresp = no.
+    MESSAGE color red/withe
+            "Indicador " indic.inddes view-as alert-box
+            buttons yes-no title " Exclusao " set sresp.
+
+    IF NOT sresp
+    THEN next keys-loop.
+    delete indic.
+    a-seeid = -1.
+    next keys-loop.
+end.
+

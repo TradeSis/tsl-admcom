@@ -1,0 +1,289 @@
+atu-22.p:    hiest.hiestf = estoq.estatual.
+atu-22.p:    hiest.hiestf = bestoq.estatual.
+atu-22.p:    hiest.hiestf = estoq.estatual.
+atu-22.p:    hiest.hiestf = estoq.estatual.
+atuest2.p:    hiest.hiestf = estoq.estatual.
+atuest2.p:    hiest.hiestf = bestoq.estatual.
+atuest2.p:    hiest.hiestf = estoq.estatual.
+atuest2.p:    hiest.hiestf = estoq.estatual.
+atuest_hd.p:    com.hiest.hiestf = com.estoq.estatual.
+atuest_hd.p:    com.hiest.hiestf = bestoq.estatual.
+atuest_hd.p:    com.hiest.hiestf = com.estoq.estatual.
+atuest_hd.p:    com.hiest.hiestf = com.estoq.estatual.
+atuest.old:    hiest.hiestf = estoq.estatual.
+atuest.old:    hiest.hiestf = bestoq.estatual.
+atuest.old:    hiest.hiestf = estoq.estatual.
+atuest.old:    hiest.hiestf = estoq.estatual.
+atuest.p:    hiest.hiestf = estoq.estatual.
+atuest.p:    hiest.hiestf = bestoq.estatual.
+atuest.p:    hiest.hiestf = estoq.estatual.
+atuest.p:    hiest.hiestf = estoq.estatual.
+atu-hie.p:        hiest.hiestf = hiest.hiestf + movim.movqtm.
+atu-hie.p:        hiest.hiestf = hiest.hiestf - movim.movqtm.
+atu-hie.p:        hiest.hiestf = hiest.hiestf - movim.movqtm.
+atu-hie.p:        hiest.hiestf = hiest.hiestf + movim.movqtm.
+atuhie.p:        hiest.hiestf = hiest.hiestf + movim.movqtm.
+atuhie.p:        hiest.hiestf = hiest.hiestf - movim.movqtm.
+atuhie.p:        hiest.hiestf = hiest.hiestf - movim.movqtm.
+atuhie.p:        hiest.hiestf = hiest.hiestf + movim.movqtm.
+atunovo.p:    commatriz.hiest.hiestf = commatriz.estoq.estatual.
+atunovo.p:    commatriz.hiest.hiestf = bestoq.estatual.
+atunovo.p:    commatriz.hiest.hiestf = commatriz.estoq.estatual.
+atunovo.p:    commatriz.hiest.hiestf = commatriz.estoq.estatual.
+aud2302.p:    then assign vest = hiest.hiestf
+aud2302.p:		vant = hiest.hiestf.
+aud2302.p:	then assign vest = hiest.hiestf
+aud2302.p:		    vant = hiest.hiestf.
+aud2302.p:	    then assign vest = hiest.hiestf
+aud2302.p:			vant = hiest.hiestf.
+aud2302.p:			  hiest.hiestf = estoq.estatual.
+aud2302.p:	       vest = hiest.hiestf.
+aud2302.p:	       vant = hiest.hiestf.
+confin.p:def var vtotesto    like hiest.hiestf extent 6.
+confin.p:def var vvalesto    like hiest.hiestf extent 6.
+confin.p:		vtotesto[i] = vtotesto[i] + hiest.hiestf.
+confin.p:		vvalesto[i] = vvalesto[i] + (hiest.hiestf * estoq.estcusto).
+conpin.p:def var vtotesto    like hiest.hiestf extent 6.
+conpin.p:def var vvalesto    like hiest.hiestf extent 6.
+conpin.p:                vtotesto[i] = vtotesto[i] + hiest.hiestf.
+conpin.p:                vtotesto[i] = vtotesto[i] + hiest.hiestf.
+ctbhie.p:                assign vqtd = hiest.hiestf
+ctbhie.p:                    vqtd = hiest.hiestf.
+ctbhie.p:                        vqtd = hiest.hiestf.
+ctbhie.p:                            vqtd = hiest.hiestf.
+ctbhie.p:                                vqtd = hiest.hiestf.
+curfab_g.p:                    vestven = vestven + (hiest.hiestf * bestoq.estvenda).
+curfab_g.p:                    vcusto  = vcusto  + (hiest.hiestf * bestoq.estcusto).
+curfab_g.p:                    curfab.qtdest = curfab.qtdest + hiest.hiestf.
+curfab_g.p:                vestven = vestven + (hiest.hiestf * bestoq.estvenda).
+curfab_g.p:                vcusto  = vcusto  + (hiest.hiestf * bestoq.estcusto).
+curfab_g.p:                curfab.qtdest = curfab.qtdest + hiest.hiestf.
+cusme1.p:                assign vqtd = hiest.hiestf
+cusme1.p:                    vqtd = hiest.hiestf.
+cve-pro.p:                        valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+cve-pro.p:                        valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+cve-pro.p:                        est-atu = est-atu + hiest.hiestf.
+cve-pro.p:                    valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+cve-pro.p:                    valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+cve-pro.p:                    est-atu = est-atu + hiest.hiestf.
+cve-pro.p:                        valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+cve-pro.p:                        valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+cve-pro.p:                        est-atu = est-atu + hiest.hiestf.
+cve-pro.p:                    valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+cve-pro.p:                    valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+cve-pro.p:                    est-atu = est-atu + hiest.hiestf.
+enc03.p:		    vestven = vestven + (hiest.hiestf * bestoq.estvenda).
+enc03.p:		    vcusto  = vcusto  + (hiest.hiestf * bestoq.estcusto).
+enc03.p:		    curfab.qtdest = curfab.qtdest + hiest.hiestf.
+enc03.p:		vestven = vestven + (hiest.hiestf * bestoq.estvenda).
+enc03.p:		vcusto  = vcusto  + (hiest.hiestf * bestoq.estcusto).
+enc03.p:		curfab.qtdest = curfab.qtdest + hiest.hiestf.
+enc03.p:		    vestven = vestven + (hiest.hiestf * bestoq.estvenda).
+enc03.p:		    vcusto  = vcusto  + (hiest.hiestf * bestoq.estcusto).
+enc03.p:		    curfab.qtdest = curfab.qtdest + hiest.hiestf.
+enc03.p:		vestven = vestven + (hiest.hiestf * bestoq.estvenda).
+enc03.p:		vcusto  = vcusto  + (hiest.hiestf * bestoq.estcusto).
+enc03.p:		curfab.qtdest = curfab.qtdest + hiest.hiestf.
+est3112.p:            assign vqtd = hiest.hiestf.
+est3112.p:                    vqtd = hiest.hiestf. 
+est3112.p:                        vqtd = hiest.hiestf.
+est3112.p:                            vqtd = hiest.hiestf.
+est3112.p:                                vqtd = hiest.hiestf.
+estacao1.p:                vqtd = hiest.hiestf.
+estacao1.p:                    vqtd = hiest.hiestf.
+estacao2.p:                vqtd = hiest.hiestf.
+estacao2.p:                    vqtd = hiest.hiestf.
+estacao3.p:                vqtd = hiest.hiestf.
+estacao3.p:                    vqtd = hiest.hiestf.
+estacao4.p:                vqtd = hiest.hiestf.
+estacao4.p:                    vqtd = hiest.hiestf.
+estcusm2.p:                assign vqtd = hiest.hiestf
+estcusm2.p:                    vqtd = hiest.hiestf.
+estcusm2.p:                        vqtd = hiest.hiestf.
+estcusm2.p:                            vqtd = hiest.hiestf.
+estcusm2.p:                                vqtd = hiest.hiestf.
+estcusme.bkp:                assign vqtd = hiest.hiestf
+estcusme.bkp:                    vqtd = hiest.hiestf.
+estcusme.bkp:                        vqtd = hiest.hiestf.
+estcusme.bkp:                            vqtd = hiest.hiestf.
+estcusme.bkp:                                vqtd = hiest.hiestf.
+estcusme.p:                assign vqtd = hiest.hiestf
+estcusme.p:                    vqtd = hiest.hiestf.
+estcusme.p:                        vqtd = hiest.hiestf.
+estcusme.p:                            vqtd = hiest.hiestf.
+estcusme.p:                                vqtd = hiest.hiestf.
+estcusve.p:                assign vqtd = hiest.hiestf
+estcusve.p:                    vqtd = hiest.hiestf.
+estcusve.p:                        vqtd = hiest.hiestf.
+estcusve.p:                            vqtd = hiest.hiestf.
+estcusve.p:                                vqtd = hiest.hiestf.
+esthie.p:            if hiest.hiestf <= 0
+esthie.p:            then if hiest.hiestf >= 0
+esthie.p:                 then vtot31 = vtot31 + (hiest.hiestf * estoq.estcusto).
+esthie.p:            then if hiest.hiestf >= 0
+esthie.p:                 then vtot41 = vtot41 + (hiest.hiestf * estoq.estcusto).
+est-pri.p:                vqtd = hiest.hiestf.
+est-pri.p:                    vqtd = hiest.hiestf. 
+est-pri.p:                        vqtd = hiest.hiestf.
+est-pri.p:                            vqtd = hiest.hiestf.
+est-pri.p:                                vqtd = hiest.hiestf.
+exppromo.p:                vqtd = hiest.hiestf.
+exppromo.p:                    vqtd = hiest.hiestf. 
+exppromo.p:                        vqtd = hiest.hiestf.
+exppromo.p:                            vqtd = hiest.hiestf.
+exppromo.p:                                vqtd = hiest.hiestf.
+ext2001.p:                else assign sal-ant = hiest.hiestf
+ext2001.p:            else assign sal-ant = hiest.hiestf
+ext2001.p:        else assign sal-ant = hiest.hiestf
+ext2001.p:    else assign sal-ant = hiest.hiestf
+ext2002.p:                else assign sal-ant = hiest.hiestf
+ext2002.p:            else assign sal-ant = hiest.hiestf
+ext2002.p:        else assign sal-ant = hiest.hiestf
+ext2002.p:    else assign sal-ant = hiest.hiestf
+ext2003.p:                else assign sal-ant = hiest.hiestf
+ext2003.p:            else assign sal-ant = hiest.hiestf
+ext2003.p:        else assign sal-ant = hiest.hiestf
+ext2003.p:    else assign sal-ant = hiest.hiestf
+extra98.p:                else assign sal-ant = 0 /* hiest.hiestf */
+extra98.p:            else assign sal-ant = hiest.hiestf
+extra98.p:        else assign sal-ant = hiest.hiestf
+extra98.p:    else assign sal-ant = hiest.hiestf
+extra_p.l:                else assign sal-ant = 0 /* hiest.hiestf */
+extra_p.l:            else assign sal-ant = hiest.hiestf
+extra_p.l:        else assign sal-ant = hiest.hiestf
+extra_p.l:    else assign sal-ant = hiest.hiestf
+extra_p.old:                else assign sal-ant = 0 /* hiest.hiestf */
+extra_p.old:            else assign sal-ant = hiest.hiestf
+extra_p.old:        else assign sal-ant = hiest.hiestf
+extra_p.old:    else assign sal-ant = hiest.hiestf
+extra_p.p:                else assign sal-ant = 0 /* hiest.hiestf */
+extra_p.p:            else assign sal-ant = hiest.hiestf
+extra_p.p:        else assign sal-ant = hiest.hiestf
+extra_p.p:    else assign sal-ant = hiest.hiestf
+_extrato.old:                else assign sal-ant = 0 /* hiest.hiestf */
+_extrato.old:            else assign sal-ant = hiest.hiestf
+_extrato.old:        else assign sal-ant = hiest.hiestf
+_extrato.old:    else assign sal-ant = hiest.hiestf
+_extrato.p:                else assign sal-ant = 0 /* hiest.hiestf */
+_extrato.p:            else assign sal-ant = hiest.hiestf
+_extrato.p:        else assign sal-ant = hiest.hiestf
+_extrato.p:    else assign sal-ant = hiest.hiestf
+gerenc.p:DEF VAR hiestfl1 LIKE hiest.hiestf.
+gerenc.p:DEF VAR hiestfl2 LIKE hiest.hiestf.
+gerenc.p:DEF VAR tothiestfl1 LIKE hiest.hiestf.
+gerenc.p:DEF VAR tothiestfl2 LIKE hiest.hiestf.
+gerenc.p:DEF VAR tothiegerfl1 LIKE hiest.hiestf.
+gerenc.p:DEF VAR tothiegerfl2 LIKE hiest.hiestf.
+gerenc.p:DEF VAR tothiegeralfl1 LIKE hiest.hiestf.
+gerenc.p:DEF VAR tothiegeralfl2 LIKE hiest.hiestf.
+gerenc.p:DEF VAR vtotqtd LIKE hiest.hiestf.
+gerenc.p:DEF VAR totger  LIKE hiest.hiestf.
+gerenc.p:DEF VAR ventotger  LIKE hiest.hiestf.
+gerenc.p:DEF VAR ventothiestfl1 LIKE hiest.hiestf.
+gerenc.p:DEF VAR ventothiestfl2 LIKE hiest.hiestf.
+gerenc.p:DEF VAR ventothiegerfl1 LIKE hiest.hiestf.
+gerenc.p:DEF VAR ventothiegerfl2 LIKE hiest.hiestf.
+gerenc.p:DEF VAR ventothiegeralfl1 LIKE hiest.hiestf.
+gerenc.p:DEF VAR ventothiegeralfl2 LIKE hiest.hiestf.
+hie.p:	    bhiest.hiestf = 0.
+hie.p:		    hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    bhiest.hiestf = bhiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    bhiest.hiestf = bhiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    bhiest.hiestf = bhiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    bhiest.hiestf = bhiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    bhiest.hiestf = bhiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    bhiest.hiestf = bhiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    bhiest.hiestf = bhiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:		    bhiest.hiestf = bhiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf + movim.movqtm.
+hie.p:		    then hiest.hiestf = hiest.hiestf - movim.movqtm.
+hie.p:	    hiest.hiestf = hiest.hiestf + vest.
+hie.p:	    vest = hiest.hiestf.
+invana.p:	    totest = (hiest.hiestf * estoq.estcusto) +
+invana.p:		      ((hiest.hiestf * estoq.estcusto) * 0.598593697).
+invana.p:	    totcus = totest / hiest.hiestf.
+invana.p:	    if hiest.hiestf <= 0
+invana.p:		 hiest.hiestf column-label "Quant."
+invsin.p:            totest = totest + (hiest.hiestf * estoq.estcusto).
+nfben.old:                    hiest.hiestf = 0.
+nfben.p:                    hiest.hiestf = 0.
+posmes.p:	if hiest.hiestf = 0
+posmes.p:		hiest.hiestf (TOTAL) column-label "Qtd." format "->>>>9"
+posmes.p:		(hiest.hiestf * estoq.estcusto) (TOTAL) column-label "Total"
+prom11.bkp:                hiest.hiestf = estoq.estatual.
+prom11.p:                hiest.hiestf = estoq.estatual.
+relfin.p:def var vtotesto    like hiest.hiestf extent 12.
+relfin.p:            vtotesto[i] = vtotesto[i] + hiest.hiestf.
+relfin.p:            vtotesto[i] = vtotesto[i] + hiest.hiestf.
+rescom.p:                        valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescom.p:                        valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescom.p:                        est-atu = est-atu + hiest.hiestf.
+rescom.p:                    valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescom.p:                    valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescom.p:                    est-atu = est-atu + hiest.hiestf.
+rescom.p:                        valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescom.p:                        valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescom.p:                        est-atu = est-atu + hiest.hiestf.
+rescom.p:                    valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescom.p:                    valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescom.p:                    est-atu = est-atu + hiest.hiestf.
+rescve1.p:                        valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescve1.p:                        valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescve1.p:                        est-atu = est-atu + hiest.hiestf.
+rescve1.p:                    valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescve1.p:                    valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescve1.p:                    est-atu = est-atu + hiest.hiestf.
+rescve1.p:                        valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescve1.p:                        valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescve1.p:                        est-atu = est-atu + hiest.hiestf.
+rescve1.p:                    valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescve1.p:                    valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescve1.p:                    est-atu = est-atu + hiest.hiestf.
+rescve.p:                        valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescve.p:                        valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescve.p:                        est-atu = est-atu + hiest.hiestf.
+rescve.p:                    valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescve.p:                    valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescve.p:                    est-atu = est-atu + hiest.hiestf.
+rescve.p:                                    (hiest.hiestf * bestoq.estvenda).
+rescve.p:                                    (hiest.hiestf * bestoq.estcusto).
+rescve.p:                            est-atu = est-atu + hiest.hiestf.
+rescve.p:                        valest  = valest  + (hiest.hiestf * bestoq.estvenda).
+rescve.p:                        valcus  = valcus  + (hiest.hiestf * bestoq.estcusto).
+rescve.p:                        est-atu = est-atu + hiest.hiestf.
+resumo.p:                        valest  = valest + (hiest.hiestf * bestoq.estvenda).
+resumo.p:                        valcus  = valcus + (hiest.hiestf * bestoq.estcusto).
+resumo.p:                        est-atu = est-atu + hiest.hiestf.
+resumo.p:                    valest  = valest + (hiest.hiestf * bestoq.estvenda).
+resumo.p:                    valcus  = valcus + (hiest.hiestf * bestoq.estcusto).
+resumo.p:                    est-atu = est-atu + hiest.hiestf.
+sal-atu.p:            else assign sal-ant = hiest.hiestf.
+sal-atu.p:        else assign sal-ant = hiest.hiestf.
+sal-atu.p:    else assign sal-ant = hiest.hiestf.
+tcur_g.p:                    vestven = vestven + (hiest.hiestf * bestoq.estvenda).
+tcur_g.p:                    vcusto  = vcusto  + (hiest.hiestf * bestoq.estcusto).
+tcur_g.p:                    curfab.qtdest = curfab.qtdest + hiest.hiestf.
+tcur_g.p:                vestven = vestven + (hiest.hiestf * bestoq.estvenda).
+tcur_g.p:                vcusto  = vcusto  + (hiest.hiestf * bestoq.estcusto).
+tcur_g.p:                curfab.qtdest = curfab.qtdest + hiest.hiestf.

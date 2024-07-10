@@ -1,0 +1,46 @@
+{admcab.i}
+def var vv as int.
+def var zz as char.
+def var xx as char.
+def var i as int.
+
+def input parameter pvalor as dec.
+
+def input parameter pdata like plani.pladat.
+def input parameter pnome as char.
+
+def var vpos as int.
+def var vdata as char.
+def var vmes  as char extent 12 initial
+["Janeiro","Fevereiro","Marco","Abril","Maio","junho","Julho","agosto",
+ "Setembro","Outubro","Novembro","Dezembro"].
+def var vextenso as char.
+def var vext1 as char.
+def var vext2 as char.
+
+find estab where estab.etbcod = setbcod no-lock.
+run extenso.p (input pvalor,
+               input "90",
+               output vext1,
+               output vext2).
+
+
+vdata = "SAO JERONIMO ,      " + string(day(pdata),"99") + "         " +
+        string(vmes[month(pdata)],"x(20)") + string(year(pdata),"9999").
+
+output to printer page-size 0.
+put unformatted chr(27) + chr(15).
+
+put chr(27) + chr(49).
+put pvalor to 101 format ">>,>>>,>>9.99"
+    skip(3)
+   vext1 format "x(90)" at 20 skip(2)
+   vext2 format "x(90)" at 6  skip(2)
+   pnome at 12 format "x(50)" 
+   skip(2)
+   vdata format "x(70)" at 58 skip(8).
+
+put chr(27) + chr(50).
+put chr(18).
+
+output close.

@@ -1,0 +1,92 @@
+find t-modgru where recid(t-modgru) = a-seerec[frame-line] .
+if keyfunction(lastkey) = "GO"
+then DO:
+    l2: repeat:
+    i-seeid = a-seeid.
+    i-recid = a-recid.
+    
+    hide frame f-linha1 no-pause.
+    clear frame f-linha1 all.
+    a-seeid = -1. a-recid = -1. a-seerec = ?.
+    
+    {sklcls.i
+        &help = "F4=Retorna F9=Inclui  F10=Exclui"
+        &file = bmodgru
+        &cfield = bmodgru.modcod
+        &ofield  = " modal.modnom when avail modal 
+                     /*lanaut.lancod when avail lanaut
+                     lanaut.lanhis when avail lanaut*/ 
+                     "
+        &aftfnd1 = "
+            find modal where modal.modcod = bmodgru.modcod
+                            no-lock no-error.
+            find first lanaut where lanaut.etbcod  = ? and
+                                    lanaut.forcod  = ? and
+                                    lanaut.modcod  = bmodgru.modcod
+                                    no-lock no-error.
+                    "        
+        &where = " bmodgru.mogsup = t-modgru.mogcod "
+        &naoexiste = " bmodgru.in " 
+        &abrelinha = " bmodgru.in "
+        &aftselect1 = "
+            /**
+            find first lanaut where lanaut.etbcod  = ? and
+                                    lanaut.forcod  = ? and
+                                    lanaut.modcod  = bmodgru.modcod
+                                    no-lock no-error.
+            if not avail lanaut
+            then create lanaut.
+            
+            update lanaut.lancod lanaut.lanhis with frame f-linha1.
+               **/ 
+                      "
+                  
+        &otherkeys = " bmodgru.ok "
+        &form = " frame f-linha1 "
+    }
+    if keyfunction(lastkey) = "END-ERROR"
+    then do:
+        hide frame f-linha1 no-pause.
+        leave l2.
+    end.
+    end.
+a-recid = i-recid.
+a-seerec = -1.
+a-seerec = ?.
+next l1.
+END.
+if keyfunction(lastkey) = "CUT"  or
+   keyfunction(lastkey) = "DELETE-LINE"
+then do:
+    find first bmodgru where bmodgru.mogsup = t-modgru.mogcod
+        no-lock no-error.
+    if avail bmodgru
+    then do:
+        message color red/with
+            "Grupo tem modalidade associada" skip
+            "exclusao nao permitida"
+            view-as alert-box.
+        next keys-loop.
+    end.
+    else do:
+        sresp = no.
+        message "Confirma excluir grupo " t-modgru.mognom update sresp.
+        if not sresp 
+        then next keys-loop.
+        find modgru where modgru.mogsup = t-modgru.mogsup and
+                          modgru.mogcod = t-modgru.mogcod and
+                          modgru.modcod = t-modgru.modcod
+                          no-error.
+        if avail modgru
+        then delete modgru.
+        next l1.     
+    end.    
+
+end.
+if keyfunction(lastkey) = "CLEAR"
+then DO:
+
+    run relatorio.
+    
+    next l1.
+END.

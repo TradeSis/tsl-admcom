@@ -1,0 +1,395 @@
+/*
+*
+*    Esqueletao de Programacao
+*
+*/
+{admcab.i}
+def var vtotlib like plani.platot.
+def var vtotpag like plani.platot.
+def input parameter vclicod like clien.clicod.
+def var vtot like plani.platot.
+def workfile wf-marca
+    field wrec as recid.
+def var vmarca          as char format "*".
+def var recatu1         as recid.
+def var recatu2         as recid.
+def var esqpos1         as int.
+def var esqpos2         as int.
+def var esqregua        as log.
+def var esqcom1         as char format "x(12)" extent 3
+            initial ["Marca","Pagamento","Consulta"].
+def var esqcom2         as char format "x(12)" extent 5
+            initial ["","","","",""].
+
+
+def buffer bglopre       for glopre.
+def var vnumero         like glopre.numero.
+
+
+    form
+        esqcom1
+            with frame f-com1
+                 row 3 no-box no-labels side-labels centered.
+    form
+        esqcom2
+            with frame f-com2
+                 row screen-lines no-box no-labels side-labels column 1.
+    esqregua  = yes.
+    esqpos1  = 1.
+    esqpos2  = 1.
+    for each wf-marca:
+        delete wf-marca.
+    end.
+
+bl-princ:
+repeat:
+    find clien where clien.clicod = vclicod no-lock.
+    disp esqcom1 with frame f-com1.
+    disp esqcom2 with frame f-com2.
+    if recatu1 = ?
+    then
+        find first glopre where glopre.clicod = vclicod and
+                                glopre.glosit = "LIB"  no-error.
+    else
+        find glopre where recid(glopre) = recatu1.
+    if not available glopre
+    then do:
+        message "Cliente sem prestacoes em aberto".
+        return.
+    end.
+    clear frame frame-a all no-pause.
+    find first wf-marca where wf-marca.wrec = recid(glopre) no-error.
+    if not avail wf-marca
+    then vmarca = "".
+    else vmarca = "*".
+
+    display vtot label "Total" with frame f-tot column 53
+                side-label color message row 20 no-box.
+    disp vmarca no-label
+         glopre.etbcod column-label "Fl"
+         glopre.numero
+         glopre.parcela column-label "Pr"
+         glopre.dtemi   column-label "Data Emis."
+         glopre.dtven
+         glopre.grupo
+         glopre.cota
+         glopre.valpar
+            with frame frame-a 12 down centered color white/red.
+
+    recatu1 = recid(glopre).
+    color display message
+        esqcom1[esqpos1]
+            with frame f-com1.
+    repeat:
+        find next glopre where glopre.clicod = vclicod and
+                               glopre.glosit = "LIB" no-error.
+        if not available glopre
+        then leave.
+        if frame-line(frame-a) = frame-down(frame-a)
+        then leave.
+        down with frame frame-a.
+
+        find first wf-marca where wf-marca.wrec = recid(glopre) no-error.
+        if not avail wf-marca
+        then vmarca = "".
+        else vmarca = "*".
+
+        display vtot label "Total" with frame f-tot.
+        disp vmarca no-label
+             glopre.etbcod
+             glopre.numero
+             glopre.parcela
+             glopre.dtemi
+             glopre.dtven
+             glopre.grupo
+             glopre.cota
+             glopre.valpar
+                with frame frame-a.
+    end.
+    up frame-line(frame-a) - 1 with frame frame-a.
+
+    repeat with frame frame-a:
+
+        find glopre where recid(glopre) = recatu1.
+
+        choose field glopre.numero
+            go-on(cursor-down cursor-up
+                  cursor-left cursor-right
+                  tab PF4 F4 ESC return).
+        if keyfunction(lastkey) = "TAB"
+        then do:
+            if esqregua
+            then do:
+                color display normal
+                    esqcom1[esqpos1]
+                    with frame f-com1.
+                color display message
+                    esqcom2[esqpos2]
+                    with frame f-com2.
+            end.
+            else do:
+                color display normal
+                    esqcom2[esqpos2]
+                    with frame f-com2.
+                color display message
+                    esqcom1[esqpos1]
+                    with frame f-com1.
+            end.
+            esqregua = not esqregua.
+        end.
+        if keyfunction(lastkey) = "cursor-right"
+        then do:
+            if esqregua
+            then do:
+                color display normal
+                    esqcom1[esqpos1]
+                    with frame f-com1.
+                esqpos1 = if esqpos1 = 3
+                          then 3
+                          else esqpos1 + 1.
+                color display messages
+                    esqcom1[esqpos1]
+                    with frame f-com1.
+            end.
+            else do:
+                color display normal
+                    esqcom2[esqpos2]
+                    with frame f-com2.
+                esqpos2 = if esqpos2 = 5
+                          then 5
+                          else esqpos2 + 1.
+                color display messages
+                    esqcom2[esqpos2]
+                    with frame f-com2.
+            end.
+            next.
+        end.
+        if keyfunction(lastkey) = "cursor-left"
+        then do:
+            if esqregua
+            then do:
+                color display normal
+                    esqcom1[esqpos1]
+                    with frame f-com1.
+                esqpos1 = if esqpos1 = 1
+                          then 1
+                          else esqpos1 - 1.
+                color display messages
+                    esqcom1[esqpos1]
+                    with frame f-com1.
+            end.
+            else do:
+                color display normal
+                    esqcom2[esqpos2]
+                    with frame f-com2.
+                esqpos2 = if esqpos2 = 1
+                          then 1
+                          else esqpos2 - 1.
+                color display messages
+                    esqcom2[esqpos2]
+                    with frame f-com2.
+            end.
+            next.
+        end.
+        if keyfunction(lastkey) = "cursor-down"
+        then do:
+            find next glopre where glopre.clicod = vclicod and
+                                   glopre.glosit = "LIB" no-error.
+            if not avail glopre
+            then next.
+            color display white/red
+                glopre.numero.
+            if frame-line(frame-a) = frame-down(frame-a)
+            then scroll with frame frame-a.
+            else down with frame frame-a.
+        end.
+        if keyfunction(lastkey) = "cursor-up"
+        then do:
+
+            find prev glopre where glopre.clicod = vclicod and
+                                   glopre.glosit = "LIB" no-error.
+            if not avail glopre
+            then next.
+            color display white/red
+                glopre.numero.
+            if frame-line(frame-a) = 1
+            then scroll down with frame frame-a.
+            else up with frame frame-a.
+        end.
+        if keyfunction(lastkey) = "end-error"
+        then leave bl-princ.
+
+        if keyfunction(lastkey) = "return"
+        then do on error undo, retry on endkey undo, leave.
+         /* hide frame frame-a no-pause. */
+
+          if esqregua
+          then do:
+            display caps(esqcom1[esqpos1]) @ esqcom1[esqpos1]
+                with frame f-com1.
+
+            if esqcom1[esqpos1] = "Marca"
+            then do:
+                find first wf-marca where wf-marca.wrec = recid(glopre)
+                                                                no-error.
+                if not avail wf-marca
+                then do:
+                    create wf-marca.
+                    assign wf-marca.wrec = recid(glopre).
+                    vtot = vtot + glopre.valpar.
+                end.
+                else do:
+                    delete wf-marca.
+                    vtot = vtot - glopre.valpar.
+                end.
+            end.
+
+            if esqcom1[esqpos1] = "Pagamento"
+            then do:
+                find first wf-marca no-error.
+                if not avail wf-marca
+                then leave.
+                display "Confirma Pagamento ?"
+                        with frame f-pag
+                            no-box row 20 side-label color
+                                message column 25 width 25 overlay.
+                update sresp no-label with frame f-pag.
+                if not sresp
+                then do:
+                    recatu1 = ?.
+                    leave.
+                end.
+                for each wf-marca:
+                    find glopre where recid(glopre) = wf-marca.wrec.
+                    update glopre.dtpag.
+                    assign /* glopre.dtpag = today */
+                           glopre.glosit = "PAG"
+                           glopre.datexp = today.
+                    vtot = 0.
+                end.
+                output to printer.
+                for each wf-marca:
+                    find glopre where recid(glopre) = wf-marca.wrec.
+                    /* put chr(27) + chr(49). */
+
+                    put skip(3) space(3)
+                        estab.etbcod
+                        estab.etbnom at 10 format "x(25)"
+                        glopre.dtven at 40 skip(2)
+                        glopre.clicod  at 6
+                        glopre.numero at 35 " - "
+                        glopre.grupo " - "
+                        glopre.cota
+                        glopre.parcela at 54 skip(3)
+                        glopre.valpar   format ">>,>>>9.99"
+                        glopre.valpar   format ">>,>>>9.99" at 47 skip(2)
+                    "PAGAMENTO DE COTA DE CONSORCIO GLOBAL"  at 12
+                    skip(4).
+
+                    /********************* 2¦ via ***********************/
+                    /* put skip(14) space(3). */
+
+                    put skip(3) space(3)
+                        estab.etbcod
+                        estab.etbnom at 10 format "x(25)"
+                        glopre.dtven at 40 skip(2)
+                        glopre.clicod  at 6
+                        glopre.numero at 35 " - "
+                        glopre.grupo " - "
+                        glopre.cota
+                        glopre.parcela at 54 skip(3)
+                        glopre.valpar   format ">>,>>>9.99"
+                        glopre.valpar   format ">>,>>>9.99" at 47 skip(2)
+                    "PAGAMENTO DE COTA DE CONSORCIO GLOBAL"  at 12
+                    skip(4).
+
+
+                    /****************************************************/
+                    /* put chr(27) + chr(50). */
+                    delete wf-marca.
+                end.
+                output close.
+                recatu1 = ?.
+                leave.
+            end.
+            if esqcom1[esqpos1] = "Consulta"
+            then do with frame f-consulta overlay row 6 centered side-label.
+                find glofin where glofin.gfcod = glopre.gfcod no-lock.
+                find func where func.funcod = glopre.vencod no-lock.
+                disp glopre.gfcod colon 15 label "Consorcio"
+                     glofin.gfdes no-label
+                     glopre.vencod colon 15 label "Vendedor"
+                     func.funnom no-label
+                     glopre.grupo colon 15
+                     glopre.cota  colon 15
+                        with frame f-consulta no-validate.
+            end.
+            if esqcom1[esqpos1] = "Exclusao"
+            then do with frame f-exclui overlay row 6 1 column centered.
+                message "Confirma Exclusao de" glopre.parcela update sresp.
+                if not sresp
+                then undo.
+                find next glopre where glopre.clicod = vclicod and
+                                       glopre.glosit = "LIB" no-error.
+                if not available glopre
+                then do:
+                    find glopre where recid(glopre) = recatu1.
+                    find prev glopre where true no-error.
+                end.
+                recatu2 = if available glopre
+                          then recid(glopre)
+                          else ?.
+                find glopre where recid(glopre) = recatu1.
+                delete glopre.
+                recatu1 = recatu2.
+                leave.
+            end.
+            if esqcom1[esqpos1] = "Listagem"
+            then do with frame f-Lista overlay row 6 1 column centered.
+                message "Confirma Impressao de glopreidades " update sresp.
+                if not sresp
+                then undo.
+                recatu2 = recatu1.
+                output to printer.
+                for each glopre:
+                    display glopre.
+                end.
+                output close.
+                recatu1 = recatu2.
+                leave.
+            end.
+
+          end.
+          else do:
+            display caps(esqcom2[esqpos2]) @ esqcom2[esqpos2]
+                with frame f-com2.
+            message esqregua esqpos2 esqcom2[esqpos2].
+            pause.
+          end.
+          view frame frame-a .
+        end.
+          if keyfunction(lastkey) = "end-error"
+          then view frame frame-a.
+
+
+        find first wf-marca where wf-marca.wrec = recid(glopre) no-error.
+        if not avail wf-marca
+        then vmarca = "".
+        else vmarca = "*".
+        display vtot label "Total" with frame f-tot.
+        disp vmarca no-label
+             glopre.etbcod
+             glopre.numero
+             glopre.parcela
+             glopre.dtemi
+             glopre.dtven
+             glopre.grupo
+             glopre.cota
+             glopre.valpar
+                with frame frame-a.
+        if esqregua
+        then display esqcom1[esqpos1] with frame f-com1.
+        else display esqcom2[esqpos2] with frame f-com2.
+        recatu1 = recid(glopre).
+   end.
+end.

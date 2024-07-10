@@ -1,0 +1,24 @@
+    do transaction:
+	vtot = 0.
+	for each liped of pedid break by liped.predt.
+	    if first(liped.predt)
+	    then vpredt = liped.predt.
+	    vtot = vtot + lipqtd * lippreco .
+	end.
+	pedid.pedtot = vtot.
+	vtot = 0.
+	for each liped of pedid where liped.lipsit <> "E" .
+	    vtot = vtot + lipqtd * lippreco .
+	end.
+    end.
+
+    run geratitu.p (input vtot,
+		    input "PED",
+		    input pedid.crecod,
+		    input tipped.pedtnat,
+		    input pedid.clifor,
+		    input string(pedid.pednum),
+		    input pedid.etbcod,
+		    input pedid.peddat,
+		    input vpredt,
+		    output vpar).

@@ -1,0 +1,25 @@
+def var vcomp           as char format "x(3)".
+def var vbanco          as char.
+def var vcontrole1      as char.
+def var vcontrole2      as char.
+def var vcontrole3      as char.
+def var vnumero         as char.
+def var vagencia        as char format "x(5)".
+def var vconta          as char.
+
+form
+    vcomp       column-label "Comp"
+    vbanco      column-label "Banco"
+    vagencia    column-label "Agencia"
+    vcontrole1  column-label "C1" format "x"
+    vconta      column-label "Conta"
+    vcontrole2  column-label "C2" format "x"
+    vnumero     column-label "Cheque"
+    vcontrole3  column-label "C3" format "X"
+    with frame f-dadosch
+	column 1 title "Dados do Cheque"
+	1 down row 12 overlay color white/red.
+
+
+update vcomp vbanco vagencia vcontrole1 vconta vcontrole2 vnumero
+	vcontrole3 with frame f-dadosch.

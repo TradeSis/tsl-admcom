@@ -1,0 +1,45 @@
+if keyfunction(lastkey) = "CLEAR"
+then do :
+    varqsai = "..\relat\relclien." + string(estab.etbcod).
+    snomcaixa = estab.etbnom.
+
+    hide frame f-regua1. 
+    
+    {mdadmcab.i
+        &Saida     = "value(varqsai)"
+        &Page-Size = "60"
+        &Cond-Var  = "150"
+        &Page-Line = "66"
+        &Nom-Rel   = ""RELCLIEN""
+        &Nom-Sis   = """SISTEMA COMERCIAL"""
+        &Tit-Rel   = """ RELATORIO DE CLIENTES ""
+                     + "" da Loja "" + string(snomcaixa) "
+        &Width     = "150"
+        &Form      = "frame f-cabcab"
+    }.
+
+    for each ttclien break by ttclien.clinom :
+    
+        find first clien where clien.clicod = ttclien.clicod no-lock no-error.
+        disp
+            clien.clicod
+            clien.clinom
+            clien.endereco[1]
+            clien.numero[1]
+            clien.compl[1]
+            clien.cep[1]
+            clien.cidade[1]
+            clien.fone
+            with frame f-implin.
+           
+        down
+            with frame f-implin.
+    end.
+    
+    an-seeid = -1. 
+    next keys-loop.
+end.                
+            
+           
+           
+            

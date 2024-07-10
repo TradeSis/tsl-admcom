@@ -1,0 +1,63 @@
+/*************************INFORMA€OES DO PROGRAMA******************************
+***** Nome do Programa             : logand1.ok
+***** Diretorio                    : gener
+***** Autor                        : Andre Baldini
+***** Descri‡ao Abreviada da Funcao: Include de Manutencao de Menu
+***** Data de Criacao              :
+
+                                ALTERACOES
+***** 1) Autor     : Claudir Santolin
+***** 1) Descricao : Alteracao Browse/cores
+***** 1) Data      : 14/09/2000
+
+***** 2) Autor     :
+***** 2) Descricao : 
+***** 2) Data      :
+
+***** 3) Autor     :
+***** 3) Descricao : 
+***** 3) Data      :
+*******************************************************************************/
+if senha_cli <> senha_sis
+then next keys-loop.
+
+if keyfunction(lastkey) = "INSERT-MODE"         /******* f9 ********/
+then do : 
+    create aplicativo.
+    update 
+        aplicativo
+        with frame f-inclui0
+            centered overlay 1 down row 10 
+                side-labels color withe/cyan.
+        
+    a-seeid = -1.
+    next keys-loop.
+end.    
+
+if keyfunction(lastkey) = "CUT"             /******** f10 *********/
+then do on endkey undo:
+    find first aplicativo where recid(aplicativo) = a-seerec[frame-line].
+    sresp = no.
+    message color red/withe
+        "Nivel " aplicativo.aplinom view-as alert-box 
+        buttons yes-no title " Exclusao de Nivel " set sresp.
+    if sresp
+    then do:
+        find first menu where 
+                   menu.aplicod = aplicativo.aplicod
+                   no-lock no-error.
+        if avail menu
+        then do:
+            bell. bell.
+            message color red/withe
+                "Existem Niveis Inferiores. Exclusao Negada."
+                view-as alert-box title " Menssagem ".
+            next keys-loop.
+        end.        
+            
+        delete aplicativo.
+        a-seeid = -1.
+        next keys-loop.
+    end.
+end.
+

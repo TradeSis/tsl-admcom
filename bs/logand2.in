@@ -1,0 +1,85 @@
+/*************************INFORMA€OES DO PROGRAMA******************************
+***** Nome do Programa             : logand2.in
+***** Diretorio                    : gener
+***** Autor                        : Andre Baldini
+***** Descri‡ao Abreviada da Funcao: Include de Manutencao do Menu
+***** Data de Criacao              :
+
+                                ALTERACOES
+***** 1) Autor     : Claudir Santolin
+***** 1) Descricao : Alteracao Browse/cor
+***** 1) Data      : 14/09/2000
+
+***** 2) Autor     :
+***** 2) Descricao : 
+***** 2) Data      :
+
+***** 3) Autor     :
+***** 3) Descricao : 
+***** 3) Data      :
+*******************************************************************************/
+
+do:
+    v-cont = 0.
+    for each bmenu no-lock by bmenu.mencod.
+        v-cont = bmenu.mencod.
+    end.
+
+    
+    create menu .
+/***
+    find last bmenu use-index mencod no-lock no-error.
+    if not avail bmenu
+    then menu.mencod = 1.
+    else menu.mencod = bmenu.mencod + 1.
+***/
+    menu.mencod = v-cont + 1.
+    update 
+        menu.mentit     colon 15
+        skip
+        menu.menpro     colon 15
+        with frame f-inclui
+            centered overlay 1 down row 10 
+                side-labels color withe/cyan.
+        
+    update 
+        menu.mensta
+        with frame mensta
+            no-box no-label centered overlay row 20 .
+    find last bmenu where bmenu.aplicod = p-aplica
+                      and bmenu.ordsup  = p-menu1
+                      and bmenu.menniv  = 2
+                    no-error.
+    if not avail bmenu
+    then v-ordem = 1.
+    else v-ordem = bmenu.menord + 1.
+    
+    assign 
+        menu.aplicod = p-aplica
+        menu.ordsup  = p-menu1
+        menu.menniv  = 2
+        menu.menord  = v-ordem.
+/***
+    for each func where func.superusuario = no no-lock : 
+        disp "Aguarde, Trancando TODOS os Funcionarios" 
+             func.funcod  func.funnom 
+             with frame f-lklklkl centered overlay 1 down no-labels
+             color withe/red.
+        pause 0.
+        find first admaplic where admaplic.cliente = func.funcod
+                              and admaplic.mencod = menu.mencod
+                            no-error.
+        if not avail admaplic
+        then do :
+           create admaplic.
+           assign
+               admaplic.ordsup      = menu.ordsup
+               admaplic.menniv      = menu.menniv
+               admaplic.menord      = menu.menord
+               admaplic.aplicod     = menu.aplicod
+               admaplic.mencod      = menu.mencod
+               admaplic.cliente     = func.funcod.
+        end.
+    end. 
+***/
+end.

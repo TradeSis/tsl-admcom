@@ -1,0 +1,127 @@
+if keyfunction(lastkey) = "CLEAR"
+then do :
+    find first pendencia where recid(pendencia) = an-seerec[frame-line].
+    pendencia.dtreceb = today.
+    pendencia.catalog = pendencia.prior.
+    update
+        pendencia.aceita with frame f-altera5.
+    if pendencia.aceita = yes
+    then do :
+        update pendencia.catalog with frame f-altera5.
+        if pendencia.catalog = 0
+        then pendencia.dtpreten = pendencia.dtreceb + 2.
+        else do :
+            if pendencia.catalog = 1 
+            then pendencia.dtpreten = pendencia.dtreceb + 8.
+            else do :
+                if pendencia.catalog = 2 
+                then pendencia.dtpreten = pendencia.dtreceb + 15.
+                else pendencia.dtpreten = pendencia.dtreceb + 30.
+            end.    
+        end.
+        update pendencia.dtpreten with frame f-altera5.
+    end.
+    update pendencia.subprior with frame f-altera5.
+    update
+        pendencia.mens[1] pendencia.mens[2] pendencia.mens[3]
+        pendencia.mens[4] pendencia.mens[5] pendencia.mens[6]
+        with frame f-altera66.
+    clear frame f-altera66 all.    
+    clear frame f-altera5 all.
+    hide frame f-altera66.
+    hide frame f-altera5.
+    an-seeid = -1.        
+    next keys-loop.
+end.
+
+if keyfunction(lastkey) =  "CUT"
+then do :
+    find first pendencia where recid(pendencia) = an-seerec[frame-line].
+    message "Confirma Exclusao da Pendencia ? " update sresp.
+    if sresp = yes
+    then do :
+        delete pendencia.
+    end.
+    an-seeid = -1.
+    next keys-loop.
+end.  
+
+if keyfunction(lastkey) = "INSERT-MODE"
+then do :
+    find first pendencia where recid(pendencia) = an-seerec[frame-line].
+    
+    {mdadmcab.i
+        &Saida     = "printer"
+        &Page-Size = "60"
+        &Cond-Var  = "80"
+        &Page-Line = "66"
+        &Nom-Rel   = ""RELPEND""
+        &Nom-Sis   = """SISTEMA COMERCIAL"""
+        &Tit-Rel   = """ RELATORIO DE PENDENCIA """
+        &Width     = "80"
+        &Form      = "frame f-cabcab1"
+    }.
+
+    find first func where func.funcod = pendencia.funemi no-lock.
+    find first sofunc where sofunc.funcod = pendencia.solic no-lock.
+
+    put unformatted chr(27) + "G".
+
+    put
+        "Emitente: "  
+        pendencia.funemi
+        " "
+        func.funnom         skip
+        "  Solicitante:"
+        pendencia.solic
+        sofunc.funnom skip.
+
+    find first func where func.funcod = pendencia.funcod no-lock.
+    find first sofunc where sofunc.funcod = pendencia.solic no-lock.
+    
+    vhora = string(pendencia.hrmens,"hh:mm:ss").
+    
+    put
+        "Data Emissao: "
+        pendencia.dtmens  
+        skip
+        "     Hora de Envio: " 
+        vhora   
+        skip
+        "               Assunto:"
+        pendencia.assunto
+        skip.
+
+    put
+        "Destinatario: "
+         func.funcod 
+         " " 
+         func.funnom
+         skip(1).
+         
+    put unformatted chr(27) + "G".
+    put
+         "                          PENDENCIA    "
+         skip(1).
+    put unformatted chr(27) + "H".
+         
+    put
+        pendencia.mens1[1] skip
+        pendencia.mens1[2] skip
+        pendencia.mens1[3] skip
+        pendencia.mens1[4] skip
+        pendencia.mens1[5] skip
+        pendencia.mens1[6] skip
+        pendencia.mens1[7] skip
+        pendencia.mens1[8] skip
+        pendencia.mens1[9] skip
+        pendencia.mens1[10] skip
+        pendencia.mens1[11] skip
+        pendencia.mens1[12] skip
+        pendencia.mens1[13] skip
+        pendencia.mens1[14] skip 
+        pendencia.mens1[14].
+    
+end.
+output close.
+

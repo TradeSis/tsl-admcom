@@ -1,0 +1,289 @@
+{admcab.i}
+def buffer bglopre for glopre.
+def var vtotlib like plani.platot.
+def var vtotpag like plani.platot.
+def workfile wf-data
+    field wdata like plani.pladat
+    field wpar  as int.
+def var vdata like plani.pladat.
+def var vdt   like plani.pladat.
+def var ii    as int.
+def var vv    as int.
+def var mm    as int.
+def var vdtemi like glopre.dtemi.
+def var regua1 as char format "x(15)" extent 2
+    initial ["Pagamento","Novo Consorcio"].
+def var regua2 as char format "x(10)" extent 3
+                initial["Dinheiro","Cheque","Cheque Pre"].
+
+def var vnumero like glopre.numero format "999999".
+def var vgfcod  like glopre.gfcod.
+def var vvencod like glopre.vencod.
+def var vdtche  like glopre.dtche.
+def var vtippag like glopre.tippag.
+def var parametro as char.
+def var funcao          as char.
+def var vclicod like clien.clicod.
+def var vendereco as char format "x(40)".
+def var vetbcod like estab.etbcod.
+
+
+form regua1 with frame f-regua1
+            row 20 no-labels side-labels centered title "Operacoes".
+
+
+form regua2 with frame f-regua2
+            row 14 no-labels side-labels centered title "Pagamento".
+
+repeat:
+
+    hide frame f-regua1 no-pause.
+    view frame fc1.
+    view frame fc2.
+
+    update vetbcod label "Filial" with frame fcli.
+    find estab where estab.etbcod = vetbcod no-lock no-error.
+    display estab.etbnom no-label with frame fcli.
+    update vclicod label "Conta" colon 07
+        with centered row 3 side-label width 80 1 down
+            title " CONTA DO CLIENTE " frame fcli.
+
+    find clien where clien.clicod = vclicod no-lock no-error.
+    if not avail clien or vclicod = 0 or vclicod = 1
+    then do:
+        bell. message  "Cliente invalido" .
+        pause. next.
+    end.
+    disp vclicod
+         clien.clinom format "x(37)" no-label with frame fcli.
+
+    /*
+    display "Solicite Identidade e Confirme" with frame f-rg no-label
+                no-box centered row 5 overlay color blink/black.
+    */
+
+    vendereco = clien.endereco[1] + " ".
+    if clien.numero[1] <> ?
+    then vendereco = vendereco + string(clien.numero[1]) + " ".
+    if clien.compl[1] <> ?
+    then vendereco = vendereco + string(clien.compl[1]).
+
+    display "Dt.Nascimento: " at 1 clien.dtnasc format "99/99/9999"
+            "Nome Pai     : " at 1 clien.pai
+            "Nome Mae     : " at 1 clien.mae
+            "Identidade   : " at 1 clien.ciinsc
+            "CPF          : " at 1 clien.ciccgc
+            "Profissao    : " at 1 clien.proprof[1]
+            "Endereco     : " at 1 vendereco
+            "Bairro       : " at 1 clien.bairro[1]
+            "Cidade       : " at 1 clien.cidade[1]
+            "UF           : " at 1 clien.ufecod[1]
+            "Cep          : " at 1 clien.cep[1]
+            "Fone         : " at 1 clien.fone
+                with frame f-confirma centered row 6 overlay no-label.
+
+
+    display regua1 with frame f-regua1.
+    choose field regua1 with frame f-regua1.
+
+    if frame-index = 1
+    then do:
+        run glopag.p (input clien.clicod).
+
+    end.
+    if frame-index = 2
+    then do:
+
+        hide frame f-confirma no-pause.
+        hide frame f-regua1 no-pause.
+
+        vnumero = 0.
+        vgfcod  = 0.
+        vvencod = 0.
+        vdtche  = ?.
+        vtippag = "".
+
+        do on error undo, retry:
+            vdtemi = today.
+            update vnumero colon 15
+                   vdtemi  colon 15
+                with frame f1 side-label width 80.
+
+            find glopre where glopre.etbcod  = estab.etbcod and
+                              glopre.clicod  = clien.clicod and
+                              glopre.numero  = vnumero      and
+                              glopre.parcela = 1            no-lock no-error.
+            if avail glopre
+            then do:
+                message "Contrato ja existente".
+                undo, retry.
+            end.
+            update vgfcod label "Consorcio" colon 15 with frame f1.
+            find glofin where glofin.gfcod = vgfcod no-lock no-error.
+            if not avail glofin
+            then do:
+                message "Consorcio nao cadastrado".
+                undo, retry.
+            end.
+            display glofin.gfdes no-label with frame f1.
+            update vvencod label "Vendedor" colon 15 with frame f1.
+            find func where func.funcod = vvencod and
+                            func.etbcod = estab.etbcod no-lock no-error.
+            display func.funnom no-label with frame f1.
+
+            
+            
+            display regua2 with frame f-regua2.
+            choose field regua2 with frame f-regua2.
+            hide frame f-regua2 no-pause.
+            if frame-index = 1
+            then do:
+                vtippag = "DIN".
+                display vtippag colon 15 with frame f1.
+            end.
+            if frame-index = 2
+            then do:
+                assign vtippag = "CHE"
+                       vdtche  = today.
+                display vtippag with frame f1.
+            end.
+            if frame-index = 3
+            then do:
+                vtippag = "CHP".
+                display vtippag with frame f1.
+                update vdtche with frame f1.
+            end.
+            if vdtche <> ?
+            then display vdtche with frame f1.
+
+            if vdtche <> ?
+            then vdt = date(month(vdtche) + 1,1,year(vdtche)).
+            else vdt = date(month(today) + 1,1,year(today)).
+
+            mm  = 0.
+            vv  = 1.
+            for each wf-data:
+                delete wf-data.
+            end.
+
+            do vdata = vdt to (vdt + (glofin.gfmes * 31)).
+                if weekday(vdata) = 3 and mm <> month(vdata)
+                then assign ii = ii + 1.
+                if ii = 2
+                then do:
+                    ii = 0.
+                    vv = vv + 1.
+                    mm = month(vdata).
+                    create wf-data.
+                    assign wf-data.wdata = vdata
+                           wf-data.wpar  = vv.
+                    if vv = glofin.gfmes
+                    then leave.
+                end.
+            end.
+        end.
+        message "Confirma inclusao do consorcio" update sresp.
+        if sresp = no
+        then undo, retry.
+        do transaction:
+            create glopre.
+            assign glopre.etbcod = estab.etbcod
+                   glopre.clicod = clien.clicod
+                   glopre.numero  = vnumero
+                   glopre.parcela = 1
+                   glopre.gfcod   = glofin.gfcod
+                   glopre.valpar  = glofin.gfpar
+                   glopre.dtemi   = vdtemi
+                   glopre.vencod  = func.funcod
+                   glopre.tippag  = vtippag
+                   glopre.dtche   = vdtche
+                   glopre.datexp  = today
+                   glopre.glosit  = "PAG".
+
+            if vdtche <> ?
+            then assign glopre.dtpag   = vdtche
+                        glopre.dtven   = vdtche.
+
+            else assign glopre.dtpag   = today
+                        glopre.dtven   = today.
+        end.
+        vv = 0.
+        do transaction:
+            for each wf-data:
+                create glopre.
+
+                assign glopre.etbcod = estab.etbcod
+                       glopre.clicod = clien.clicod
+                       glopre.numero  = vnumero
+                       glopre.parcela = wf-data.wpar
+                       glopre.gfcod   = glofin.gfcod
+                       glopre.valpar  = glofin.gfpar
+                       glopre.dtemi   = today
+                       glopre.vencod  = func.funcod
+                       glopre.tippag  = vtippag
+                       glopre.dtche   = vdtche
+                       glopre.datexp  = today
+                       glopre.dtven   = wf-data.wdata
+                       glopre.glosit  = "LIB"
+                       glopre.dtpag   = ?.
+                /*
+                vv = vv + 1.
+                if vv < 8
+                then display glopre.parcela column-label "Pr"
+                             glopre.dtven
+                             glopre.valpar column-label "Vl.Prest."
+                                                        format ">>,>>9.99"
+                                    with frame f3 down color white/cyan.
+
+                if vv >= 8 and vv < 15
+                then display glopre.parcela column-label "Pr"
+                             glopre.dtven
+                             glopre.valpar column-label "Vl.Prest."
+                                                        format ">>,>>9.99"
+                                with frame f4 down color white/cyan column 27.
+
+                if vv >= 15
+                then display glopre.parcela column-label "Pr"
+                             glopre.dtven
+                             glopre.valpar column-label "Vl.Prest."
+                                                        format ">>,>>9.99"
+                                with frame f5 down color white/cyan column 53.
+                */
+            end.
+        end.
+
+        sresp = no.
+        message "Deseja imprimir Controle de vencimento" update sresp.
+        if sresp = no
+        then next.
+        
+        vtotlib = 0.
+        vtotpag = 0.
+        {mdadmcab.i &Saida     = "printer"
+            &Page-Size = "64"
+            &Cond-Var  = "160"
+            &Page-Line = "66"
+            &Nom-Rel   = ""glopag""
+            &Nom-Sis   = """SISTEMA DE CONSORCIO - GLOBAL"""
+            &Tit-Rel   = """EXTRATO DE PRESTACOES "" +
+                          "" LOJA "" + string(estab.etbcod) + "" - "" +
+                          "" CLIENTE: "" + string(clien.clinom,""x(35)"")"
+            &Width     = "160"
+            &Form      = "frame f-cabcab1"}
+        for each bglopre where bglopre.clicod = glopre.clicod and
+                               bglopre.numero = glopre.numero no-lock:
+            display bglopre.numero
+                    bglopre.parcela
+                    bglopre.valpar
+                    bglopre.glosit with frame f-printer centered down.
+            if bglopre.glosit = "LIB"
+            then vtotlib = vtotlib + bglopre.valpar.
+            if bglopre.glosit = "PAG"
+            then vtotpag = vtotpag + bglopre.valpar.
+        end.
+        output close.
+    end.
+
+
+
+end.

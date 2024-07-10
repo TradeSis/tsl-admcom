@@ -1,0 +1,21 @@
+if keyfunction(lastkey) = "CUT" or
+   keyfunction(lastkey) = "delete-line"
+then do:
+
+    message " F10 " view-as alert-box.
+
+end.
+
+if keyfunction(lastkey) = "COPY"
+then do:
+
+    message " F11 " view-as alert-box.
+
+end.
+
+if keyfunction(lastkey) = "CLEAR"
+then do:
+
+    message " F8 " view-as alert-box.
+
+end.

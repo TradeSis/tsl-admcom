@@ -1,0 +1,75 @@
+atu_ger.p:find gerloja.geranum where gerloja.geranum.etbcod = vetbcod no-error.
+atu_ger.p:if not avail gerloja.geranum
+atu_ger.p:        create gerloja.geranum.
+atu_ger.p:        assign gerloja.geranum.etbcod = vetbcod
+atu_ger.p:               gerloja.geranum.contnum = 100000
+atu_ger.p:               gerloja.geranum.clicod  = 100000.
+atu_ger.p:        display gerloja.geranum.etbcod label "Filial"
+atu_ger.p:                    with frame f-geranum side-label centered.
+atu_ger.p:        update gerloja.geranum.contnum label "Contrato"
+atu_ger.p:               gerloja.geranum.clicod label "Cliente"
+atu_ger.p:                    with frame f-geranum.
+atu_ger.p:    display gerloja.geranum.clicod  label "Cliente"
+atu_ger.p:            gerloja.geranum.contnum label "Contrato"
+atu_ger.p:            assign gerloja.geranum.clicod  = vclicod
+atu_ger.p:                   gerloja.geranum.contnum = vcontnum
+atu_ger.p:                   gerloja.geranum.datexp  = today.
+gerpla.andre:        do for geranum on error undo on endkey undo:
+gerpla.andre:            find geranum where geranum.etbcod = setbcod.
+gerpla.andre:            vgera = geranum.contnum.
+gerpla.andre:            assign geranum.contnum = geranum.contnum + 1.
+habil.p:                    do for geranum on error undo:
+habil.p:                        find geranum where geranum.etbcod = setbcod.
+habil.p:                        vgera = geranum.clicod.
+habil.p:                        assign geranum.clicod = geranum.clicod + 1.
+novacaol.p:        do for geranum on error undo on endkey undo:
+novacaol.p:            find geranum where geranum.etbcod = setbcod.
+novacaol.p:            vgera = geranum.contnum.
+novacaol.p:            assign geranum.contnum = geranum.contnum + 1.
+novacaol.p-28052008:        do for geranum on error undo on endkey undo:
+novacaol.p-28052008:            find geranum where geranum.etbcod = setbcod.
+novacaol.p-28052008:            vgera = geranum.contnum.
+novacaol.p-28052008:            assign geranum.contnum = geranum.contnum + 1.
+wf-movim.andre:def var vgera       like geranum.clicod.
+altifil.p:          create contrato.
+conin.p:        create contrato.
+convb4.p:    create contrato.
+cris.p:	create contrato.
+gerpla.andre:        create contrato.
+imp1006.p:	then create contrato.
+impcont.p:    create contrato.
+impesp.p~:                then create contrato.
+implojb4.p:            create contrato.
+impmat00.old:                then create contrato.
+impmat00.p:                then create contrato.
+impmat01.p:                then create contrato.
+impmat99.p:                then create contrato.
+impmatll.p:                then create contrato.
+impmatmz.p:            then create contrato.
+impoloja.p:        create contrato.
+importa.p:	then create contrato.
+impstmmz.p:	then create contrato.
+letit.p:	create contrato.
+repar.p:        create contrato.
+aclien9.p:    create clien.
+clien9.p:    create clien.
+clien9.pbk01:    create clien.
+clien.p:            create clien.
+clien.p:                create clien.
+convb4.p:create clien.
+cxext.p:		create clien.
+habil.p:                    create clien.
+impclien.p:                create clien.
+impclien.p~:                create clien.
+impcli.in:	then create clien.
+impcli.p:            create clien.
+impesp.p:                create clien.
+impesp.p~:                create clien.
+implojb4.p:            create clien.
+impmat00.old:                create clien.
+impmat00.p:                create clien.
+impmat01.p:                create clien.
+impmat99.p:                create clien.
+impmatll.p:                create clien.
+impstmmz.p:	then create clien.
+nfdevc.p:        create clien.

@@ -1,0 +1,24 @@
+scroll from-current down with frame f-linha.
+repeat on error undo, leave with frame f-linha:
+    find last bindic no-lock no-error.
+    CREATE indic.
+
+    if avail bindic
+    then indic.indcod = bindic.indcod + 1.
+    else indic.indcod = 1.
+
+    UPDATE
+            indic.inddes.
+    indic.inddes = caps(indic.inddes).
+
+    display indic.indcod indic.inddes.
+    scroll from-current down with frame f-linha.
+end.
+/*
+a-seeid = -1.
+
+if not can-find(first indic)
+then leave keys-loop.
+else next keys-loop.
+*/
+

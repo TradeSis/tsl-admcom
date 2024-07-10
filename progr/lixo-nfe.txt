@@ -1,0 +1,1 @@
+ls: cannot access /admcom/nfe/logosystem/prenota*.txt: No such file or directory

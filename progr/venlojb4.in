@@ -1,0 +1,42 @@
+assign vclacod = 0 vprocod = 0.
+
+do with frame frame-a:
+    find first produ no-lock .    /* Provisorio */
+    /*
+    prompt-for produ.procod .
+    find produ where
+	    produ.procod = input frame frame-a produ.procod
+	 no-lock no-error.
+    if not available produ
+    then do:
+	bell.
+	message "Produto n∆o Cadastrado".
+	pause.
+	undo.
+    end. */
+    display produ.pronom.
+end.
+find last bmovim of plani no-error.
+create movim.
+assign movim.movtdc  = plani.movtdc
+       movim.placod  = plani.placod
+       movim.etbcod  = plani.etbcod
+       movim.movseq  = if available bmovim
+		       then bmovim.movseq + 1
+		       else 1.
+assign movim.procod = produ.procod
+       movim.movqtm = 1.
+display movim.movqtm.
+pause 1 no-message.
+update movim.movpc.
+/*{buspre.i vpercdes}*/
+assign vprotot      = movim.movqtm * (movim.movpc - movim.movdes)
+       plani.platot = plani.platot + vprotot
+       vmovqtm      = vmovqtm + movim.movqtm.
+       /*movim.movctm = produ.procmed.*/
+display movim.movpc
+	vpercdes
+	vprotot.
+display vmovqtm
+	plani.platot
+	with frame f-subtot.

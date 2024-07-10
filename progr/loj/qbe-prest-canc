@@ -1,0 +1,30 @@
+<N>
+<C>Termo de Cancelamento 
+<C>Seguro Prestamista LEBES
+<N>
+<L>
+    Nome: &Nome
+     CPF: &Cpf            Data de Nascimento: &DNascimen
+Endereco: &Endereco
+  Bairro: &Bairro
+  Cidade: &Cidade
+      UF: &Uf               CEP: &Cep
+<L>
+N. Bilhete: 9839&Certificado Data de Emissao: &DInclusao
+<L>
+Data de cancelamento: &DCancelam
+<L>
+Tipo de cancelamento: 
+(  ) Cancelamento em ate 7 dias corridos da data de contratacao do seguro com devolucao integral do premio 
+(  ) Cancelamento apos os 7 dias corridos da data da contratacao do seguro, valido a partir do proximo vencimento da parcela do seguro.
+<L>
+Declaro que recebi o valor acima discriminado, referente a minha solicitacao de cancelamento do Seguro Prestamista LEBES. Dessa maneira, declaro ainda que nao tenho mais nada a reclamar a qualquer tempo ou sob qualquer fundamento, dando PLENA, RASA, GERAL e IRREVOGAVEL, quitacao a seguradora, assinando na norma da lei, por compreender o inteiro teor do presente. 
+<L>
+Para mais informacoes, consulte as condicoes gerais do seguro, a disposicao no site www.qbe.com.br. O plano de seguro tambem pode ser consultado no site da Susep: http://www.susep.gov.br/menu/informacoes-ao-publico/planos-e-produtos/consultapublica-de-produtos-1. Seguro garantido pela QBE Brasil Seguros S.A., CNPJ 96.348.677/000194, Codigo SUSEP n. 594-1, atraves do processo SUSEP n. 15414.900599/2015-83 (Ramo: 1377 - Prestamista). Corretora: Calvente Consultoria Administracao e Corretagem de Seguros, Codigo SUSEP 100.074.861, CNPJ 61.061.768/0001-60. Representante de Seguro Drebes e Cia LTDA CNPJ: 96.662.168/0001-31. O registro do produto na SUSEP nao implica, por parte da Autarquia, incentivo ou recomendacao a sua comercializacao, representando, exclusivamente, sua adequacao as normas em vigor. Tenho ciencia que poderei consultar a situacao cadastral do corretor de seguros no site www.susep.gov.br, por meio de seu n.de registro na SUSEP, nome completo, CNPJ ou CPF. QBE Brasil Seguros - Ouvidoria 08007700824 - E-mail: ouvidoria@qbe.com.br. SAC QBE: 08007744419. <N>Central de Atendimento Gratuito SUSEP - 08000218484 - Atendimento Exclusivo ao Consumidor (9:30 as 17:00). <N>
+<L>
+&Local
+<P>
+<P>
+<C>___________________________________
+<C>Assinatura
+

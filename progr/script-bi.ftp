@@ -1,0 +1,6 @@
+#! /bin/bash                                          
+                                                      
+cd /admcom/custom/laureano/bi-teste/                                
+rm /admcom/custom/laureano/bi-teste/bi-dados-drebes.zip            
+zip /admcom/custom/laureano/bi-teste/bi-dados-drebes.zip *.csv     
+

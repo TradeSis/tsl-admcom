@@ -1,0 +1,30 @@
+output to printer.
+
+   /* put chr(27) + chr(69). */               /* enfatiza   */
+   put chr(15) skip.                          /* condensado */
+   /* put chr(27) + chr(48). */               /*   1/8'     */
+    
+   put chr(27) + chr(49).                     /*   7/72'    */
+
+/* put chr(27) + chr(71).    passada dupla
+   put chr(27) + chr(83).    subscrito
+   put chr(27) + chr(52).    modo italico */
+   
+   put chr(27) + chr(97) + chr(0).            /* justifica a esquerda */
+          
+   put "teste teste teste teste" at 10 skip
+       "teste teste teste teste" at 10.
+       
+/* put chr(27) + chr(70) skip */              /* cancela enfatizado */.
+
+
+/* put chr(27) + chr(72).    cancela passada dupla
+   put chr(27) + chr(84).    cancela subscrito
+   put chr(27) + chr(53).    cancela italico */
+   
+
+   
+   put chr(27) + chr(50).                   /* 1/6' */
+   put chr(18) skip.                        /* cancela condensado */
+
+

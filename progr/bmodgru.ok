@@ -1,0 +1,11 @@
+find bmodgru where recid(bmodgru) = a-seerec[frame-line].
+if keyfunction(lastkey) = "DELETE-LINE"   or
+   keyfunction(lastkey) = "CUT"
+then do:
+    sresp = no.
+    message "Confirma excluir " bmodgru.modcod update sresp.
+    if not sresp
+    then next keys-loop.
+    delete bmodgru.
+    next l2.
+end.

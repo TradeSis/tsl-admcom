@@ -1,0 +1,35 @@
+folha.p
+-rwxrwxrwx  1 root           root      7338 Set  3  2008 folha.p
+-rwxrwxrwx  1 root           root      7566 Set  3  2008 folha_p.p
+folha_p.p
+-rwxrwxrwx  1 root           root      7566 Set  3  2008 folha_p.p
+lncredsp.p
+-rwxrwxrwx  1 root           root     15365 Mai 13 14:42 lncredsp.p
+lucper.p
+-rwxrwxrwx  1 root           root      6701 Ago 24  2003 lucper.p
+pagdesp.p
+-rwxrwxrwx  1 root           root     20134 Ago 16  2008 pagdesp.p
+promod01.p
+-rwxrwxrwx  1 root           root     26416 Jul 25 14:27 promod01.p
+promod02.p
+-rwxrwxrwx  1 root           root     26054 Jul 25 14:27 promod02.p
+promtitl.p
+-rwxrwxrwx  1 root           root     16616 Ago 16  2008 promtitl.p
+relmont.p
+-rwxrwxrwx  1 root           root     15303 Jul 25 14:27 relmont.p
+relpcel1.p
+-rwxrwxrwx  1 root           root     17019 Ago 16  2008 relpcel1.p
+relpcel2.p
+-rwxrwxrwx  1 root           root     16616 Ago 16  2008 relpcel2.p
+relpsel1.p
+-rwxrwxrwx  1 root           root     15732 Jul 25 14:27 relpsel1.p
+titluc1.old
+-rwxrwxrwx  1 root           root     28782 Jul 25 14:27 titluc1.old
+titluc1.p
+-rwxrwxrwx  1 root           root     34686 Ago 10 17:06 titluc1.p
+titluclj.p
+-rwxrwxrwx  1 root           root     23913 Jul 17  2008 titluclj.p
+titluc.p
+-rwxrwxrwx  1 root           root       181 Out  2  2007 cria-titluc.p
+-rwxrwxrwx  1 root           root      4053 Jun 26 22:30 paga-titluc.p
+-rwxrwxrwx  1 root           root     21078 Jul 25 14:27 titluc.p

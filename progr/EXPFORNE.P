@@ -1,0 +1,60 @@
+{admcab.i}
+def var vetbcod like estab.etbcod.
+def temp-table tt-forne
+    field forcod like forne.forcod.
+def var vdti like plani.pladat.
+def var vdtf like plani.pladat.
+
+repeat:
+
+    update vetbcod with frame f1 side-label width 80.
+    find estab where estab.etbcod = vetbcod no-lock no-error.
+    display estab.etbnom no-label with frame f1.
+    update vdti label "Data Inicial" colon 16
+           vdtf label "Data Final"   colon 16 
+                    with frame f1.
+    
+    message "Deseja gerar arquivo" update sresp.
+    
+    if sresp = no
+    then undo, retry.
+
+    for each fiscal where fiscal.desti  = vetbcod and
+                          fiscal.movtdc = 04      and
+                          fiscal.plarec >= vdti   and
+                          fiscal.plarec <= vdtf no-lock:
+                         
+        find first tt-forne where tt-forne.forcod = fiscal.emite no-error.
+        if not avail tt-forne 
+        then do:
+            create tt-forne.
+            assign tt-forne.forcod = fiscal.emite.
+        end.
+        disp fiscal.plarec
+             tt-forne.forcod with 1 down. pause 0.   
+    
+    end.          
+                             
+  
+    output to m:\livros\scfor.exp.
+
+ 
+    for each forne no-lock.
+    
+        put forne.livcod      format "99999"
+            forne.fornom      format "x(40)"
+            forne.forrua      format "x(30)"
+            forne.formunic    format "x(30)"
+            forne.forcep      format "x(08)"
+            forne.ufecod      format "x(02)"
+            forne.forcgc      format "x(18)"
+            forne.forinest    format "x(18)"
+            "00000000"  
+            "       "   
+            "                          " skip.
+     end.
+     output close.
+end.     
+     
+     
+            

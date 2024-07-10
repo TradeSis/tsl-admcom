@@ -1,0 +1,708 @@
+{admcab.i}
+
+def var recatu1         as recid.
+def var recatu2         as recid.
+def var reccont         as int.
+def var esqpos1         as int.
+def var esqpos2         as int.
+def var esqregua        as log.
+def var esqvazio        as log.
+def var esqascend     as log initial yes.
+def var esqcom1         as char format "x(12)" extent 5
+    initial [" Inclusao "," Alteracao "," Consulta "," "," "].
+def var esqcom2         as char format "x(12)" extent 5
+            initial [" "," ","","",""].
+def var esqhel1         as char format "x(80)" extent 5
+    initial [" Inclusao     de Montagem ",
+             " Alteracao    de Montagem ",
+             " Cancelamento de Montagem ",
+             " Consulta     de Montagem ",
+             " "].
+def var esqhel2         as char format "x(12)" extent 5
+   initial ["  ",
+            " ",
+            " ",
+            " ",
+            " "].
+
+
+def temp-table tt-monmov like adm.monmov.
+
+def buffer bmonmov       for adm.monmov.
+
+
+form
+    esqcom1
+    with frame f-com1
+                 row 4 no-box no-labels side-labels column 1 centered.
+form
+    esqcom2
+    with frame f-com2
+                 row screen-lines no-box no-labels side-labels column 1
+                 centered.
+assign
+    esqregua = yes
+    esqpos1  = 1
+    esqpos2  = 1.
+
+bl-princ:
+repeat:
+
+    disp esqcom1 with frame f-com1.
+    disp esqcom2 with frame f-com2.
+    if recatu1 = ?
+    then
+        run leitura (input "pri").
+    else
+        find adm.monmov where recid(adm.monmov) = recatu1 no-lock.
+
+    if not available adm.monmov
+    then esqvazio = yes.
+    else esqvazio = no.
+    
+    clear frame frame-a all no-pause.
+    if not esqvazio
+    then do:
+        run frame-a.
+    end.
+
+    recatu1 = recid(adm.monmov).
+    if esqregua
+    then color display message esqcom1[esqpos1] with frame f-com1.
+    else color display message esqcom2[esqpos2] with frame f-com2.
+    if not esqvazio
+    then repeat:
+        run leitura (input "seg").
+        if not available adm.monmov
+        then leave.
+        if frame-line(frame-a) = frame-down(frame-a)
+        then leave.
+        down
+            with frame frame-a.
+        run frame-a.
+    end.
+    if not esqvazio
+    then up frame-line(frame-a) - 1 with frame frame-a.
+
+    repeat with frame frame-a:
+
+        if not esqvazio
+        then do:
+            find adm.monmov 
+                 where recid(adm.monmov) = recatu1 no-lock.
+
+            status default
+                if esqregua
+                then esqhel1[esqpos1] + if esqpos1 > 1 and
+                                           esqhel1[esqpos1] <> ""
+                                        then  string(adm.monmov.moncod)
+                                        else ""
+                else esqhel2[esqpos2] + if esqhel2[esqpos2] <> ""
+                                        then string(adm.monmov.moncod)
+                                        else "".
+            run color-message.
+            choose field
+                    adm.monmov.etbcod 
+                    adm.montagem.monnom 
+                    adm.montador.montnom 
+                    adm.monmov.monnot 
+                    adm.monmov.monser
+                    adm.monmov.procod 
+                    adm.monmov.movpc help ""
+                go-on(cursor-down cursor-up
+                      cursor-left cursor-right
+                      page-down   page-up
+                      tab PF4 F4 ESC return) /*color white/black*/ .
+            run color-normal.
+            status default "".
+
+        end.
+            if keyfunction(lastkey) = "TAB"
+            then do:
+                if esqregua
+                then do:
+                    color display normal esqcom1[esqpos1] with frame f-com1.
+                    color display message esqcom2[esqpos2] with frame f-com2.
+                end.
+                else do:
+                    color display normal esqcom2[esqpos2] with frame f-com2.
+                    color display message esqcom1[esqpos1] with frame f-com1.
+                end.
+                esqregua = not esqregua.
+            end.
+            if keyfunction(lastkey) = "cursor-right"
+            then do:
+                if esqregua
+                then do:
+                    color display normal esqcom1[esqpos1] with frame f-com1.
+                    esqpos1 = if esqpos1 = 5 then 5 else esqpos1 + 1.
+                    color display messages esqcom1[esqpos1] with frame f-com1.
+                end.
+                else do:
+                    color display normal esqcom2[esqpos2] with frame f-com2.
+                    esqpos2 = if esqpos2 = 5 then 5 else esqpos2 + 1.
+                    color display messages esqcom2[esqpos2] with frame f-com2.
+                end.
+                next.
+            end.
+            if keyfunction(lastkey) = "cursor-left"
+            then do:
+                if esqregua
+                then do:
+                    color display normal esqcom1[esqpos1] with frame f-com1.
+                    esqpos1 = if esqpos1 = 1 then 1 else esqpos1 - 1.
+                    color display messages esqcom1[esqpos1] with frame f-com1.
+                end.
+                else do:
+                    color display normal esqcom2[esqpos2] with frame f-com2.
+                    esqpos2 = if esqpos2 = 1 then 1 else esqpos2 - 1.
+                    color display messages esqcom2[esqpos2] with frame f-com2.
+                end.
+                next.
+            end.
+            if keyfunction(lastkey) = "page-down"
+            then do:
+                do reccont = 1 to frame-down(frame-a):
+                    run leitura (input "down").
+                    if not avail adm.monmov
+                    then leave.
+                    recatu1 = recid(adm.monmov).
+                end.
+                leave.
+            end.
+            if keyfunction(lastkey) = "page-up"
+            then do:
+                do reccont = 1 to frame-down(frame-a):
+                    run leitura (input "up").
+                    if not avail adm.monmov
+                    then leave.
+                    recatu1 = recid(adm.monmov).
+                end.
+                leave.
+            end.
+            if keyfunction(lastkey) = "cursor-down"
+            then do:
+                run leitura (input "down").
+                if not avail adm.monmov
+                then next.
+                color display white/red 
+                         adm.monmov.etbcod 
+                         adm.montagem.monnom 
+                         adm.montador.montnom 
+                         adm.monmov.monnot 
+                         adm.monmov.monser
+                         adm.monmov.procod 
+                         adm.monmov.movpc                
+                         with frame frame-a.
+                if frame-line(frame-a) = frame-down(frame-a)
+                then scroll with frame frame-a.
+                else down with frame frame-a.
+            end.
+            if keyfunction(lastkey) = "cursor-up"
+            then do:
+                run leitura (input "up").
+                if not avail adm.monmov
+                then next.
+                color display white/red adm.monmov.etbcod 
+                    adm.montagem.monnom 
+                    adm.montador.montnom 
+                    adm.monmov.monnot 
+                    adm.monmov.monser
+                    adm.monmov.procod 
+                    adm.monmov.movpc with frame frame-a.
+                if frame-line(frame-a) = 1
+                then scroll down with frame frame-a.
+                else up with frame frame-a.
+            end.
+ 
+        if keyfunction(lastkey) = "end-error"
+        then leave bl-princ.
+
+        if keyfunction(lastkey) = "return" or esqvazio
+        then do:
+            form tt-monmov.etbcod label "Filial..."     space(2)
+                 estab.etbnom      no-label
+                 skip
+                 tt-monmov.moncod label "Montagem."     space(2)
+                 adm.montagem.monnom no-label
+                 skip
+                 tt-monmov.montcod label "Montador."
+                 adm.montador.montnom no-label
+                 skip
+                 tt-monmov.monnot  label "Numero NF" space(2)
+                 tt-monmov.monser  label "Serie NF"
+                 tt-monmov.mondat  label "Dt.Montagem"
+                 skip
+                 tt-monmov.procod  label "Produto.."
+                 tt-monmov.movpc   label "Valor..."
+                 with frame f-monmov-i color black/cyan
+                      centered side-label row 5 .
+                      
+            form adm.monmov.etbcod label "Filial..." space(2)
+                 estab.etbnom      no-label
+                 skip
+                 adm.monmov.moncod label "Montagem." space(2)
+                 adm.montagem.monnom no-label
+                 skip
+                 adm.monmov.montcod label "Montador."
+                 adm.montador.montnom no-label
+                 skip
+                 adm.monmov.monnot  label "Numero NF" space(2)
+                 adm.monmov.monser  label "Serie NF"
+                 adm.monmov.mondat  label "Dt.Montagem"
+                 skip
+                 adm.monmov.procod  label "Produto.."
+                 adm.monmov.movpc   label "Valor..."
+                 with frame f-monmov color black/cyan
+                      centered side-label row 5.
+
+            hide frame frame-a no-pause.
+            
+            if esqregua
+            then do:
+                display caps(esqcom1[esqpos1]) @ esqcom1[esqpos1]
+                        with frame f-com1.
+
+                if esqcom1[esqpos1] = " Inclusao " or esqvazio
+                then do with frame f-monmov-i on error undo.
+                    for each tt-monmov. delete tt-monmov. end.
+                    
+                    create tt-monmov.
+                    assign tt-monmov.mondat   = today.
+
+                    disp tt-monmov.mondat.
+                    
+                    /*tt-monmov.etbcod = setbcod.*/
+
+                    update adm.monmov.etbcod.
+                    
+                    disp tt-monmov.etbcod.
+                    
+                    find estab where
+                         estab.etbcod = tt-monmov.etbcod
+                         no-lock no-error.
+                    if not avail estab
+                    then do:
+                        message "Filial nao cadastrada.".
+                        undo.
+                    end.
+                    else disp estab.etbnom no-label skip.
+                    
+                    update tt-monmov.moncod.  
+
+                    find adm.montagem where
+                         adm.montagem.moncod = tt-monmov.moncod
+                                                no-lock no-error.
+                    if not avail adm.montagem
+                    then do:
+                        message "Tipo de Montagem nao cadastrada.".
+                        undo.
+                    end.
+                    else disp adm.montagem.monnom no-label skip.
+                           
+                    update tt-monmov.montcod.
+
+                    find adm.montador where 
+                         adm.montador.montcod = tt-monmov.montcod
+                                                no-lock no-error.
+                    if not avail adm.montador
+                    then do:
+                        message "Montador nao cadastrado".
+                        undo.
+                    end.
+                    else disp adm.montador.montnom no-label skip.
+                    
+                    if tt-monmov.moncod = 1 
+                    then do:
+                        tt-monmov.monser = "V".
+                        update 
+                               tt-monmov.monnot  skip
+                               tt-monmov.monser  skip
+                               tt-monmov.procod  skip.
+                    end.
+                    else do:
+                        update 
+                               tt-monmov.procod  skip.
+                    end.
+                    
+                    /*** Validando ***/
+                    find com.produ where 
+                         com.produ.procod = tt-monmov.procod
+                                                  no-lock no-error.
+                    if not avail com.produ
+                    then do:
+                        message "Produto nao cadastrado".
+                        undo.
+                    end.
+                    
+                    if com.produ.protam = "NAO" or
+                       com.produ.protam = ""
+                    then do:
+                        message "Produto nao esta cadastrado p/ Montagem".
+                        undo.
+                    end.
+                    
+                    /*****************/
+                    
+                    /***/
+                    if tt-monmov.moncod = 1
+                    then do:
+                    
+                    find last com.plani
+                        where com.plani.movtdc = 5
+                          and com.plani.etbcod = tt-monmov.etbcod 
+                          and com.plani.emite  = tt-monmov.etbcod 
+                          and com.plani.serie  = tt-monmov.monser
+                          and com.plani.numero = tt-monmov.monnot 
+                                      no-lock no-error.
+                    if avail com.plani
+                    then do:
+                        if (today - com.plani.pladat) > 90
+                        then do:
+                            message "Nota Fiscal emitida a mais de 3 meses.
+                                    Continuar? "
+                                    update sresp.
+                            if not sresp
+                            then undo.
+                        end.
+                    
+                        for each com.movim
+                           where com.movim.etbcod = com.plani.etbcod
+                             and com.movim.placod = com.plani.placod
+                             and com.movim.movtdc = com.plani.movtdc
+                             and com.movim.movdat = com.plani.pladat
+                                                          no-lock:
+
+                            if com.movim.procod = tt-monmov.procod
+                            then do:
+                                find first bmonmov where
+                                        bmonmov.monnot = tt-monmov.monnot
+                                    and bmonmov.monser = tt-monmov.monser
+                                        no-lock no-error.
+                                if avail bmonmov
+                                then do:
+                                    if com.movim.movqtm > 1
+                                    then.
+                                    else do:
+                                        message "Montagem ja incluida".
+                                        pause 3 no-message.
+                                        recatu1 = ?.
+                                        leave bl-princ.
+                                    end.
+                                end.        
+                                
+                                tt-monmov.movpc = com.movim.movpc.
+                            end.    
+                        end.                 
+
+                        if tt-monmov.movpc = 0
+                        then do:
+                            message "Produto nao encontrado na Nota.".
+                            undo.
+                        end.
+                        
+                    end.
+                    else do:
+                        if adm.montagem.moncod = 1
+                        then do:
+                            message "Nota Fiscal nao encontrada.".
+                            pause 3 no-message.
+                            undo.
+                        end.
+                    end.
+                    end.        
+                    if tt-monmov.moncod = 2
+                    then do:
+                        if adm.montagem.moncod = 2 /* Loja */
+                        then do:
+                            find last com.movim where
+                                      com.movim.procod = 
+                                          tt-monmov.procod
+                                  and com.movim.movdat >= (today - 45)
+                                  no-lock no-error.
+                            if not avail movim
+                            then do:
+                                 find first com.estoq where
+                                            com.estoq.etbcod = 
+                                            tt-monmov.etbcod
+                                        and com.estoq.procod =
+                                            tt-monmov.procod
+                                        and com.estoq.estatual > 0
+                                          no-lock no-error.
+                                 if not avail com.estoq
+                                 then do:
+                             message "Produto sem movimentacao (45 dias) e sem saldo".
+                                    pause 3 no-message.
+                                    undo.
+                                 end.
+                            end.
+                        end.
+                        
+                        find last com.movim where
+                                com.movim.procod = tt-monmov.procod
+                              and com.movim.movtdc = 5
+                              and com.movim.movdat <= today
+                              no-lock no-error.
+                        if avail com.movim
+                        then tt-monmov.movpc = com.movim.movpc.
+                        else do:
+                            find first com.estoq where
+                                            com.estoq.etbcod = 
+                                            tt-monmov.etbcod
+                                        and com.estoq.procod =
+                                            tt-monmov.procod
+                                            no-lock no-error.
+                            if avail com.estoq then
+                            tt-monmov.movpc = estoq.estproper.                
+
+                        end.
+                        
+                        update tt-monmov.movpc.
+                    end.
+                    /***/
+                    disp tt-monmov.movpc.
+
+                    if tt-monmov.movpc = 0
+                    then
+                        update tt-monmov.movpc.
+                    
+                           
+                    message "Confirma a inclusao de montagem?"
+                            update sresp.
+                    if not sresp 
+                    then do:
+                        recatu1 = ?. leave.
+                    end.
+                    else do:
+                        create adm.monmov.
+                        buffer-copy tt-monmov to adm.monmov.
+                        
+                        recatu1 = recid(adm.monmov).
+                        leave.                
+                    end.
+                    
+                end.
+                
+                if esqcom1[esqpos1] = " Consulta " or
+                   esqcom1[esqpos1] = " Exclusao " or
+                   esqcom1[esqpos1] = " Alteracao "
+                then do with frame f-monmov.
+                    find estab where
+                         estab.etbcod = adm.monmov.etbcod
+                                        no-lock no-error.
+                    find adm.montagem where
+                         adm.montagem.moncod = adm.monmov.moncod
+                                                no-lock no-error.
+                    find adm.montador where 
+                         adm.montador.montcod = adm.monmov.montcod
+                                                no-lock no-error.
+
+                
+                    disp adm.monmov.mondat.
+                    disp estab.etbnom no-label.
+                    disp adm.montagem.monnom no-label.
+                    disp adm.montador.montnom no-label.
+
+                    disp adm.monmov except aux.
+                end.
+                
+                if esqcom1[esqpos1] = " Exclusao "
+                then do with frame f-exc on error undo.
+                
+                
+                
+                end.
+                
+                
+                if esqcom1[esqpos1] = " Alteracao "
+                then do with frame f-monmov on error undo.
+                    find adm.monmov where
+                            recid(adm.monmov) = recatu1 
+                        exclusive.
+                    find estab where
+                         estab.etbcod = adm.monmov.etbcod no-lock no-error.
+                    find adm.montagem where
+                         adm.montagem.moncod = adm.monmov.moncod
+                                                no-lock no-error.
+                    find adm.montador where 
+                         adm.montador.montcod = adm.monmov.montcod
+                                                no-lock no-error.
+                
+                    disp adm.monmov.mondat.
+                    disp estab.etbnom no-label.
+                    disp adm.montagem.monnom no-label.
+                    disp adm.montador.montnom no-label.
+                    
+                    update adm.monmov.etbcod.
+                    
+                    find estab where
+                         estab.etbcod = adm.monmov.etbcod
+                                        no-lock no-error.
+                    if not avail estab
+                    then do:
+                        message "Filial nao cadastrada.".
+                        undo.
+                    end.
+                    else disp estab.etbnom no-label skip.
+                    
+                    update adm.monmov.moncod.  
+                    
+                    find adm.montagem where
+                         adm.montagem.moncod = adm.monmov.moncod
+                                                no-lock no-error.
+                    if not avail adm.montagem
+                    then do:
+                        message "Tipo de Montagem nao cadastrada.".
+                        undo.
+                    end.
+                    else disp adm.montagem.monnom no-label skip.
+                           
+                    update adm.monmov.montcod.
+                    
+                    find adm.montador where 
+                         adm.montador.montcod = adm.monmov.montcod
+                                                no-lock no-error.
+                    if not avail adm.montador
+                    then do:
+                        message "Montador nao cadastrado".
+                        undo.
+                    end.
+                    else disp adm.montador.montnom no-label skip.
+                    update 
+                           adm.monmov.monnot  skip
+                           adm.monmov.monser  skip
+                           adm.monmov.procod  skip
+                           adm.monmov.movpc.
+                
+                end.
+
+            end.
+            else do:
+                display caps(esqcom2[esqpos2]) @ esqcom2[esqpos2]
+                        with frame f-com2.
+                if esqcom2[esqpos2] = "  "
+                then do:
+                    hide frame f-com1  no-pause.
+                    hide frame f-com2  no-pause.
+                    /* run programa de relacionamento.p (input ). */
+                    view frame f-com1.
+                    view frame f-com2.
+                end.
+                leave.
+            end.
+        end.
+        if not esqvazio
+        then do:
+            run frame-a.
+        end.
+        if esqregua
+        then display esqcom1[esqpos1] with frame f-com1.
+        else display esqcom2[esqpos2] with frame f-com2.
+        recatu1 = recid(adm.monmov).
+    end.
+    if keyfunction(lastkey) = "end-error"
+    then do:
+        view frame fc1.
+        view frame fc2.
+    end.
+end.
+hide frame f-com1  no-pause.
+hide frame f-com2  no-pause.
+hide frame frame-a no-pause.
+
+procedure frame-a.
+
+    find adm.montagem where
+         adm.montagem.moncod = adm.monmov.moncod no-lock no-error.
+    find adm.montador where
+         adm.montador.montcod = adm.monmov.montcod no-lock no-error.
+         
+    display adm.monmov.etbcod    column-label "Fil" format ">>9"
+            adm.montagem.monnom  column-label "Montagem" format "x(17)"
+            when avail adm.montagem
+            adm.montador.montnom column-label "Montador" format "x(17)"
+            when avail adm.montador
+            adm.monmov.monnot    column-label "Num. NF"
+            adm.monmov.monser    column-label "Serie"
+            adm.monmov.procod    column-label "Produto"
+            adm.monmov.movpc     column-label "Valor"
+            with frame frame-a 11 down centered color white/red row 5.
+            
+end procedure.
+procedure color-message.
+    find adm.montagem where
+         adm.montagem.moncod = adm.monmov.moncod no-lock no-error.
+    find adm.montador where
+         adm.montador.montcod = adm.monmov.montcod no-lock no-error.
+
+    color display message
+            adm.monmov.etbcod    column-label "Fil" format ">>9"
+            adm.montagem.monnom  column-label "Montagem" format "x(17)"
+            when avail adm.montagem
+            adm.montador.montnom column-label "Montador" format "x(17)"
+            when avail adm.montador
+            adm.monmov.monnot    column-label "Num. NF"
+            adm.monmov.monser    column-label "Serie"
+            adm.monmov.procod    column-label "Produto"
+            adm.monmov.movpc     column-label "Valor"
+
+            with frame frame-a.
+end procedure.
+
+procedure color-normal.
+    find adm.montagem where
+         adm.montagem.moncod = adm.monmov.moncod no-lock no-error.
+    find adm.montador where
+         adm.montador.montcod = adm.monmov.montcod no-lock no-error.
+
+    color display normal
+            adm.monmov.etbcod    column-label "Fil" format ">>9"
+            adm.montagem.monnom  column-label "Montagem" format "x(17)"
+            when avail adm.montagem
+            adm.montador.montnom column-label "Montador" format "x(17)"
+            when avail adm.montador
+            adm.monmov.monnot    column-label "Num. NF"
+            adm.monmov.monser    column-label "Serie"
+            adm.monmov.procod    column-label "Produto"
+            adm.monmov.movpc     column-label "Valor"
+            with frame frame-a.
+end procedure.
+
+
+
+
+procedure leitura . 
+def input parameter par-tipo as char.
+        
+if par-tipo = "pri" 
+then  
+    if esqascend  
+    then  
+        find first adm.monmov where
+                   adm.monmov.etbcod = setbcod no-lock no-error.
+    else  
+        find last adm.monmov  where
+                  adm.monmov.etbcod = setbcod no-lock no-error.
+                                             
+if par-tipo = "seg" or par-tipo = "down" 
+then  
+    if esqascend  
+    then  
+        find next adm.monmov  where
+                  adm.monmov.etbcod = setbcod no-lock no-error.
+    else  
+        find prev adm.monmov  where
+                  adm.monmov.etbcod = setbcod no-lock no-error.
+             
+if par-tipo = "up" 
+then                  
+    if esqascend   
+    then   
+        find prev adm.monmov where
+                  adm.monmov.etbcod = setbcod no-lock no-error.
+    else   
+        find next adm.monmov where 
+                  adm.monmov.etbcod = setbcod no-lock no-error.
+        
+end procedure.
+         

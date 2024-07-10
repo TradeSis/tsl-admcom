@@ -1,0 +1,26 @@
+
+scabrel = {&tit-rel}.
+
+output to {&Saida} page-size {&Page-Size} {&Append}.
+
+if {&Page-Line} <> 0
+then
+    put unformatted chr(27) + "C" + chr({&Page-Line}).
+
+if {&Cond-Var} >  137
+then
+    put unformatted chr(27) + "M" + chr(15).
+
+if {&Cond-Var} >  96  and {&Cond-Var} <=  137
+then
+    put unformatted chr(27) + "P" + chr(15).
+
+if {&Cond-Var} >  80  and {&Cond-Var} <=  96
+then
+    put unformatted chr(27) + "M" + chr(18).
+
+if {&Cond-Var} <=  80
+then
+    put unformatted chr(27) + "P" + chr(18).
+
+/* display with {&form}. */

@@ -1,0 +1,520 @@
+ajusta-imcs-nota.p:for each plani where plani.etbcod = 993 
+atuptab.p:                    estoq.etbcod = 993 no-lock no-error.
+bsi-qvexp2.p:            find first bfestoq where bfestoq.etbcod = 993
+bsi-qvexp3.p:            find first bfestoq where bfestoq.etbcod = 993
+bsi-qvexp-eis.p:            find first bfestoq where bfestoq.etbcod = 993
+bsi-qvexp_homologa.p:            find first bfestoq where bfestoq.etbcod = 993
+bsi-qvexp.p:            find first bfestoq where bfestoq.etbcod = 993
+cham_nfe.p:   setbcod = 993 or
+cliprog0513-real.p:       tt-estab.etbcod <> 993
+cliprog0620.p:       tt-estab.etbcod <> 993
+cliprog4.p:           tt-estab.etbcod <> 993
+cliprog8.p:           tt-estab.etbcod <> 993
+cliprog9513.p:       tt-estab.etbcod <> 993
+cobert9.p:    message "Processa Estoque Disponivel em Depositos Somente CD (993/995) ?"
+cobert9.p:    message "Processa Estoque Disponivel em Depositos Somente CD (993/900) ?"
+cobert9.p:                if (estoq.etbcod = 900 or estoq.etbcod = 993) 
+cobert9.p:                                  estoq.etbcod = 993 or
+cobert9.p:                if (estoq.etbcod = 900 or estoq.etbcod = 993) 
+cobert9.p:        for each estab where estab.etbcod >= 993 or
+cobertj.p:    message "Processa Estoque Disponivel em Depositos Somente CD (993/995) ?"
+cobertj.p:                      estoq.etbcod = 993 or
+cobertj.p:                if (estoq.etbcod = 900 or estoq.etbcod = 993) 
+cobertj.p:                                  estoq.etbcod = 993 or
+cobertj.p:                if (estoq.etbcod = 900 or estoq.etbcod = 993) 
+cobertj.p:        for each estab where estab.etbcod >= 993 no-lock:
+condev_1.p:                           or plani.dest = 993 
+conmix-lj.p:        find estoq where estoq.etbcod = 993 and
+conmix-lj.p:        if estab.etbcod = 993
+connectm3a.p:      find estoq where estoq.etbcod = 993 and
+connectm_log-ag4.p:      find estoq where estoq.etbcod = 993 and
+connectm_new.p:      find estoq where estoq.etbcod = 993 and
+connectm_new_scp.p:      find estoq where estoq.etbcod = 993 and
+connectm_nwe_cl.p:      find estoq where estoq.etbcod = 993 and
+corte_disponivel.p:find com.estoq where com.estoq.etbcod = 993
+corte_disponivel.p:find com.estoq where com.estoq.etbcod = 993
+devcom-atual.p:                                         plani.etbcod = 993           and
+devcom-atual.p:       vetbcod = 993 or
+devcom-atual.p:       vetbcod <> 993 and
+devcom-atual.p:       estab.etbcod = 993 
+devcom-atual.p:                              xestab.etbcod = 993 no-lock,
+devcom-atual.p:                estab.etbcod = 993 
+devcom-atual.p:                              xestab.etbcod = 993 no-lock,
+devcom-atual.p:    then nfe-emite = 993.
+devcom-atual.p:                estab.etbcod = 993 
+devcom-atual.p:                              xestab.etbcod = 993 no-lock,
+devcom.p:                                         plani.etbcod = 993           and
+devcom.p:       vetbcod = 993 or
+devcom.p:       vetbcod <> 993 and
+devcom.p:               estab.etbcod = 993 or
+devcom.p:                              xestab.etbcod = 993 or
+devcom.p:                   estab.etbcod = 993 or
+devcom.p:                              xestab.etbcod = 993 or
+devcom.p:    then nfe-emite = 993.
+devcom.p:                estab.etbcod = 993 or 
+devcom.p:                              xestab.etbcod = 993 or
+devcomst.p:                                         plani.etbcod = 993           and
+devdep.p:        if plani.etbcod = 993 or 
+devipir1.p:                                         plani.etbcod = 993           and
+devipir1.p:       estab.etbcod = 993 
+devipir1.p:                              xestab.etbcod = 993 no-lock,
+devipist.p:                                         plani.etbcod = 993           and
+devipist.p:            estab.etbcod = 993 
+devipist.p:                              xestab.etbcod = 993 no-lock,
+devipist.p:                estab.etbcod = 993 
+devipist.p:                              xestab.etbcod = 993 no-lock,
+devipist.p:                estab.etbcod = 993 
+devipist.p:                              xestab.etbcod = 993 no-lock,
+devipist.p:            estab.etbcod = 993 
+devipist.p:                              xestab.etbcod = 993 no-lock,
+devipist.p:            estab.etbcod = 993 
+devipist.p:                              xestab.etbcod = 993 no-lock,
+devrdipi.p:                                         plani.etbcod = 993           and
+devrdipi.p:       estab.etbcod = 993 
+devrdipi.p:                              xestab.etbcod = 993 no-lock,
+devven-ecom_nfe.p:       estab.etbcod = 993
+devven-ecom_nfe.p:        for each xestab where xestab.etbcod = 993 or
+dg009.p:                     and plani.etbcod = 993
+dg011.p:                     estoq.etbcod = 993 no-lock:
+eminfdv.p:    then nfe-emite = 993.
+eminfent.p:                                         plani.etbcod = 993           and
+eminfent.p:            estab.etbcod = 993 
+eminfent.p:                              xestab.etbcod = 993 no-lock,
+entaud02.p:            if plani.emite = 993 /*95*/ and
+entaud02.p:               plani.desti = 993 /*95*/
+entaud02.p:            then vemi = 993 /*95*/.
+entaud02.p:            then vdesti = 993 /*95*/.
+entaud02.p:            then vemi = 993 /*95*/.
+entaud02.p:            then vdesti = 993 /*95*/.
+entconin.p:    if (estab.etbcod >= 993 and
+entctb28.p:       (vetbcod < 993 or
+entd_aud_energia.p:                if vetbcod = 993
+entd_aud_energia.p:                    and estab.etbcod <> 993
+entd_aud_energia.p:                if vetbcod <> 993
+entd_aud_energia.p:                    if tt-imp.etbcod = 993
+entd_aud_energia.p:                if vetbcod = 993
+entd_aud_energia.p:                    and estab.etbcod <> 993
+entd_aud_energia.p:                if vetbcod <> 993
+entd_aud_energia.p:                            else if fiscal.emite = 993
+entd_aud_energia.p:                    or (fiscal.desti = 993 and fiscal.emite = 998)
+entd_aud_energia.p:            if vetbcod = 993
+entd_aud_energia.p:                and estab.etbcod <> 993
+entd_aud_energia.p:            if vetbcod <> 993
+entd_aud_energia.p:            if plani.emite = 993 /*95*/ and
+entd_aud_energia.p:               plani.desti = 993 /*95*/
+entd_aud_energia.p:            then vemi = 993 /*95*/.
+entd_aud_energia.p:            then vdesti = 993 /*95*/.
+entd_aud_energia.p:            then vemi = 993 /*95*/.
+entd_aud_energia.p:            then vdesti = 993 /*95*/.
+entd_aud_energia.p:    then vplani_etbcod = 993.
+entd_aud_energia.p:    then vcod = "E0000993".
+entd_aud_energia.p:    then vestab_etbcod = 993.
+entd_aud_energia.p:    then vcod = "E0000993".
+entd_aud_energia.p:    then vestab_etbcod = 993.
+entd_aud_energia.p:    then vcod = "E0000993".
+entd_aud_energia.p:    then vcod = "E0000993".
+entd_aud_energia.p:    then vcod = "E0000993".
+entd_aud_energia.p:    then vcod = "E0000993".
+entd_aud_energia.p:    then vcod = "E0000993".
+entd_aud.p:                if vetbcod = 993
+entd_aud.p:                    and estab.etbcod <> 993
+entd_aud.p:                if vetbcod <> 993
+entd_aud.p:                    if tt-imp.etbcod = 993
+entd_aud.p:                if vetbcod = 993
+entd_aud.p:                    and estab.etbcod <> 993
+entd_aud.p:                if vetbcod <> 993
+entd_aud.p:                            else if fiscal.emite = 993
+entd_aud.p:                    or (fiscal.desti = 993 and fiscal.emite = 998)
+entd_aud.p:            if vetbcod = 993
+entd_aud.p:                and estab.etbcod <> 993
+entd_aud.p:            if vetbcod <> 993
+entd_aud.p:            if plani.emite = 993 /*95*/ and
+entd_aud.p:               plani.desti = 993 /*95*/
+entd_aud.p:            then vemi = 993 /*95*/.
+entd_aud.p:            then vdesti = 993 /*95*/.
+entd_aud.p:            then vemi = 993 /*95*/.
+entd_aud.p:            then vdesti = 993 /*95*/.
+entd_aud.p:    then vplani_etbcod = 993.
+entd_aud.p:    then vcod = "E0000993".
+entd_aud.p:    then vestab_etbcod = 993.
+entd_aud.p:    then vcod = "E0000993".
+entd_aud.p:    then vestab_etbcod = 993.
+entd_aud.p:    then vcod = "E0000993".
+entd_aud.p:    then vcod = "E0000993".
+entd_aud.p:    then vcod = "E0000993".
+entd_aud.p:    then vcod = "E0000993".
+entd_aud.p:    then vcod = "E0000993".
+entradas_MTP.p:                if vetbcod = 993
+entradas_MTP.p:                    and estab.etbcod <> 993
+entradas_MTP.p:                if vetbcod <> 993
+entradas_MTP.p:                            else if fiscal.emite = 993
+entradas_MTP.p:                    or (fiscal.desti = 993 and fiscal.emite = 998)
+entradas_MTP.p:            if vetbcod = 993
+entradas_MTP.p:                and estab.etbcod <> 993
+entradas_MTP.p:            if vetbcod <> 993
+entradas_MTP.p:            if plani.emite = 993 /*95*/ and
+entradas_MTP.p:               plani.desti = 993 /*95*/
+entradas_MTP.p:            then vemi = 993 /*95*/.
+entradas_MTP.p:            then vdesti = 993 /*95*/.
+entradas_MTP.p:            then vemi = 993 /*95*/.
+entradas_MTP.p:            then vdesti = 993 /*95*/.
+entradas_MTP.p:    then vplani_etbcod = 993.
+entradas_MTP.p:    then vcod = "E0000993".
+entradas_MTP.p:    then vestab_etbcod = 993.
+entradas_MTP.p:    then vcod = "E0000993".
+entradas_MTP.p:    then vestab_etbcod = 993.
+entradas_MTP.p:    then vcod = "E0000993".
+entradas_MTP.p:    then vcod = "E0000993".
+entradas_MTP.p:    then vcod = "E0000993".
+entradas_MTP.p:    then vcod = "E0000993".
+entradas_MTP.p:    then vcod = "E0000993".
+ent_tci.p:            if plani.emite = 993 /*95*/ and
+ent_tci.p:               plani.desti = 993 /*95*/
+ent_tci.p:            then vemi = 993 /*95*/.
+ent_tci.p:            then vdesti = 993 /*95*/.
+estcus01.p:                   tt-est.etbcod = 993 and 
+estoq_retaguarda_loja.p:message "Este menu considera o estoque dos seguintes estabelecimentos: 900, 980, 981, 988, 990, 993 e 998!" view-as alert-box.
+estoq_retaguarda_loja.p:	for each commatriz.estoq where (commatriz.estoq.etbcod = 900 or commatriz.estoq.etbcod = 980 or commatriz.estoq.etbcod = 981 or commatriz.estoq.etbcod = 988 or commatriz.estoq.etbcod = 990 or commatriz.estoq.etbcod = 993 or commatriz.estoq.etbcod = 998) and commatriz.estoq.estatual > 0 no-lock.
+estoq_retaguarda_loja.p:	for each commatriz.estoq where (commatriz.estoq.etbcod = 900 or commatriz.estoq.etbcod = 980 or commatriz.estoq.etbcod = 981 or commatriz.estoq.etbcod = 988 or commatriz.estoq.etbcod = 990 or commatriz.estoq.etbcod = 993 or commatriz.estoq.etbcod = 998) and commatriz.estoq.procod = vprocod and commatriz.estoq.estatual > 0 no-lock.
+estoq_retaguarda_loja.p:	for each commatriz.estoq where (commatriz.estoq.etbcod = 900 or commatriz.estoq.etbcod = 980 or commatriz.estoq.etbcod = 981 or commatriz.estoq.etbcod = 988 or commatriz.estoq.etbcod = 990 or commatriz.estoq.etbcod = 993 or commatriz.estoq.etbcod = 998) and commatriz.estoq.estatual > 0 no-lock.
+estoq_retaguarda_loja.p:	for each commatriz.estoq where (commatriz.estoq.etbcod = 900 or commatriz.estoq.etbcod = 980 or commatriz.estoq.etbcod = 981 or commatriz.estoq.etbcod = 988 or commatriz.estoq.etbcod = 990 or commatriz.estoq.etbcod = 993 or commatriz.estoq.etbcod = 998) and commatriz.estoq.estatual > 0 and commatriz.estoq.procod = vprocod no-lock.
+estoq_retaguarda.p:message "Este menu considera o estoque dos seguintes estabelecimentos: 900, 980, 981, 988, 990, 993 e 998!" view-as alert-box.
+estoq_retaguarda.p:	for each estoq where (etbcod = 900 or etbcod = 980 or etbcod = 981 or etbcod = 988 or etbcod = 990 or etbcod = 993 or etbcod = 998) and estatual > 0 no-lock.
+estoq_retaguarda.p:	for each estoq where (etbcod = 900 or etbcod = 980 or etbcod = 981 or etbcod = 988 or etbcod = 990 or etbcod = 993 or etbcod = 998) and procod = vprocod and estatual > 0 no-lock.
+estoq_retaguarda.p:	for each estoq where (etbcod = 900 or etbcod = 980 or etbcod = 981 or etbcod = 988 or etbcod = 990 or etbcod = 993 or etbcod = 998) and estatual > 0 no-lock.
+estoq_retaguarda.p:	for each estoq where (etbcod = 900 or etbcod = 980 or etbcod = 981 or etbcod = 988 or etbcod = 990 or etbcod = 993 or etbcod = 998) and estatual > 0 and procod = vprocod no-lock.
+estoque-por-classe.p:    find estoq where estoq.etbcod = 993 and
+estoque-por-classe.p:    find first wpro where wpro.etbcod = 993
+estoque-por-classe.p:     tt-produ.estdp   column-label "Dep.993" format "->>>>9"
+estoque-por-classe.p:        find estab where estab.etbcod = 993 no-lock.
+estoque-por-classe.p:        if estab.etbcod = 993
+estoque-por-classe.p:        if wpro.etbcod = 993
+_extrato11.p:                          bmovim.emite  = 993 and
+_extrato11.p:                          bmovim.desti  = 993 and
+_extrato12.p:                          bmovim.emite  = 993 and
+_extrato12.p:                          bmovim.desti  = 993 and
+fipedido.p:                   bestoq.etbcod = 993 and
+folha.p:        if tt-estab.etbcod <> 993 and
+for0506.p:    for each estab where estab.etbcod >= /*94*/ 993 no-lock:
+for0506.p:        if estab.etbcod >= 900 and estab.etbcod < 993 then next.
+for0506.p:        for each estab where estab.etbcod >= /*94*/ 993 no-lock:
+for0506.p:            if estab.etbcod >= 900 and estab.etbcod < 993 then next.
+for0507.p:    for each estab where estab.etbcod >= /*95*/ 993 no-lock:
+for0507.p:        for each estab where estab.etbcod >= /*95*/ 993 no-lock:
+for2710.p:    for each estab where estab.etbcod >= /*94*/ 993 no-lock:
+for2710.p:        if estab.etbcod >= 900 and estab.etbcod < 993 then next.
+for2710.p:        for each estab where estab.etbcod >= /*94*/ 993 no-lock:
+for2710.p:            if estab.etbcod >= 900 and estab.etbcod < 993 then next.
+ge9014.p:for each estab 993 no-lock.
+geraarqinvsmart.p:           put unformatted /* 001-003 */ "993"  at 01.
+geraarqinvsmart.p:           put unformatted /* 001-003 */ "993"  at 01.
+gera_fiscal_nfe_entradas.p:            then vemite = 993 /*95*/.
+gera-mix-paei.p:def var vestatual993 like estoq.estatual.
+gera-mix-paei.p:        "Est.CD 993;"
+gera-mix-paei.p:        "Est.CD993;"
+gera-mix-paei.p:        vestatual993 = 0
+gera-mix-paei.p:                 and estoq.etbcod = 993
+gera-mix-paei.p:    then assign vestatual993 = estoq.estatual.
+gera-mix-paei.p:                 vestatual993 column-label "Est.993" format "->>9.99"
+gera-mix-paei.p:        if vestatual981 + vestatual993 + vestatualloj < 5
+gera-mix-paei.p:                vestatual993  ";"
+gera-mix-paei.p:                vestatual993  ";"
+gera-mix-paei.p:                vestatual981 + vestatual993 ";"
+gerapedidoautomatico-adm.p:        find estoq where estoq.etbcod = 993 and
+gerapedidoautomatico-cron.p:                find estoq where estoq.etbcod = 993 and
+gerapedidoautomatico-valida-mix.p:find bestoq where bestoq.etbcod = 993 and
+gerfis1.p:            then vemite = 993 /*95*/.
+gerfis.p:            then vemite = 993 /*95*/.
+gerfis.p:            then vemite = 993 /*95*/.
+gerfis.p:            then vemite = 993 /*95*/.
+gerfis.p:            then vdesti    = 993 /*95*/.
+gerfis.p:            then vdesti    = 993 /*95*/.
+gerfis.p:            then vdesti = 993 /*95*/.
+invc_aud.p:       estab.etbcod <> 993 and
+invc_aud.p:        /* 001-003 */ "993"  at 01.
+invc_aud.p:        vetbinv = 993.
+invd_aud.p:           tt-saldo.etbcod = 993.
+invd_aud.p:        /* 001-003 */ "993"  at 01.
+lcobert9.p:        for each estab where estab.etbcod >= 993 no-lock:
+leote10022016.p: * 09/04/2014 - emiminada da tela o display dos campos Disp993 e Disp995     *
+leote10022016.p:def new shared var vdisponiv993  like estoq.estatual format "->>>>9".
+leote10022016.p:def new shared var vestatual993  like estoq.estatual format "->>>>9".
+leote10022016.p:def var pedidos_993 as dec.
+leote10022016.p:    vdisponiv993 = 0.
+leote10022016.p:    vestatual993 = 0.
+leote10022016.p:    find estoq where estoq.etbcod = 993 and estoq.procod = vvprocod
+leote10022016.p:    if avail estoq then assign vestatual993 = vestatual993 + estoq.estatual.
+leote10022016.p:    vdisponiv993 = vdisponiv993 - vreserv_ecom.
+leote10022016.p:  (vestatual  - vestatual993 - /*vestatual995 -*/ vestatual988 - vestatual500 
+leote10022016.p:            vestatual993      label "Est993"
+leote10022016.p:            pedidos_993      label "Pedidos" format "->>>>9"
+leote10022016.p:    def var vdisponivel like vdisponiv993.
+leote10022016.p:    pedidos_993 = vreservas.
+leote10022016.p:    vdisponiv993 = vdisponivel.
+leote10022016.p:    if vdisponiv993 < 0
+leote10022016.p:    then estoq-indisponivel = vdisponiv993 * -1.
+leote10022016.p:    else estoq-disponivel   = vdisponiv993.
+leote10022016.p:        if estab.etbcod = 993
+leote10022016.p:            if wpro.etbcod = 993
+leote10022016.p:    find first wpro where wpro.etbcod = 993
+leote10022016.p:    assign vdisponiv993 =  vestatual993 - (if avail wpro then wpro.wreserva 
+leote10022016.p:    disp vestatual993        
+leote10022016.p:         pedidos_993
+leote10022016.p:    pedidos_993 = vreservas.
+leote10022016.p:    vdisponiv993 = vdisponivel.
+leote10022016.p:    if vdisponiv993 < 0
+leote10022016.p:    then estoq-indisponivel = vdisponiv993 * -1.
+leote10022016.p:    else estoq-disponivel   = vdisponiv993.
+leote10022016.p:        if estab.etbcod = 993
+lista-inf-cpl-vinicios.p:    for each a01_infnfe where a01_infnfe.etbcod = 993
+listpro1.p:then assign vetbcod = 993.
+livroin1.p:else assign vetbi = 993
+lpaestat.p:        find estoq where estoq.etbcod = 993 and
+lpaestat.p:                find estoq where estoq.etbcod = 993 and
+manfor1.p:           if vetb = 993 or vetb = 995 or vetb = 996 or vetb = 998 or vetb = 999
+monmov.p:                                            com.estoq.etbcod = 993 
+movest10-e.p:        p-etbcod = 993.
+movest11-e.p:        p-etbcod = 993.
+nfalmin.p:       vemite <> 993 or
+nfalmin.p:           estab.etbcod = 993 
+nfalmin.p:                                  xestab.etbcod = 993 no-lock.
+nfalmin.p:    then nfe-emite = 993.
+nfben.p:        estab.etbcod = 993
+nfben.p:       vetbcod <> 993 and
+nfben.p:       estab.etbcod = 993
+nfben.p:        for each xestab where xestab.etbcod = 993 or
+nfben.p:       vetbcod <> 993 and
+nfben.p:    then nfe-emite = 993.
+nfdevcom.p:                                         plani.etbcod = 993           and
+nfdevcom.p:       estab.etbcod = 993 
+nfdevcom.p:                              xestab.etbcod = 993 no-lock,
+nfe_1603.p:then nfe-emite = 993.
+nfe_1949_e.p:then nfe-emite = 993.
+nfe_5102_j.p:then nfe-emite = 993.
+nfe_5152.p:then nfe-emite = 993.
+nfe_5202.p:then nfe-emite = 993.
+nfe_5411.p:then nfe-emite = 993.
+nfe_5552.p:then nfe-emite = 993.
+nfe_5603.p:then nfe-emite = 993.
+nfe_5905.p:then nfe-emite = 993.
+nfe_5915.p:then nfe-emite = 993.
+nfe_5923.p:then nfe-emite = 993.
+nfe_5949_e.p:then nfe-emite = 993.
+nfe_5949.p:then nfe-emite = 993.
+nfe_993.p:sfuncod = 993.
+nfe_993.p:setbcod = 993.
+nfe_devipi_1603.p:then nfe-emite = 993.
+nfe_devipi_5202.p:then nfe-emite = 993.
+nfe_devipi_5411.p:then nfe-emite = 993.
+nfe_devipi_5603.p:then nfe-emite = 993.
+nfent093.p:    if plani.desti = 993
+nfe_os_5152.p:then nfe-emite = 993.
+nfe_os_5915.p:then nfe-emite = 993.
+nfe_wms_5152.p:then nfe-emite = 993.
+nfe_wms_alcis_5152.p:then nfe-emite = 993.
+nfoutsai.p:                                         plani.etbcod = 993           and
+nfoutsai.p:       estab.etbcod = 993 
+nfoutsai.p:                              xestab.etbcod = 993 no-lock,
+nfremcon.p:    if (estab.etbcod >= 993 and
+nfremcon.p:       estab.etbcod = 993
+nfremcon.p:                              xestab.etbcod = 993 no-lock,
+nftracre1.p:    if estab.etbcod = 993
+nftracre1.p:        for each xestab where xestab.etbcod = 993 no-lock.
+nftracre.p:    if (vemite >= 993 and
+nftracre.p:       estab.etbcod = 993
+nftracre.p:        for each xestab where xestab.etbcod = 993 or
+nftractb.p:    if (vetbcod >= 993 and
+nftractb.p:    if estab.etbcod = 993
+nftractb.p:        for each xestab where xestab.etbcod = 993
+nftraimb.p:    if (vemite >= 993 and
+nftraimb.p:       estab.etbcod = 993
+nftraimb.p:        for each xestab where xestab.etbcod = 993 or
+nftransf.p:    if (vemite >= 993 and
+nftransf.p:       estab.etbcod = 993
+nftransf.p:        for each xestab where xestab.etbcod = 993 or
+nftra.p:    if (vemite >= 993 and
+nftra.p:       vemite <> 993 and
+nftra.p:       estab.etbcod = 993
+nftra.p:        for each xestab where xestab.etbcod = 993 or
+nftra.p:    then nfe-emite = 993.
+nftrauco.p:    if (vemite >= 993 and
+nftrauco.p:       estab.etbcod = 993
+nftrauco.p:        for each xestab where xestab.etbcod = 993 or
+not_etiqfec.p:    if asstec.etbcodatu = 993
+not_etiqfec.p:    if asstec.etbcodatu = 993
+not_os_filial.p:        input bestab.etbcod <> 993 and
+not_os_filial.p:        message "Somente estabelecimento 65, 107, 993, 998" view-as alert-box.
+not_os_filial.p:    then nfe-emite = 993.
+not_os_posto.p:    then nfe-emite = 993.
+os_filial.p:       estab.etbcod = 993
+os_filial.p:        for each xestab where xestab.etbcod = 993 or
+os_filial.p:    then nfe-emite = 993.
+os_posto.p:       estab.etbcod = 993
+os_posto.p:                              xestab.etbcod = 993 no-lock,
+os_posto.p:    then nfe-emite = 993.
+outsai.p:                                         plani.etbcod = 993           and
+pedaxnfv.p:                find estoq where estoq.etbcod = 993 and
+pedrepo0.p:            find estoq where estoq.etbcod = 993 and
+pedrepo0.p:    find estoq where estoq.etbcod = 993 and
+pedrepo0.p:        find estoq where estoq.etbcod = 993 and
+pedrepo0.p:        find estoq where estoq.etbcod = 993 and
+pedrepo0.p:    if estoq.etbcod = 993
+pedrepo1.p:            find estoq where estoq.etbcod = 993 and
+pedrepo1.p:    if estoq.etbcod = 993
+pesco.p: * 09/04/2014 - emiminada da tela o display dos campos Disp993 e Disp995     *
+pesco.p:def new shared var vdisponiv993  like estoq.estatual format "->>>>9".
+pesco.p:def new shared var vestatual993  like estoq.estatual format "->>>>9".
+pesco.p:def var pedidos_993 as dec.
+pesco.p:    vdisponiv993 = 0.
+pesco.p:    vestatual993 = 0.
+pesco.p:    find estoq where estoq.etbcod = 993 and estoq.procod = vvprocod
+pesco.p:    if avail estoq then assign vestatual993 = vestatual993 + estoq.estatual.
+pesco.p:    vdisponiv993 = vdisponiv993 - vreserv_ecom.
+pesco.p:  (vestatual  - vestatual993 - /*vestatual995 -*/ vestatual988 - vestatual500 
+pesco.p:            vestatual993      label "Est993"
+pesco.p:            pedidos_993      label "Pedidos" format "->>>>9"
+pesco.p:    def var vdisponivel like vdisponiv993.
+pesco.p:    pedidos_993 = vreservas.
+pesco.p:    vdisponiv993 = vdisponivel.
+pesco.p:    if vdisponiv993 < 0
+pesco.p:    then estoq-indisponivel = vdisponiv993 * -1.
+pesco.p:    else estoq-disponivel   = vdisponiv993.
+pesco.p:        if estab.etbcod = 993
+pesco.p:            if wpro.etbcod = 993
+pesco.p:    find first wpro where wpro.etbcod = 993
+pesco.p:    assign vdisponiv993 =  vestatual993 - (if avail wpro then wpro.wreserva 
+pesco.p:    disp vestatual993        
+pesco.p:         pedidos_993
+pesco.p:    pedidos_993 = vreservas.
+pesco.p:    vdisponiv993 = vdisponivel.
+pesco.p:    if vdisponiv993 < 0
+pesco.p:    then estoq-indisponivel = vdisponiv993 * -1.
+pesco.p:    else estoq-disponivel   = vdisponiv993.
+pesco.p:        if estab.etbcod = 993
+p-grava-nfe-recuperada.p:    if not avail plani and tt-plani.etbcod = 993
+p-grava-nfe-recuperada.p:        if avail plani and plani.emite = 998 and tt-plani.emite = 993
+p-grava-nfe-recuperada.p:        then assign plani.emite = 993.
+p-grava-nfe-recuperada.p:        if avail plani and plani.etbcod = 998 and tt-plani.etbcod = 993
+p-grava-nfe-recuperada.p:                       tt-movim.emite = 993.
+pla-dep4.p:            if plani.emite = 993 /*95*/ and
+pla-dep4.p:               plani.desti = 993 /*95*/
+pla-dep4.p:            if plani.emite = 993 /*95*/ and
+pla-dep4.p:               plani.desti = 993 /*95*/
+posestlj.p:                if vetb-est <> 993 and
+posestlj.p:                if vetb-est <> 993 and
+p-reverte-recuperacao.p:            if tt-reverte.etbcod = 993
+p-reverte-recuperacao.p:    if not avail plani and tt-plani.etbcod = 993
+produ_descontinuado.p:def var vdisponiv993  like estoq.estatual format "->>>>9".
+produ_descontinuado.p:def var vestatual993  like estoq.estatual format "->>>>9".
+produ_descontinuado.p:           vdisponiv993     = 0  
+produ_descontinuado.p:           vestatual993     = 0  
+produ_descontinuado.p:    find estoq where estoq.etbcod = 993 and estoq.procod = vprocod
+produ_descontinuado.p:    if avail estoq then assign vestatual993 = vestatual993 + estoq.estatual.
+produ_descontinuado.p:    vestatual_cd =  vestatual993 + vestatual981 + vestatual995 +  
+pro-nft-fil-fil.p:    then nfe-emite = 993.
+rcobert1.p:    if vetbcod = 993
+rcobert1.p:            if estab.etbcod = 993 then do:
+rcobert1.p:    if vetbcod <> 993
+rcobert1.p:           tt-fil.etbcod <> 993 and
+rcobert1.p:        if vetbcod = 0 and tt-fil.etbcod <> 993
+rcobert1.p:        find first tt-cober where tt-cober.etbcod = 993 and
+rcobert1.p:     else if vetbcod = 993
+rcobert1.p:        for each tt-fil where tt-fil.etbcod = 993 no-lock:
+rconftra.p:assign vlist-dep = "993,995,998".
+recnotas2.p:        if vetbcod = 993
+recnotas2.p:        then vetbcod = 993.
+redepfag.p:                                         plani.etbcod = 993           and
+redepfag.p:       estab.etbcod = 993 
+redepfag.p:                              xestab.etbcod = 993 no-lock,
+relfin.p:        repeat aux-etb = 993 to 999: 
+relfin.p:        repeat aux-etb = 993 to 999:
+relfor00.p:    for each estab where estab.etbcod >= 993 no-lock:
+relfor00.p:        for each estab where estab.etbcod >= 993 no-lock:
+relfor02.p:    for each estab where estab.etbcod >= 993 no-lock:
+relfor02.p:        for each estab where estab.etbcod >= 993 no-lock:
+relfor03-cron.p:    for each estab where estab.etbcod >= 993 no-lock:
+relfor03-cron.p:        for each estab where estab.etbcod >= 993 no-lock:
+relfor03.p:    for each estab where estab.etbcod >= 993 no-lock:
+relfor03.p:        for each estab where estab.etbcod >= 993 no-lock:
+relmov01.p:                      aestoq.etbcod = 993 no-lock no-error.
+remconin9.p:    if (estab.etbcod >= 993 and
+remconin9.p:       estab.etbcod = 993
+remconin9.p:                              xestab.etbcod = 993 no-lock,
+remconin.p:    if (estab.etbcod >= 993 and
+remconin.p:       vetbcod <> 993 and
+remconin.p:       vetbcod <> 993 and
+remconin.p:       estab.etbcod = 993
+remconin.p:                              xestab.etbcod = 993 no-lock,
+remconin.p:    then nfe-emite = 993.
+rempcoaordem.p:                                         plani.etbcod = 993           and
+rempcoaordem.p:    then nfe-emite = 993.
+retmdfag.p:    if (estab.etbcod >= 993 and
+rfalpro1.p:                          and wmsplani.etbcod  = 993 
+rpedsep1.p:                    if estoq.etbcod = 993
+rpedsep1.p:                    end. /* estab = 993 */
+rpedsep1.p:                    if estoq.etbcod = 993
+rpedsep1.p:                    end. /* estab = 993 */
+rpflprd.p:                if vetbcod <> 0 and vetbcod <> 993 and pedid.etbcod <> vetbcod  ~                then next.
+rpflprd.p:                if vetbcod = 993 and liped.pedtdc <> 3 then next.
+rpflprd.p:                    if estoq.etbcod = 993
+rpflprd.p:                    end. /* estab = 993 */
+rqtdmaxp.p:        for each estoq where estoq.etbcod = 993 no-lock.
+rqtdmaxp.p:        for each estoq where estoq.etbcod = 993 
+sai_aud.p:                if plani.emite = 993 /*95*/ and
+sai_aud.p:                   plani.desti = 993 /*95*/
+sai_aud.p:                then vemite = 993 /*95*/.
+sai_aud.p:                then vdesti = 993 /*95*/.
+saidas_MTP.p:                if vetbcod = 993
+saidas_MTP.p:                    and estab.etbcod <> 993
+saidas_MTP.p:                if vetbcod <> 993
+saidas_MTP.p:                if plani.emite = 993 /*95*/ and
+saidas_MTP.p:                   plani.desti = 993 /*95*/
+saidas_MTP.p:                then vemite = 993 /*95*/.
+saidas_MTP.p:                then vdesti = 993 /*95*/.
+saidas_MTP.p:                if vetbcod = 993
+saidas_MTP.p:                    and estab.etbcod <> 993
+saidas_MTP.p:                if vetbcod <> 993
+saidas_MTP.p:                then vemite = 993 /*95*/.
+saidas_MTP.p:                then vdesti = 993 /*95*/.
+said_aud.p:                if vetbcod = 993
+said_aud.p:                    and estab.etbcod <> 993
+said_aud.p:                if vetbcod <> 993
+said_aud.p:                                         where tt-imp.etbcod = 993
+said_aud.p:                if plani.emite = 993 /*95*/ and
+said_aud.p:                   plani.desti = 993 /*95*/
+said_aud.p:                then vemite = 993 /*95*/.
+said_aud.p:                then vdesti = 993 /*95*/.
+said_aud.p:                if vetbcod = 993
+said_aud.p:                    and estab.etbcod <> 993
+said_aud.p:                if vetbcod <> 993
+said_aud.p:                then vemite = 993 /*95*/.
+said_aud.p:                then vdesti = 993 /*95*/.
+sai_tci.p:                if plani.emite = 993 /*95*/ and
+sai_tci.p:                   plani.desti = 993 /*95*/
+sai_tci.p:                then vemite = 993 /*95*/.
+sai_tci.p:                then vdesti = 993 /*95*/.
+serv_aud.p:            then vemite = 993.
+serv_aud.p:            then vemi = 993 /*95*/.
+serv_aud.p:            then vdesti = 993 /*95*/.
+serv_aud.p:            then vemi = 993 /*95*/.
+serv_aud.p:            then vdesti = 993 /*95*/.
+serv_aud.p:        /* 1993-2008 */ base_cofins format "9999999999999.99"
+serv_aud.p:        /* 1993-2008 */ base_cofins format "9999999999999.99"
+simctom1.p:    find last movim where /*movim.etbcod = 993 and*/
+simdis04.p:            if vetb-est <> 993 and
+simulapr.p:find estoq where estoq.etbcod = 993 and
+tbp_new.p:            tt-tbprice.etb_compra = 993
+tbprice0.p:            tt-tbprice.etb_compra = 993
+teclar-v.p:    find estoq where estoq.etbcod = 993 and
+testa-by-root.p:    find last a01_infnfe where a01_infnfe.etbcod = 993
+titluc.p:            if titluc.etbcod = 993 or
+tracre.p:    if estab.etbcod = 993
+tracre.p:        for each xestab where xestab.etbcod = 993 no-lock.
+trcolnot.p:                                  (plani.emit = 993 or
+trcolnot.p:                                  (plani.emit = 993 or
+valida-nf-dev-ipi.p:    find first plani where plani.etbcod = 993
+vercobertura1.p:find cestoq where cestoq.etbcod = 993 and
+vercobertura.p:find cestoq where cestoq.etbcod = 993 and
+verifica-by-root.p:    find last a01_infnfe where a01_infnfe.emite = 993
+verifica-by-root.p:        find last ba01_infnfe where ba01_infnfe.emite = 993
+visurel.p:    if setbcod = 998 or setbcod = 993

@@ -1,0 +1,43 @@
+    do transaction:
+	find plani where recid(plani) = recatu1 exclusive-lock.
+	vtot = 0.
+	for each movim of plani.
+	    vtot = vtot + movpc * movqtm.
+	end.
+	plani.platot = vtot.
+	update plani.platot.
+	plani.plades = if plani.platot <> vtot
+		       then 100 - (plani.platot / vtot * 100)
+		       else 0.
+    end.
+    display plani.plades.
+
+    run placxa.p (input recid(plani)).
+
+    if tipmov.movtnota
+    then do:
+	prompt-for nota.notser
+		   nota.tofcod
+		   nota.notviatr
+		   with frame f-ser side-labels
+			centered row 12 overlay.
+	run geranota.p (input recid(plani),
+			input input nota.notser,
+			input input nota.tofcod,
+			input input nota.notviatr).
+    end.
+    if tipmov.movttitu
+    then do:
+	display tipmov.modcod colon 25.
+	prompt-for tipmov.modcod colon 25.
+	run geratitu.p (input plani.platot,
+			input input tipmov.modcod,
+			input plani.crecod,
+			input tipmov.movtnat,
+			input plani.clifor,
+			input string(plani.movndc),
+			input plani.etbcod,
+			input plani.pladat,
+			input plani.pladat,
+			output vpar).
+    end.

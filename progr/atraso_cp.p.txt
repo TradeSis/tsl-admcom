@@ -1,0 +1,14 @@
+{admcab.i new}                                                               
+                                                                             
+display "VERIFICANDO PARCELAS CP...".                                        
+                                                                             
+for each titulo where                                                        
+(modcod = "CP0" or modcod = "CP1" or modcod = "CP2")                         
+and titdtven < today and titsit <> "PAG" and titsit <> "EXC" and titdtven >= 
+01/01/2016 no-lock.                                                          
+                                                                             
+disp titulo.etbcod clifor titnum titsit titdtven titvlcob.                   
+                                                                             
+                                                                             
+end.                                                                         
+                                                                             

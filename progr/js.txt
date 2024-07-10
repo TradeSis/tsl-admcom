@@ -1,0 +1,40 @@
+
+
+Logar na loja
+
+vi /etc/services
+
+adicionar no final
+
+#NOVA TRANSMISSAO
+sdrebcom_t        50100/tcp
+sdrebfin_t        50200/tcp
+sdrebger_t        50300/tcp
+sdrebadm_t        50400/tcp
+sdrebsup_t        50500/tcp
+sdrebdragao_t     50600/tcp
+sdrebbanfin_t     50700/tcp       
+
+salvar [esc]+:x
+
+vi /usr/admcom/bases/remoto.pf
+
+Alterar o -h de 10 para 12
+
+-T /usr/admcom/temp
+-h 12
+-s 100
+
+
+salvar [esc]+:x
+
+Mandar para a loja os programas:
+
+
+scp -C -pr automnew.p disp.p aturep-conecta.p aturep-disp.p aturep01.p aturep01-disp.p aturep01-com.p aturep01-fin.p aturep01-titlm.p aturep01-titml.p aturep02.p aturep02-disp.p aturep02-com.p aturep02-fin.p aturep02-ger.p aturep02-adm.p aturep03.p aturep03-disp.p aturep03-com.p aturep03-fin.p aturep03-ger.p aturep03-adm.p aturep-desconecta.p root@filial02:/usr/admcom/progr/                                                                               
+
+
+Para finalizar, execute destranca na loja
+
+
+

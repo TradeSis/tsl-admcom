@@ -1,0 +1,9 @@
+		voper = esqcom1[esqpos1].
+		recin = recid(movim).
+		vrec2 = recid(plani).
+		hide frame f-com1 no-pause.
+		hide frame f-dialogo no-pause.
+		run movim.p(input voper,
+			    input recin,
+			    input vrec2).
+		view frame f-com1.

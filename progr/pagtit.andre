@@ -1,0 +1,340 @@
+{admcab.i}
+def var varq as char.
+def var i as int.
+def var de-juro         as   dec.
+def var de-vlpri        as   dec.
+def var de-vltit        as   dec.
+def buffer bmoeda       for moeda.
+def buffer bevent       for event.
+def var ljuros          as   log      init yes.
+def var vnumdia         as   integer  init 0.
+def var vclicodlab      as   char format "x(12)".
+def var vclicodnom      as   char format "x(30)".
+def var wperdes         as   dec format ">9.99 %" label "Perc. Desc.".
+def var wperjur         as   dec format ">9.99 %" label "Perc. Juros".
+def var vtitvlpag       like titulo.titvlpag.
+def var vtitvlcob       like titulo.titvlcob.
+def var vtitdtpag       like titulo.titdtpag.
+def var vvldevido       like titulo.titvlpag.
+def var vdivida         like titulo.titvlcob.
+def var vclicod         like clien.clicod.
+def var i-dia           as   int format ">>>9"                        no-undo.
+def var de-desc         as   dec                                      no-undo.
+def var vrec            as   recid.
+def var totalizador     like titulo.titvlcob.
+def var vtottit         like titulo.titvlcob.
+def shared workfile wftit
+    field rec as recid.
+
+
+def shared temp-table tp-titulo like fin.titulo
+    index dt-ven titdtven.
+
+
+def buffer btp-titulo      for tp-titulo.
+def buffer ctp-titulo      for tp-titulo.
+
+form
+    vtitdtpag     colon 13 label "Dt.Pagam"
+    moeda.moecod  colon 13 label "Moeda"
+    moeda.moenom           no-label
+    with frame fpag1 side-label
+         row 7 color white/cyan
+         overlay column 42 width 39 title " Pagamento " .
+         
+find event where evecod = 108 no-lock.
+                                    /* ATENCAO */
+find caixa where caixa.etbcod = setbcod and
+                 caixa.cxacod = scxacod no-lock.
+/* find bmoeda of caixa no-lock. */
+display "REA"  @ moeda.moecod
+        with frame fpag1.
+
+vtitdtpag = today.
+update vtitdtpag
+        with frame fpag1.
+prompt-for moeda.moecod with frame fpag1.
+find moeda using moeda.moecod.
+display moeda.moenom no-label
+        with frame fpag1.
+i = 0.
+for each wftit.
+    find tp-titulo where recid(tp-titulo) = wftit.rec.
+
+    assign tp-titulo.titdtpag = today
+           tp-titulo.etbcobra = setbcod
+           tp-titulo.datexp   = today
+           tp-titulo.cxmdata  = today
+           tp-titulo.cxacod   = scxacod
+           tp-titulo.moecod   = if tp-titulo.titdtpag > today
+                                then "PRE"
+                                else moeda.moecod.
+           tp-titulo.titdtpag = vtitdtpag.
+
+    if  tp-titulo.titdtpag > tp-titulo.titdtven
+    then do:
+        ljuros = yes.
+        if tp-titulo.titdtpag - tp-titulo.titdtven = 2
+        then do:
+            find dtextra where exdata = tp-titulo.titdtpag - 2 no-error.
+            if weekday(tp-titulo.titdtpag - 2) = 1 or avail dtextra
+            then do:
+                find dtextra where exdata = tp-titulo.titdtpag - 1 no-error.
+                if weekday(tp-titulo.titdtpag - 1) = 1 or avail dtextra
+                then ljuros = no.
+            end.
+        end.
+        else do:
+            if tp-titulo.titdtpag - tp-titulo.titdtven = 1
+            then do:
+                find dtextra where exdata = tp-titulo.titdtpag - 1 no-error.
+                if weekday(tp-titulo.titdtpag - 1) = 1 or avail dtextra
+                then ljuros = no.
+            end.
+        end.
+        vnumdia = if not ljuros
+                  then 0
+                  else tp-titulo.titdtpag - tp-titulo.titdtven.
+        find tabjur where tabjur.nrdias = vnumdia no-lock no-error.
+        if  not avail tabjur
+        then do:
+            message "Fator para" vnumdia "dias de atraso, nao cadastrado".
+            pause.
+            undo.
+        end.
+        assign tp-titulo.titvlpag = tp-titulo.titvlcob * tabjur.fator
+               tp-titulo.titjuro  = tp-titulo.titvlpag - tp-titulo.titvlcob.
+
+    end.
+    else tp-titulo.titvlpag = tp-titulo.titvlcob.
+
+    /** ATENCAO!!!!!!!*/
+    output to value("/usr/admcom/backup/tit" + string(month(today),"99")
+                     + string(day(today),"99") + ".txt") append.
+        export tp-titulo.
+    output close.    
+
+    assign vtitvlpag = tp-titulo.titvlpag
+           vvldevido = tp-titulo.titvlpag.
+    tp-titulo.moecod = moeda.moecod.
+    vtitvlpag = tp-titulo.titvlpag.
+    find first cobra where cobra.cobban = no.
+    tp-titulo.cobcod = cobra.cobcod.
+    if  vtitvlpag > vvldevido
+    then do:
+        bell.
+        display "Valor do Troco - Cr$ " vtitvlpag - tp-titulo.titvlpag no-label
+                with overlay frame ftro row 18  color white/red
+                       column 35 title " Troco " centered.
+        do on endkey undo:
+            pause.
+        end.
+        vtitvlpag = vtitvlpag - (vtitvlpag - tp-titulo.titvlpag).
+    end.
+    else
+        if  vtitvlpag <  vvldevido
+        then do:
+            assign sresp = no.
+            display "  Confirma PAGAMENTO PARCIAL ?"
+                              with frame fpag color messages
+                              width 40 overlay row 10 centered.
+            update sresp no-label with frame fpag.
+            if  sresp
+            then do:
+                if  tp-titulo.titdtven < today
+                then do:
+                    assign i-dia = today - tp-titulo.titdtven.
+                    find tabjur where tabjur.nrdias = i-dia no-lock no-error.
+                    assign de-vlpri = vtitvlpag / tabjur.fator
+                           de-juro  = vtitvlpag - de-vlpri
+                           de-vltit = tp-titulo.titvlcob - de-vlpri.
+
+                    tp-titulo.titjuro = de-juro.
+
+                    find last btp-titulo where
+                                      btp-titulo.empcod   = 19             and
+                                      btp-titulo.titnat   = event.evenat   and
+                                      btp-titulo.modcod   = "CRE"          and
+                                      btp-titulo.etbcod   = setbcod        and
+                                      btp-titulo.clifor   = vclicod        and
+                                      btp-titulo.titnum   = tp-titulo.titnum.
+                    pause.
+                    create ctp-titulo.
+                    assign ctp-titulo.empcod = btp-titulo.empcod
+                           ctp-titulo.cxacod = scxacod
+                           ctp-titulo.titnat = btp-titulo.titnat
+                           ctp-titulo.modcod = btp-titulo.modcod
+                           ctp-titulo.etbcod = btp-titulo.etbcod
+                           ctp-titulo.clifor = btp-titulo.clifor
+                           ctp-titulo.titnum = btp-titulo.titnum
+                           ctp-titulo.titpar = btp-titulo.titpar + 1
+                           ctp-titulo.cobcod = btp-titulo.cobcod
+                           ctp-titulo.titdtemi = tp-titulo.titdtemi
+                           ctp-titulo.titdtven = tp-titulo.titdtven
+                           ctp-titulo.datexp   = today
+                           ctp-titulo.titvlcob = de-vltit
+                           ctp-titulo.titnumger = tp-titulo.titnum
+                           ctp-titulo.titparger = tp-titulo.titpar
+                           vdivida = vdivida + ctp-titulo.titvlcob.
+                    disp vdivida when vclicod <> 1
+                                    with frame fdivida.
+                    display ctp-titulo.titnum
+                            ctp-titulo.titpar
+                            ctp-titulo.titdtemi
+                            ctp-titulo.titdtven
+                            ctp-titulo.titvlcob
+                            with frame fmos width 40 1 column
+                                              title " Titulo Gerado " overlay
+                                              centered row 10.
+                end.
+                else do:
+                    find last btp-titulo where
+                                      btp-titulo.etbcod   = setbcod        and
+                                      btp-titulo.titnat   = event.evenat   and
+                                      btp-titulo.etbcod   = setbcod        and
+                                      btp-titulo.clifor   = vclicod        and
+                                      btp-titulo.titnum   = tp-titulo.titnum.
+                    create ctp-titulo.
+                    assign
+                                ctp-titulo.empcod = btp-titulo.empcod
+                                ctp-titulo.etbcod = btp-titulo.etbcod
+                                ctp-titulo.cxacod = scxacod
+                                ctp-titulo.modcod = btp-titulo.modcod
+                                ctp-titulo.clifor = btp-titulo.clifor
+                                ctp-titulo.titnat = btp-titulo.titnat
+                                ctp-titulo.etbcod = btp-titulo.etbcod
+                                ctp-titulo.titnum = btp-titulo.titnum
+                                ctp-titulo.cobcod = tp-titulo.cobcod
+                                ctp-titulo.titpar   = btp-titulo.titpar + 1
+                                ctp-titulo.titdtemi = tp-titulo.titdtemi
+                                ctp-titulo.titdtven = tp-titulo.titdtven
+                                ctp-titulo.datexp   = today.
+                    if  tp-titulo.titdtpag > tp-titulo.titdtven
+                    then
+                        ctp-titulo.titvlcob = tp-titulo.titvlcob -
+                                              (vtitvlpag / tabjur.fator).
+                    else
+                        ctp-titulo.titvlcob = tp-titulo.titvlcob - vtitvlpag.
+                    assign ctp-titulo.titnumger = tp-titulo.titnum
+                           ctp-titulo.titparger = tp-titulo.titpar.
+                end.
+                vdivida = vdivida + ctp-titulo.titvlcob.
+                disp vdivida when vclicod <> 1
+                                with frame fdivida.
+                display ctp-titulo.titnum
+                        ctp-titulo.titpar
+                        ctp-titulo.titdtemi
+                        ctp-titulo.titdtven
+                        ctp-titulo.titvlcob
+                        with frame fmos width 40 1 column
+                                title " Titulo Gerado " overlay
+                                              centered row 10.
+            end.
+            if  not sresp
+            then do:
+                assign de-desc = vtitvlpag - vvldevido.
+                if  de-desc < 0
+                then
+                    de-desc = de-desc * -1.
+                tp-titulo.titdesc = de-desc.
+            end.
+        end.
+        assign tp-titulo.titsit   = "PAG"
+               tp-titulo.titvlpag = vtitvlpag
+               tp-titulo.titdtpag = today 
+               tp-titulo.datexp   = today
+               totalizador = totalizador + tp-titulo.titvlpag
+               vdivida = vdivida - tp-titulo.titvlpag.
+        /***** ATENCAO!!!!*****/
+        output to value("/usr/admcom/backup/tit" + string(month(today),"99")
+                        + string(day(today),"99") + ".txt") append.
+            export tp-titulo.
+        output close.  
+
+        repeat on endkey undo,retry:
+                    find titulo where titulo.empcod = tp-titulo.empcod
+                                  and titulo.titnat = tp-titulo.titnat
+                                  and titulo.modcod = tp-titulo.modcod
+                                  and titulo.clifor = tp-titulo.clifor
+                                  and titulo.etbcod = tp-titulo.etbcod
+                                  and titulo.titnum = tp-titulo.titnum
+                                  and titulo.titpar = tp-titulo.titpar
+                                  use-index titnum 
+                                                 no-error.
+                    if avail titulo
+                    then do:
+                        assign titulo.titsit   = tp-titulo.titsit
+                               titulo.titdtpag = tp-titulo.titdtpag
+                               titulo.titvlpag = tp-titulo.titvlpag
+                               titulo.titvlcob = tp-titulo.titvlcob
+                               titulo.titjuro  = tp-titulo.titjuro
+                               titulo.titdesc  = tp-titulo.titdesc
+                               titulo.titvljur = tp-titulo.titvljur
+                               titulo.cxacod   = tp-titulo.cxacod
+                               titulo.cxmdata  = tp-titulo.cxmdata
+                               titulo.etbcobra = tp-titulo.etbcobra
+                               titulo.datexp   = tp-titulo.datexp.
+                    end.
+                    else do:
+                        create titulo.
+                        assign titulo.empcod   = tp-titulo.empcod
+                               titulo.modcod   = tp-titulo.modcod
+                               titulo.clifor   = tp-titulo.clifor
+                               titulo.titnum   = tp-titulo.titnum
+                               titulo.titpar   = tp-titulo.titpar
+                               titulo.titsit   = tp-titulo.titsit
+                               titulo.titnat   = tp-titulo.titnat
+                               titulo.etbcod   = tp-titulo.etbcod
+                               titulo.titdtemi = tp-titulo.titdtemi
+                               titulo.titdtven = tp-titulo.titdtven
+                               titulo.titdtpag = today
+                               titulo.titvlcob = tp-titulo.titvlcob
+                               titulo.cobcod   = tp-titulo.cobcod
+                               titulo.titvlpag = tp-titulo.titvlpag
+                               titulo.titvljur = tp-titulo.titvljur
+                               titulo.etbcobra = tp-titulo.etbcobra
+                               titulo.titjuro  = tp-titulo.titjuro
+                               titulo.titdesc  = tp-titulo.titdesc
+                               titulo.cxacod   = tp-titulo.cxacod
+                               titulo.cxmdata  = tp-titulo.cxmdata
+                               titulo.datexp   = tp-titulo.datexp.
+                    end.
+                    sresp = yes.
+    
+                    /********* ATENCAO DESCOMENTAR***/
+                    if  sresp
+                    then do:
+                        run recibb4.p (input (recid(tp-titulo)),
+                                       input scxacod).
+                    end.
+                    assign 
+                        sresp = yes
+                        varq  = "/usr/admcom/relat/pagtit." 
+                                        + string(scxacod, "99").
+
+                    if  sresp
+                    then do:
+                        output to value(varq).
+                       /** output to printer.txt page-size 0.**********/
+                        put unformatted chr(15)
+                            space(6)
+                            "*"
+                            today                         space(1)
+                            trim(string(tp-titulo.etbcobra)) space(1)
+                            trim(string(tp-titulo.titvlpag,">>>,>>9.99"))
+                            "******".
+                        if tp-titulo.moecod = "PRE"
+                        then put "  Pagto c/ Pre ***".
+                        put chr(18) skip(3).
+                        output close.
+                        os-command silent /fiscal/lp value(varq).
+                     leave.
+                    end. 
+        end.
+        if titulo.moecod = "CHP" or titulo.moecod = "PRE" or
+           titulo.moecod = "CHV" 
+        then do :
+            run pedchq.p ( input recid(titulo)).
+        end.        
+    delete wftit.
+end.

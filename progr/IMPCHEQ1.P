@@ -1,0 +1,36 @@
+{admcab.i}
+def var i as int.
+def var vnum as int format ">9".
+def workfile wcheque
+        field wnum   as int
+        field wvalor like plani.platot
+        field wdata  like plani.pladat
+        field wnome  as char.
+
+for each wcheque:
+    delete wcheque.
+end.
+update vnum label "Numero de Cheques"
+                with frame f1 side-label width 80.
+
+do i = 1 to vnum:
+    create wcheque.
+    wcheque.wnum = i.
+    display i label "Cheque" with frame f2.
+    update
+           wcheque.wdata  label "Data"
+           wcheque.wvalor label "Valor"
+           wcheque.wnome  label "Nominal" format "x(40)"
+            with frame f2 side-label centered vnum down.
+    down with frame f2.
+end.
+
+for each wcheque:
+    /*
+    display "Coloque o Cheque numero " wcheque.wnum " na Impressora"
+            with frame f-mens centered no-label.
+    */
+    run impcheq.p (input wcheque.wvalor,
+                   input wcheque.wdata,
+                   input wcheque.wnome).
+end.

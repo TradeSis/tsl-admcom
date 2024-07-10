@@ -1,0 +1,67 @@
+/*************************INFORMA€OES DO PROGRAMA******************************
+***** Nome do Programa             : logand1.in
+***** Diretorio                    : gener
+***** Autor                        : Andre Baldini
+***** Descri‡ao Abreviada da Funcao: Include de Manutencao de Menu
+***** Data de Criacao              :
+
+                                ALTERACOES
+***** 1) Autor     : Caludir Santolin
+***** 1) Descricao : Alteracao de Browse/cor
+***** 1) Data      : 14/09/2000
+
+***** 2) Autor     :
+***** 2) Descricao : 
+***** 2) Data      :
+
+***** 3) Autor     :
+***** 3) Descricao : 
+***** 3) Data      :
+*******************************************************************************/
+
+if senha_sis = senha_cli
+then do:    
+    v-cont = 0.
+    for each bmenu no-lock by bmenu.mencod.
+        v-cont = bmenu.mencod.
+    end.
+
+    create menu .
+/***
+    find last bmenu use-index mencod no-lock no-error.
+    if not avail bmenu
+    then menu.mencod = 1.
+    else menu.mencod = bmenu.mencod + 1.
+***/
+    menu.mencod = v-cont + 1.
+    update 
+        menu.mentit     colon 15
+        skip
+        menu.menpro     colon 15
+        with frame f-inclui
+            centered overlay 1 down row 10 
+                side-labels color withe/cyan.
+        
+    update 
+        menu.mensta
+        with frame mensta
+            no-box no-label centered overlay row 20 .
+    find last bmenu where bmenu.aplicod = p-aplica
+                      and bmenu.ordsup  = 0
+                      and bmenu.menniv  = 1
+                    no-error.
+    if not avail bmenu
+    then v-ordem = 1.
+    else v-ordem = bmenu.menord + 1.
+    
+    assign 
+        menu.aplicod = p-aplica
+        menu.ordsup  = 0
+        menu.menniv  = 1
+        menu.menord  = v-ordem.
+    a-seeid = -1.
+    a-recid = -1.
+    a-seerec = ?.    
+    NEXT KEYS-LOOP.
+    
+end.

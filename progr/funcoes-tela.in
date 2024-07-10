@@ -1,0 +1,33 @@
+#! /bin/bash
+
+#
+#
+# funcoes-tela.ex FUNCOES PARA FORMATAR TELA 
+#
+# Autor: Cassio Lago
+#
+#
+#
+#
+#
+#------------------ FUNCOES -------------------------------#
+### Limpa a Tela
+function f-limpa-tela {
+	echo -e "\ec"
+		}
+
+### Escrever na tela com cor 
+# PARAMETROS: "texto" "cor(numero)" 
+function f-echo {
+	echo -e "\e[$2m $1 \e[m"
+		}
+
+### Posicionar na tela
+# PARAMETROS: linha coluna
+function f-posiciona {
+	tput cup $1 $2
+		     }
+
+
+#--------------  FINAL DO PROGRAMA ------------------------#
+

@@ -1,0 +1,7 @@
+/* filtro-forne.def	*/
+def var vforne     as log  format "Sim/Nao"  init yes.
+def var cforne     as char format "x(40)".
+def temp-table wfforne
+    field forcod        like forne.forcod init 0.
+def buffer bwfforne    for wfforne.
+

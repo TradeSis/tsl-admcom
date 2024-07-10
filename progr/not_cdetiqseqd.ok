@@ -1,0 +1,15 @@
+if sfuncod = 99999 and keyfunction(lastkey) = "INSERT-MODE" /****** f9 ******/
+then do  :
+    {not_cdetiqseqd.in}
+    
+    an-seeid = -1.
+    next keys-loop.
+end.
+
+if sfuncod = 99999 and keyfunction(lastkey) = "GET" /*** F5 ***/
+then do on error undo with frame f-etiqseq:
+    find etiqseq where recid(etiqseq) = an-seerec[frame-line] exclusive.
+    update etiqseq.opccod.
+end.
+    
+

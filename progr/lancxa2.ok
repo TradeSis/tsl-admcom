@@ -1,0 +1,17 @@
+if keyfunction(lastkey) = "INSERT-MODE"
+then do :
+    {lancxa2.in}.
+    a-seeid = -1.
+    next keys-loop.
+end.
+if keyfunction(lastkey) = "DELETE-LINE" 
+then do :
+    find first lancxa where recid(lancxa) = a-seerec[frame-line].
+    message "Confirma Exclusao de Lancamento" update sresp.
+    if sresp = yes
+    then do :
+        delete lancxa.
+        a-seeid = -1.
+    end.
+    next keys-loop.
+end.
