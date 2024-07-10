@@ -1,5 +1,5 @@
 /* medico na tela 042022 - helio */
-{admcab.i }
+{admcab.i}
 
 def var vhostname as char.
 def var xetbcod as int.
@@ -38,7 +38,9 @@ repeat.
     then do: 
 
         run med/tmedadesao.p ("VENDAS",
-                              input trim(copcoes[iopcoes])).
+                              input trim(copcoes[iopcoes]),
+                              ?,
+                              ?).
         
     end.
         
@@ -46,7 +48,8 @@ repeat.
     then do: 
 
         run med/tmedadesao.p ("CANCELAMENTOS", 
-                              input trim(copcoes[iopcoes])).
+                              input trim(copcoes[iopcoes]),
+                              ?,?).
         
     end.
 
@@ -54,7 +57,8 @@ repeat.
     then do: 
 
         run med/tmedadesao.p ("CLIENTE", 
-                              input trim(copcoes[iopcoes])).
+                              input trim(copcoes[iopcoes]),
+                              ?,?).
         
     end.
 
