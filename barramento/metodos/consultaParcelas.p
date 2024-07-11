@@ -69,8 +69,8 @@ def temp-table tt-modal no-undo
     field juros  as dec
     index modal is primary unique modcod.
 
-def var mmodal as char extent 4 init ["CRE", "CP0", "CP1", "CPN"].
-def var mestab as int  extent 4 init [0, 0, 0,0].
+def var mmodal as char extent 5 init ["CRE", "CP0", "CP1", "CPN", "RFN"]. /* HELIO 24062024 RFN */
+def var mestab as int  extent 5 init [0, 0, 0,0, 0].
 
 def new global shared var setbcod       as int.
 
@@ -109,7 +109,7 @@ def var par-valorOrigem  as dec.
     ttclien.cpf_cnpj = if avail neuclien then string(neuclien.cpfcnpj) else clien.ciccgc.  
 
      
-    do vi = 1 to 4.
+    do vi = 1 to 5.
         create tt-modal.
         tt-modal.modcod = mmodal[vi].
         tt-modal.etbcod = mestab[vi].
