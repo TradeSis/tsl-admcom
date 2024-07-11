@@ -51,6 +51,7 @@ output to value(vsaida + ".sh").
 put unformatted
     "curl -s \"http://localhost/bsweb/api/cliente/consultar-lista-pep" + "\" " +
     " -H \"Content-Type: application/json\" " +
+    " --connect-timeout 7  --max-time 7 " + /* helio 05072022 colocado timeout */
     " -d '" + string(vLCEntrada) + "' " + 
     " -o "  + vsaida.
 output close.

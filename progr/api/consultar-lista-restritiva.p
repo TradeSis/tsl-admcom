@@ -39,6 +39,7 @@ output to value(vsaida + ".sh").
 put unformatted
     "curl -s \"http://localhost/bsweb/api/cliente/consultar-listas-restritivas" + "\" " +
     " -H \"Content-Type: application/json\" " +
+    " --connect-timeout 7  --max-time 7 " + /* helio 05072022 colocado timeout */
     " -d '" + string(vLCEntrada) + "' " + 
     " -o "  + vsaida.
 output close.
