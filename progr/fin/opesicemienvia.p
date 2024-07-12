@@ -237,7 +237,6 @@ end FUNCTION.
             run p-registro-13.
             /*run p-registro-14.*/
         end.
-        run p-registro-15.
         
         run p-registro-98.
     end.
@@ -553,8 +552,6 @@ end procedure.
 
 /* OPERACAO */
 procedure p-registro-10.
-    def var lcontratoeletronico as log.
-    
   def var vcod-produto  as integer.
   def var vplano-fin like contrato.crecod.
   vseq = vseq + 1.
@@ -579,14 +576,6 @@ procedure p-registro-10.
                     no-lock no-error.
                 end.
     if not avail titulo then next.                     /* helio 25042023 - ID 24709 - arquivo exporta��o com falha. */
-
-    /* PROJETO DPGE - COMUNICACAO SICRED */
-    lcontratoeletronico = no.
-    find first contrassin where contrassin.contnum = contrato.contnum no-lock  no-error.
-    if avail contrassin
-    then do:
-        lcontratoeletronico = contrassin.dtproc <> ?.
-    end.
     
     /* helio 13072022 - projeto Criar Produtos - ADM */
     vcod-produto = sicred_contr.codProduto. 
@@ -759,16 +748,6 @@ procedure p-registro-10.
   end.
   /**/
     
-  /* helio 12/07/2024 - Carol solicitou - para todos os contratos */
-    /*   vai sobrescrever a variavel valoroperacao, com esta nova formula */
-  if contrato.modcod = "CPN" or (contrato.modcod = "CRE" and contrato.tpcontrato = "N")
-  then do:  
-      vvaloroperacao = contrato.vlf_principal - contrato.vlentra - contrato.vlseguro.
-      if vvaloroperacao < 0
-      then vvaloroperacao = 0.
-  end.
-  /**/
-  
   put unformat skip 
       "10"            /* 01  - 02  TIPO  FIXO �1  */
       contrato.contnum format "9999999999" /* 03 - 12 N�MERO OPERA��O  */
@@ -805,11 +784,10 @@ procedure p-registro-10.
       vservicos * 100   format "99999999999999999" /* 215 - 231 VAL SEGURO*/
       **/
       /* helio 18/01/2023 - novo campo */
-      vvalorseguro * 100   format "99999999999999999" /* 215-231 17 */
-      "          " /* 232-241 10 */
-      "    "           /* 245-242 4 */   
-      lcontratoeletronico   format "S/N" /* 246-246 */
-      " "                 format "x(548)"            /* 247 - 794 FILLER */
+      vvalorseguro * 100   format "99999999999999999"
+      /**/
+        
+      " "                 format "x(563)"            /* 238 - 794 FILLER */
       vseq format    "999999".
 
 end procedure.
@@ -867,11 +845,7 @@ procedure p-registro-11.
      ((vtitvltot /*- btitulo.titdesc*/) * 100) 
                 format "999999999999" /* 28-39 VLR PRESTAcaO */
      fill("0",30) format "x(30)"       /* 40-69 CMC7: nro do cheque pre */
-     " " format "x(25)" /*NOSSONUMEROBANCO    070-094     ALFANUM�RICO    025*/
-     " " format "x(03)" /*CODIGOBANCOCORR     095-097     NUMERICO        003    */
-     " " format "x(04)" /*AGENCIABANCOCORR    098-101     numerico        004 */
-     " " format "x(12)" /*CONTABANCOCORR      102-113     numerico        012 */
-     " " format "x(681)"               /* 114 - 794 FILLER */
+     " " format "x(725)"               /* 70 - 794 FILLER */
      vseq format    "999999".
 
     /* arquivo de controle */
@@ -1101,45 +1075,6 @@ def buffer bcontrato for contrato.
 
 end procedure.
 
-/*OPERA�AO . INF ELETRONICAS (SE TIPO 10 REG 246 = S)*/
-procedure p-registro-15.
-    def var lcontratoeletronico as log.
-    /* PROJETO DPGE - COMUNICACAO SICRED */
-    lcontratoeletronico = no.
-    find first contrassin where contrassin.contnum = contrato.contnum no-lock  no-error.
-    if avail contrassin
-    then do:
-        lcontratoeletronico = contrassin.dtproc <> ?.
-    end.
-    if lcontratoeletronico = no then return.
-    
-    vseq = vseq + 1.
-    put unformat skip
-      "15"                   /* 01-02 fixo "15" */
-      contrato.contnum format "9999999999" /* 03 - 12 N�MERO OPERA��O  */
-      "0001"           /* 13 - 16 AG�NCIA          */
-      "05"              
-      "05"
-      "Sistema Operacional Linux Versao Storex " + contrassin.versaocomponente    format "x(60)"
-      contrassin.nomecomponente    format "x(15)"
-      ""    format "x(15)"
-      ""    format "x(15)"
-      ""    format "x(15)"
-        string(year(contrassin.dtinclu),"9999")  + "-" +
-        string(month(contrassin.dtinclu),"99")   + "-" +
-        string(day(contrassin.dtinclu),"99")     + " " + 
-        string(contrassin.hrincl,"HH:MM:SS") format "x(19)"
-      string(contrassin.hash1)   format "x(50)"
-        string(year(contrassin.dtproc),"9999")  + "-" +
-        string(month(contrassin.dtproc),"99")   + "-" +
-        string(day(contrassin.dtproc),"99")     + " " + 
-        string(contrassin.hrproc,"HH:MM:SS") format "x(19)"
-      string(contrassin.hash2)    format "x(50)"
-     " " format "x(516)"    /* 03-794 FILLER   */
-     vseq format    "999999".
-        
-
-end procedure.
 
 /* Trailer da Opera��o */
 procedure p-registro-98.
