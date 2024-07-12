@@ -625,13 +625,14 @@ procedure p-registro-10.
         end.
     end.
   
-    vplano-fin = contrato.crecod.
-    if vplano-fin = 0     /* 122020 helio 46030 */
+    vplano-fin = sicred_contr.fincod .   /* helio 12072024 contrato.crecod. */
+    /* helio 12072024 */
+    if vplano-fin = 0     
     then do:
-        if vcod-produto = 2 or vcod-produto = 12
+        if vcod-produto = 2 or vcod-produto = 12 or vcod-produto = 5    
         then vplano-fin = 500.
-        else if vcod-produto = 5
-             then vplano-fin = 501.
+        if vcod-produto = 19 or vcod-produto = 20
+        then vplano-fin = 501.
     end.
     
     /* 17.06 le a nota para pegar o valor dos servicos */
@@ -748,6 +749,16 @@ procedure p-registro-10.
           vvaloroperacao = vvaloroperacao - vvalorseguro.
     end.
     
+  /* helio 12/07/2024 - Carol solicitou - para todos os contratos */
+    /*   vai sobrescrever a variavel valoroperacao, com esta nova formula */
+  if contrato.modcod = "CPN" or (contrato.modcod = "CRE" and contrato.tpcontrato = "N")
+  then do:  
+      vvaloroperacao = contrato.vlf_principal - contrato.vlentra - contrato.vlseguro.
+      if vvaloroperacao < 0
+      then vvaloroperacao = 0.
+  end.
+  /**/
+  
   put unformat skip 
       "10"            /* 01  - 02  TIPO  FIXO –1  */
       contrato.contnum format "9999999999" /* 03 - 12 NÚMERO OPERAÇÃO  */
