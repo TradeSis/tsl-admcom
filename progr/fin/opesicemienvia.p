@@ -2,14 +2,14 @@
 /* helio 24052023 Demanda 286 - trocado nome do arquivo de op para ep, so que apenas quando contratos EP */
 /* helio 18052023 - Demanda 269 - ajustado dtven */
 /* helio 18052023 - Demanda 286 - trocado nome do arquivo de op para ep */ 
-/*** helio 12042023 - Qualitor 22363 - Erro no exportador / Data cônjuge. */
+/*** helio 12042023 - Qualitor 22363 - Erro no exportador / Data cï¿½njuge. */
 /* helio 23032023 - ajuste banco pagamento */
 /* helio 07022023 - teste existe pdvmov, por causa problema da linx */
 /* helio 18012023 - alterado para pegar dados do contrato do proprio contrato. */
 /* helio 05122022 - ID 155437 - Caracteres Especiais no Exportador do ADMCOM - colocado funcao api/acentos.i RemoveAcento */
-/* helio #16062022 - ID 148949 - Ajuste Data Admissão Cliente */
+/* helio #16062022 - ID 148949 - Ajuste Data Admissï¿½o Cliente */
 /* helio #02092022 - reativacao projeto cria produto adm */
-/* helio 18082022 -  rollback produitos adm + ID 131236 - Ajuste Arquivo de Importação */
+/* helio 18082022 -  rollback produitos adm + ID 131236 - Ajuste Arquivo de Importaï¿½ï¿½o */
 /* helio 19072022 - projeto Criar Produtos - ADM - tipoontratoSicred */
 /* helio 13072022 - projeto Criar Produtos - ADM */
 
@@ -299,8 +299,8 @@ procedure p-registro-00.
          "00" 
          varqexp format "x(08)"
          string(today,"99999999")
-         "0001"    /* 19 - 22 NUMÉRICO        AGÊNCIA ??? */
-         "LEBES" format "x(6)" /* 23 - 28 ALFANUMÉRICO    LOJISTA ??? */
+         "0001"    /* 19 - 22 NUMï¿½RICO        AGï¿½NCIA ??? */
+         "LEBES" format "x(6)" /* 23 - 28 ALFANUMï¿½RICO    LOJISTA ??? */
          0000 /*vetbcod*/ format ">>>9"   /* 29-32 LOJA (UM ARQ. P/FILIAL??) */
          " " format "x(762)" 
          vseq format "999999" /* NUMERICO  Sequencia do arquvo???? */
@@ -348,12 +348,12 @@ put unformat skip
      (if clien.nacion begins "br" then "BR" else "ES") /* 172 - 173 */
      string(vciinsc) format "x(15)"    /* 174 - 188 */
      " " format "x(6)" /* 189 - 194   TIPO DOC IDENTIDADE  */
-     "  "         /* 195 - 196  orgão emissor */
-     "00000000"   /* 197 - 204   DATA    DATA EMISSÃO  */  
-     "0"          /* 205 - 205    GRAU DE INSTRUÇÃO */
+     "  "         /* 195 - 196  orgï¿½o emissor */
+     "00000000"   /* 197 - 204   DATA    DATA EMISSï¿½O  */  
+     "0"          /* 205 - 205    GRAU DE INSTRUï¿½ï¿½O */
      "C"          /* 206 - 206 TP CLIENTE C-Cliente  A-Avalista O-Coobr */
      "  "         /* 207 - 208 UF DOC IDENTIDADE */
-     "  "         /* 209 - 210 Código do Conceito do cliente */
+     "  "         /* 209 - 210 Cï¿½digo do Conceito do cliente */
      " " format "x(584)"
      vseq format "999999".
  
@@ -378,12 +378,12 @@ assign
     vcpfconj = substr(clien.conjuge,51,20)
     vnatconj = substr(clien.conjuge,71,20).
 
-    /*#16092022 se a data estivar vazia ou invalida, incluir a data da operação realizada. */
+    /*#16092022 se a data estivar vazia ou invalida, incluir a data da operaï¿½ï¿½o realizada. */
     vprodta = if clien.prodta[2] = ? or clien.prodta[2] < today - (100 * 365)
               then contrato.dtinicial
               else clien.prodta[2].
 
-    /*** helio 12042023 - Qualitor 22363 - Erro no exportador / Data cônjuge.*/
+    /*** helio 12042023 - Qualitor 22363 - Erro no exportador / Data cï¿½njuge.*/
 
     vnascon = if clien.nascon = ?
               then 01/01/2000
@@ -400,9 +400,9 @@ assign
 put unformat skip 
    "02"  
     dec(f-troca(vcpfconj))    format "99999999999999"
-    RemoveAcento(vnomconj) format "x(40)"    /* 17 - 56 NOME DO CÔNJUGE  */
+    RemoveAcento(vnomconj) format "x(40)"    /* 17 - 56 NOME DO Cï¿½NJUGE  */
     f-troca(string(vnascon)) format "99999999" /* 57-64 DATA NASCIMENTO */
-    "   "                            /* 65 - 68  PROFISSÃO */
+    "   "                            /* 65 - 68  PROFISSï¿½O */
     RemoveAcento(clien.proprof[2])  format "x(15)"  /* 69 - 83  CARGO  */
     vrenda * 100 format "999999999999"  /* 84-95 RENDA */
     /*#16092022 f-troca(string(clien.prodta[2]))  format "99999999" /* 96-103 DT DE ADM */ */
@@ -423,18 +423,18 @@ procedure p-registro-03.
       "0000"     /* 35 - 38 Banco */
       "0"        /* 39 - 39 TIPO CONTA2 1-NENHUMA2-COMUM3-ESPECIAL */
       "000000"   /* 40 - 45 cONTA DESDE2 */
-      " " format "x(20)"  /* 46 - 65 ALFANUMÉRICO    AGÊNCIA BANCO2 */
-      "000"     /* 66 - 68 NUMÉRICO    CARTAO CREDITO1 VER ANEXO */
+      " " format "x(20)"  /* 46 - 65 ALFANUMï¿½RICO    AGï¿½NCIA BANCO2 */
+      "000"     /* 66 - 68 NUMï¿½RICO    CARTAO CREDITO1 VER ANEXO */
       "00"      /* 69 - 70 NUMERICO    TIPO CARTAO1    */
-      "000"     /* 71 - 73 NUMÉRICO    CARTAO CREDITO2   */
-      "00"      /* 74 - 75 NUMÉRICO    TIPO CARTAO2      */
+      "000"     /* 71 - 73 NUMï¿½RICO    CARTAO CREDITO2   */
+      "00"      /* 74 - 75 NUMï¿½RICO    TIPO CARTAO2      */
       clien.entbairro[1] format "x(40)" /* 76 - 115 REF PESSOAL */
       clien.entcompl[1]  format "x(10)" /* 116 - 125 RELACION */
       clien.entcidade[1] format "x(20)" /* 126 - 145  TELEFONE */
       clien.entbairro[2] format "x(40)" /* 146 - 185 REF PESSOAL */
       clien.entcompl[2] format "x(10)" /* 186 - 195 RELACION */
       clien.entcidade[2] format "x(20)" /* 196 - 215  TELEFONE */
-      " " format "x(579)" /* 216 - 794   ALFANUMÉRICO    FILLER  */
+      " " format "x(579)" /* 216 - 794   ALFANUMï¿½RICO    FILLER  */
       vseq format    "999999" /*795 - 800 */ .
 end procedure.        
 
@@ -442,8 +442,8 @@ end procedure.
 procedure p-registro-04.
   def var vaux as char. 
   vseq = vseq + 1.
-  put unformat skip "04"  /* 01  - 02  TIPO  FIXO – 04*/
-      clien.endereco[1]  format "x(50)" /* 03 - 52   ENDEREÇO */
+  put unformat skip "04"  /* 01  - 02  TIPO  FIXO ï¿½ 04*/
+      clien.endereco[1]  format "x(50)" /* 03 - 52   ENDEREï¿½O */
       clien.bairro[1]    format "x(40)" /* 53  - 92  BAIRRO  */
       clien.cidade[1]    format "x(40)" /* 93  - 132 CIDADE  */
       clien.ufecod[1]    format "x(2)" /* 133 - 134 UF    */
@@ -451,7 +451,7 @@ procedure p-registro-04.
       (if clien.tipres then "1" else "3")  /* 143  1- PROPRIA;  3- ALUGADA */
        trim(substring(string(clien.temres,"999999"),1,2) + "/" + 
             substring(string(clien.temres,"999999"),3,4)) format "x(7)"
-                  /* 144 - 150   RESIDÊNCIA DESDE */
+                  /* 144 - 150   RESIDï¿½NCIA DESDE */
       "2". /* 151  DESTINO CORRESP.A 1- COMERCIAL;2- RESIDENCIAL */
       
   vaux = f-troca(clien.fone).
@@ -467,15 +467,15 @@ procedure p-registro-04.
       (if length(vaux) > 5 
       then "2"  /* 191 - 2 celular, 3 nao possue */
       else "3")
-      clien.zona format "x(40)" /* 192 – 231 EMAIL */
-      " " format "x(40)" /* 232 – 271 ENDEREÇO ALTERNATIVO  */
-      " " format "x(40)" /* 272 – 311 BAIRRO ENDEREÇO ALTERNATIVO*/    
-      " " format "x(40)" /* 312 – 351 CIDADE ENDEREÇO ALTERNATIV */   
-      " " format "x(2)"  /* 352 – 353 UF ENDEREÇO ALTERNATIV */
-      " " format "x(8)"  /* 354 – 361 CEP ENDEREÇO ALTERNATIVO*/
-      fill("0",17)       /* 362 – 378 ALUGUEL MENSAL    Clien.*/
-      fill("0",17)       /* 379 – 395 PRESTAÇÃO CASA PRÓPRIA*/
-      fill(" ",399)      /* 396  794   ALFANUMÉRICO    FILLER  */
+      clien.zona format "x(40)" /* 192 ï¿½ 231 EMAIL */
+      " " format "x(40)" /* 232 ï¿½ 271 ENDEREï¿½O ALTERNATIVO  */
+      " " format "x(40)" /* 272 ï¿½ 311 BAIRRO ENDEREï¿½O ALTERNATIVO*/    
+      " " format "x(40)" /* 312 ï¿½ 351 CIDADE ENDEREï¿½O ALTERNATIV */   
+      " " format "x(2)"  /* 352 ï¿½ 353 UF ENDEREï¿½O ALTERNATIV */
+      " " format "x(8)"  /* 354 ï¿½ 361 CEP ENDEREï¿½O ALTERNATIVO*/
+      fill("0",17)       /* 362 ï¿½ 378 ALUGUEL MENSAL    Clien.*/
+      fill("0",17)       /* 379 ï¿½ 395 PRESTAï¿½ï¿½O CASA PRï¿½PRIA*/
+      fill(" ",399)      /* 396  794   ALFANUMï¿½RICO    FILLER  */
       vseq format    "999999" /*795 - 800 */ .
 end procedure.
 
@@ -498,7 +498,7 @@ def var vprodta as date.
     then var-int4 = cpclien.var-int4.
     else var-int4 = 0.
 
-    /*#16092022 se a data estivar vazia ou invalida, incluir a data da operação realizada. */
+    /*#16092022 se a data estivar vazia ou invalida, incluir a data da operaï¿½ï¿½o realizada. */
     vprodta = if clien.prodta[1] = ? or clien.prodta[1] < today - (100 * 365)
               then contrato.dtinicial
               else clien.prodta[1].
@@ -522,8 +522,8 @@ def var vprodta as date.
         
         vrenda * 100 format "99999999999999999" /* 236 - 252 */
         "00000000000000000"   /* 253 - 269 OUTROS RENDIM*/
-        " "  format "x(29)"    /* 270 - 299 DESCRIÇÃO OUTROS RENDIMENTOS*/
-        "N"                 /* 300 - 300 PROPRIETÁRIO*/
+        " "  format "x(29)"    /* 270 - 299 DESCRIï¿½ï¿½O OUTROS RENDIMENTOS*/
+        "N"                 /* 300 - 300 PROPRIETï¿½RIO*/
         " "  format "x(14)"  /* 301 - 314 */
         fill(" ",399)       /* 315 - 794 FILLER  */
         vseq format    "999999" /* 795 - 800 */ 
@@ -578,7 +578,7 @@ procedure p-registro-10.
                     titulo.titdtemi   = contrato.dtinicial
                     no-lock no-error.
                 end.
-    if not avail titulo then next.                     /* helio 25042023 - ID 24709 - arquivo exportação com falha. */
+    if not avail titulo then next.                     /* helio 25042023 - ID 24709 - arquivo exportaï¿½ï¿½o com falha. */
 
     /* PROJETO DPGE - COMUNICACAO SICRED */
     lcontratoeletronico = no.
@@ -621,7 +621,7 @@ procedure p-registro-10.
         find contrsite where contrsite.contnum = contrato.contnum no-lock no-error. 
         if avail contrsite 
         then do: 
-            vcod-produto = 13. /* 06042021 helio - Crediário Digital . Int. Financeira - Codigo produto */
+            vcod-produto = 13. /* 06042021 helio - Crediï¿½rio Digital . Int. Financeira - Codigo produto */
         end.
     end.
   
@@ -677,7 +677,7 @@ procedure p-registro-10.
                           then contrato.vlf_principal /*- contrato.vlentra helio 06042022*/
                           else contrato.vlf_principal.
     
-    /* ID 139269 - ADMCOM - "PRINCIPAL" CONTENDO Valores/Exportação de arquivo PRINCIPAL=0 */
+    /* ID 139269 - ADMCOM - "PRINCIPAL" CONTENDO Valores/Exportaï¿½ï¿½o de arquivo PRINCIPAL=0 */
     if contrato.modcod = "CRE" /* ID 139269 acrescentei teste so para CRE */
     then do:
         if vvlf_principal <= vservicos        /* ID 139269 era < ficou <= */
@@ -701,7 +701,7 @@ procedure p-registro-10.
     vdtinicial = contrato.dtinicial.
     vtitdtven = titulo.titdtven.
 
-    /* 14042021 card ID 67095 - Exportação Novação 
+    /* 14042021 card ID 67095 - Exportaï¿½ï¿½o Novaï¿½ï¿½o 
         voltando atras 
     if poperacao = "NOVACAO" /* 19/02/2021 */
     then do:
@@ -748,6 +748,16 @@ procedure p-registro-10.
           end.        
           vvaloroperacao = vvaloroperacao - vvalorseguro.
     end.
+
+  /* helio 12/07/2024 - Carol solicitou - para todos os contratos */
+    /*   vai sobrescrever a variavel valoroperacao, com esta nova formula */
+  if contrato.modcod = "CPN" or (contrato.modcod = "CRE" and contrato.tpcontrato = "N")
+  then do:  
+    vvaloroperacao = contrato.vlf_principal - contrato.vlentra - contrato.vlseguro.
+    if vvaloroperacao < 0
+    then vvaloroperacao = 0.
+  end.
+  /**/
     
   /* helio 12/07/2024 - Carol solicitou - para todos os contratos */
     /*   vai sobrescrever a variavel valoroperacao, com esta nova formula */
@@ -760,9 +770,9 @@ procedure p-registro-10.
   /**/
   
   put unformat skip 
-      "10"            /* 01  - 02  TIPO  FIXO –1  */
-      contrato.contnum format "9999999999" /* 03 - 12 NÚMERO OPERAÇÃO  */
-      "0001"           /* 13 - 16 AGÊNCIA          */
+      "10"            /* 01  - 02  TIPO  FIXO ï¿½1  */
+      contrato.contnum format "9999999999" /* 03 - 12 Nï¿½MERO OPERAï¿½ï¿½O  */
+      "0001"           /* 13 - 16 AGï¿½NCIA          */
       "06"            /* 17 - 18 MIDIA            */
       "000001"        /* 19 - 24 LOJISTA          */
       contrato.etbcod format "9999"      /* 25-28 LOJA  */
@@ -770,8 +780,8 @@ procedure p-registro-10.
       " " format "x(02)"                  /* 29-34 PRODUTO */
       vplano-fin /*contrato.crecod*/ format ">>>9"      /* 35-38 PLANO    */
       contrato.nro_parcelas format ">>9"   /* prazo */
-      vdtinicial format "99999999"  /* 42-49 DATA EMISSÃO */
-      vtitdtven format "99999999" /* 50-57 DATA 1° VENCIMENTO */ 
+      vdtinicial format "99999999"  /* 42-49 DATA EMISSï¿½O */
+      vtitdtven format "99999999" /* 50-57 DATA 1ï¿½ VENCIMENTO */ 
       
       /* helio 18/01/2023 - novo campo
         ((vvlf_principal /* Helio 29112022 ID 156242 retirado-> - vservicos*/) * 100) format "99999999999999999"
@@ -780,7 +790,7 @@ procedure p-registro-10.
       vvaloroperacao * 100 format "99999999999999999"
       /**/
 
-      ((vtitvltot /*- titulo.titdesc*/) * 100) format "999999999999999999" /* 75-92 VALOR PRESTAÇÃO */
+      ((vtitvltot /*- titulo.titdesc*/) * 100) format "999999999999999999" /* 75-92 VALOR PRESTAï¿½ï¿½O */
       " " format "x(20)"                 /* SOMENTE P/ CONVENIOS */
       vtipocontratosicred format "x(2)"    /* 113-114 TIPO CONTRATO */ /* helio 19072022 - projeto Criar Produtos - ADM - tipoontratoSicred */
 
@@ -850,14 +860,14 @@ procedure p-registro-11.
 
   put unformat skip
      "11"                   /* 01-02 fixo "11" */
-     dec(btitulo.titnum) format "9999999999" /* 03 - 12 OPERAÇÃO */
-     "0001"                            /* 13 - 16 AGÊNCIA */
+     dec(btitulo.titnum) format "9999999999" /* 03 - 12 OPERAï¿½ï¿½O */
+     "0001"                            /* 13 - 16 AGï¿½NCIA */
      vparcela format "999"        /* 17 - 19 PARCELA */
      if btitulo.titdtven = btitulo.titdtemi then btitulo.titdtven + 1 else btitulo.titdtven  format "99999999" /* 20 - 27 dt VENCIMENTO */
      ((vtitvltot /*- btitulo.titdesc*/) * 100) 
                 format "999999999999" /* 28-39 VLR PRESTAcaO */
      fill("0",30) format "x(30)"       /* 40-69 CMC7: nro do cheque pre */
-     " " format "x(25)" /*NOSSONUMEROBANCO    070-094     ALFANUMÉRICO    025*/
+     " " format "x(25)" /*NOSSONUMEROBANCO    070-094     ALFANUMï¿½RICO    025*/
      " " format "x(03)" /*CODIGOBANCOCORR     095-097     NUMERICO        003    */
      " " format "x(04)" /*AGENCIABANCOCORR    098-101     numerico        004 */
      " " format "x(12)" /*CONTABANCOCORR      102-113     numerico        012 */
@@ -906,7 +916,7 @@ procedure p-registro-11.
 
 end.
 
-/* LIBERAÇÃO PARA O CLIENTE (Obrigatório para empréstimo Pessoal) */
+/* LIBERAï¿½ï¿½O PARA O CLIENTE (Obrigatï¿½rio para emprï¿½stimo Pessoal) */
 PROCEDURE p-registro-12.
 
 
@@ -928,12 +938,12 @@ PROCEDURE p-registro-12.
     vconta      = contcp.numeroconta.
     vtipo_conta = contcp.tipoconta.
     
-    /* helio 16122021 - Chamado 101510 - 75460 - Alteração CPF arquivo Financeira 
+    /* helio 16122021 - Chamado 101510 - 75460 - Alteraï¿½ï¿½o CPF arquivo Financeira 
     *vcpf_cgc_desti = if contcp.cpfdesti = ?    or contcp.cpfdesti = 0
     *          then clien.ciccgc
     *          else string(contcp.cpfdesti).
     */
-    /* helio 16122021 - Chamado 101510 - 75460 - Alteração CPF arquivo Financeira */
+    /* helio 16122021 - Chamado 101510 - 75460 - Alteraï¿½ï¿½o CPF arquivo Financeira */
     vcpf_cgc_desti = clien.ciccgc.
     
     run Pi-cic-number(input-output vcpf_cgc_desti).
@@ -1027,8 +1037,8 @@ procedure p-registro-13:
         vseq = vseq + 1.
         put unformat skip
         "13"                   /* 01-02 fixo "13" */
-        dec(ttnovacao.contnum) format "9999999999" /* 03 - 12 OPERAÇÃO */
-        "0001"                            /* 13 - 16 AGÊNCIA */
+        dec(ttnovacao.contnum) format "9999999999" /* 03 - 12 OPERAï¿½ï¿½O */
+        "0001"                            /* 13 - 16 AGï¿½NCIA */
         (ttnovacao.valor * 100)
                     format "99999999999999999"  /* 17 - 33 PARCELA */
         " " format "x(20)"  /* 34 - 53*/
@@ -1075,7 +1085,7 @@ def buffer bcontrato for contrato.
             put unformat skip
             "14"                   
             dec(pdvdoc.contnum) format "9999999999"
-            "0001"                            /* 13 - 16 AGÊNCIA */
+            "0001"                            /* 13 - 16 AGï¿½NCIA */
             /* helio 122020 44132*/
             if pdvdoc.titpar >= 31 then pdvdoc.titpar - 30 else pdvdoc.titpar format "999"
             /*44132*/
@@ -1091,7 +1101,7 @@ def buffer bcontrato for contrato.
 
 end procedure.
 
-/*OPERAÇAO . INF ELETRONICAS (SE TIPO 10 REG 246 = S)*/
+/*OPERAï¿½AO . INF ELETRONICAS (SE TIPO 10 REG 246 = S)*/
 procedure p-registro-15.
     def var lcontratoeletronico as log.
     /* PROJETO DPGE - COMUNICACAO SICRED */
@@ -1106,8 +1116,8 @@ procedure p-registro-15.
     vseq = vseq + 1.
     put unformat skip
       "15"                   /* 01-02 fixo "15" */
-      contrato.contnum format "9999999999" /* 03 - 12 NÚMERO OPERAÇÃO  */
-      "0001"           /* 13 - 16 AGÊNCIA          */
+      contrato.contnum format "9999999999" /* 03 - 12 Nï¿½MERO OPERAï¿½ï¿½O  */
+      "0001"           /* 13 - 16 AGï¿½NCIA          */
       "05"              
       "05"
       "Sistema Operacional Linux Versao Storex " + contrassin.versaocomponente    format "x(60)"
@@ -1131,7 +1141,7 @@ procedure p-registro-15.
 
 end procedure.
 
-/* Trailer da Operação */
+/* Trailer da Operaï¿½ï¿½o */
 procedure p-registro-98.
   vseq = vseq + 1.
   put unformat skip
@@ -1148,8 +1158,8 @@ procedure p-registro-99.
      "99"                                 /* 01-02 fixo "99" */
      varqexp format "x(8)"                /* 03-10 Nome do arquivo */
      string(today,"99999999")             /* 11-18 data movimento */
-     vqtoper format "9999999999"          /* 19-28 QTD DE OPERAÇÕES */
-     vtotal  format "99999999999999999"   /* 29-45 VLR TOTAL das OPERAÇÕES */
+     vqtoper format "9999999999"          /* 19-28 QTD DE OPERAï¿½ï¿½ES */
+     vtotal  format "99999999999999999"   /* 29-45 VLR TOTAL das OPERAï¿½ï¿½ES */
      " " format "x(749)"                  /* 46-794 FILLER */
      vseq format    "999999" skip.
      
