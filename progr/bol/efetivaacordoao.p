@@ -109,7 +109,7 @@ then do:
             contrato.crecod    = 500
             contrato.banco = if vmodcod = "CPN"
                              then 13 else 10
-            contrato.tpcontrato = if vmodcod = "RFN" then "" else "N". /* helio 21062024 -- */
+            contrato.tpcontrato = "". /* helio 21062024 -- */
 
         /* helio 25.11.2021 ID 98001 - Novações cslog fora da estrutura padrão para origem e novo.
                 criando forma e pdvmoeda */
