@@ -1,5 +1,18 @@
-def var vdir as char.
-vdir    = "/var/www/html/prophp/tslebes/tsrelat/".
+DEF VAR vdir AS CHAR.
+DEF VAR vpini AS CHAR.
+DEF VAR vpropath AS CHAR.
+DEF VAR vpf AS CHAR.
+
+vdir = "/admcom/barramento/tsrelat/".
+INPUT FROM VALUE(vdir + "tsrelat.ini").
+repeat TRANSACTION:
+    IMPORT UNFORMATTED vpini.
+    if vpini = "" or vpini = ? then next.
+    
+    if ENTRY(1,vpini,"=") = "PF"         THEN vpf = ENTRY(2,vpini,"=").
+    if ENTRY(1,vpini,"=") = "PROPATH"    THEN vpropath = ENTRY(2,vpini,"=").
+end.
+input close.
 
 def new global shared var scontador as int.
 scontador = 100000.
@@ -9,8 +22,8 @@ def var par-pause as int.
 
 def var ventradaarquivo as char.
 
-par-param = SESSION:PARAMETER.
-par-pause = int(entry(1,par-param)).
+par-param = SESSION:PARAMETER no-error.
+par-pause = int(entry(1,par-param)) no-error.
 
 def var vprograma as char.
 def var lcjsonentrada as longchar.
@@ -19,7 +32,10 @@ def var verro as char.
 def var vmensagem as log.
 def var vini as log init yes.
 
-{/admcom/barramento/pidtsrelat.i}
+if opsys = "UNIX"
+then do:
+    {/admcom/barramento/pidtsrelat.i}
+end.
 
 procedure verifica-fim.
 
@@ -45,11 +61,12 @@ end procedure.
     end.    
 
         
-    message today string(time,"HH:MM:SS").
+    message today string(time,"HH:MM:SS"). pause.
 def var vloop as int.
 
 pause 0 before-hide.
 vmensagem = yes.
+
 repeat:
     vloop = vloop + 1.
 
@@ -85,12 +102,25 @@ repeat:
                 no-lock
                 by tsrelat.dtinclu by tsrelat.hrinclu.
                 
-            run log("Processando... " + tsrelat.progcod + string(tsrelat.idrelat)).
+            run log("Processando... " + tsrelat.progcod + " ID=" + string(tsrelat.idrelat)).
             
             if search(vdir + tsrelat.progcod + ".p") <> ?
             then do:    
-                os-command silent value("/usr/dlc/bin/mbpro -pf /admcom/bases/baseslin.pf -p " + vdir + 
-                                    tsrelat.progcod + ".p -param " + string(tsrelat.idrelat) + " &" ) .            
+                if opsys = "UNIX"
+                then do:
+                    os-command silent value("/usr/dlc/bin/mbpro -pf " + vpf + " -p " + 
+                                        vdir + tsrelat.progcod + ".p " + 
+                                        " -param " + string(tsrelat.idrelat) + ">> /admcom/barramento/log/tsrelatserver.log  & " ) .            
+                END.  
+                ELSE DO:
+                    MESSAGE   "c:\Progress\OpenEdge\bin\mbpro.bat -pf " + vpf + " -p " + 
+                                        vdir + tsrelat.progcod + ".p " + 
+                                        " -param " + string(tsrelat.idrelat) + " >> /admcom/barramento/log/tsrelatserver_" + tsrelat.progcod + ".log  &".
+                    os-command silent value("c:\Progress\OpenEdge\bin\mbpro.bat -pf " + vpf + " -p " + 
+                                        vdir + tsrelat.progcod + ".p " + 
+                                        " -param " + string(tsrelat.idrelat) + " >> /admcom/barramento/log/tsrelatserver_" + tsrelat.progcod + ".log   &" ) .            
+                
+                END.
             end.
         end.
   
@@ -107,3 +137,4 @@ par-men.
 
 
 end procedure.
+

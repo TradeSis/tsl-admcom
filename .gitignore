@@ -45,3 +45,5 @@ tmp/
 verus/
 zebra-fila/
 zebra/
+desenv/
+desenv/*
