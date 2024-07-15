@@ -441,7 +441,7 @@ for each ttrenegociacaocrediario.
 
                 /* nova formula                */
 
-                voriginal_financiado = voriginal - contrato.vlentra.
+                voriginal_financiado = voriginal /*- contrato.vlentra*/.
                 if voriginal_financiado < 0 then voriginal_financiado = 0.
 
                 vfinanciado = (contrato.vltotal - contrato.vlentra) /*SEM IOF- contrato.vliof*/ - contrato.vlseguro. 
