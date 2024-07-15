@@ -1,4 +1,7 @@
 /*  helio 24102022 - ID 152286 - Valor de novação - Principal menor que as parcelas - fim*/
+/* dpge/assinatura 03072024 */
+def var vversaoComponente as char.
+def var vnomeComponente as char.
 
 DEFINE INPUT  PARAMETER lcJsonEntrada      AS LONGCHAR.
 def    output param     verro as char no-undo.
@@ -438,7 +441,7 @@ for each ttrenegociacaocrediario.
 
                 /* nova formula                */
 
-                voriginal_financiado = voriginal - contrato.vlentra.
+                voriginal_financiado = voriginal /*- contrato.vlentra*/.
                 if voriginal_financiado < 0 then voriginal_financiado = 0.
 
                 vfinanciado = (contrato.vltotal - contrato.vlentra) /*SEM IOF- contrato.vliof*/ - contrato.vlseguro. 

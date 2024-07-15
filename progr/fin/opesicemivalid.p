@@ -342,7 +342,7 @@ pause 0 before-hide.
                 if contrato.vlf_acrescimo >= 1
                 then do:
                     vfincod = 500.
-                    vcod-produto = 2.
+                    vcod-produto = 5.
                 end.
                 else do:
                     vfincod = 501.
@@ -354,7 +354,7 @@ pause 0 before-hide.
                 if contrato.vlf_acrescimo >= 1
                 then do:
                     vfincod = 500.
-                    vcod-produto = 5.
+                    vcod-produto = 2.
                 end.
                 else do:
                     vfincod = 501.
