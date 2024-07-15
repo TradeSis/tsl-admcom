@@ -7,11 +7,10 @@ DEF VAR lcJsonEntrada AS LONGCHAR.
 DEF VAR hentrada AS HANDLE.
 
 def temp-table ttparametros serialize-name "parametros"
-    field posicao       as int
     field codigoFilial  as int
-    field dataInicial   as date
-    field dataFinal     as date
-    field ordem         as int.
+    field dataInicial   as CHAR
+    field dataFinal     as CHAR
+    field alfa          AS LOG.
 hentrada =  temp-table ttparametros:HANDLE.
 
 
@@ -84,11 +83,10 @@ REPEAT:
     else valfa = no.
 
     CREATE ttparametros.
-    ttparametros.posicao        = 1. /* este programa */
     ttparametros.codigofilial   = vetbcod.
-    ttparametros.datainicial    = vdtvenini.
-    ttparametros.datafinal      = vdtvenfim.
-    ttparametros.ordem          = IF valfa THEN 1 ELSE 0.
+    ttparametros.datainicial    = string(vdtvenini,"99/99/9999").
+    ttparametros.datafinal      = string(vdtvenfim,"99/99/9999"). 
+    ttparametros.alfa           = valfa.
     
     hentrada:WRITE-JSON("longchar",lcjsonentrada).
     
