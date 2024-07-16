@@ -64,11 +64,12 @@ vdtvenini   = dataInicial.
 vdtvenfim   = dataFinal.
 
 
-//
+
 varquivo = "cre03-" + STRING(TODAY,"99999999") +
             replace(STRING(TIME,"HH:MM:SS"),":","").
-//varquivo = "/admcom/relat/lip" + string(time).
-output to value(varquivo).
+/*varquivo = "/admcom/relat/lip" + string(time).*/
+
+output to VALUE(vdir + varquivo + ".txt").
 PUT UNFORMATTED CHR(15)  .
 VSUBTOT = 0.
 PAGE.
@@ -249,22 +250,12 @@ os-command silent /fiscal/lp value(varquivo).
 os-command cat value(varquivo) > /dev/lp0 &.
 */
 
-run pdfout.p (input varquivo,
-              input "/admcom/kbase/pdfout/",
-              input "cred03-" + string(time) + ".pdf",
-              input "Portrait",
-              input 6.3,
-              input 1,
-              output vpdf).
-     
-message ("Arquivo " + vpdf + " gerado com sucesso!") view-as alert-box.
- 
-/*
-run visurel.p (input varquivo, input "").
-*/
-
-message "Deseja imprimir extratos" update sresp.
-if sresp 
-then run loj/extrato30.p.
+run pdfout.p (INPUT vdir + varquivo + ".txt",
+                  input vdir,
+                  input varquivo + ".pdf",
+                  input "Landscape", /* Landscape/Portrait */
+                  input 7,
+                  input 1,
+                  output vpdf).
 
 
