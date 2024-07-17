@@ -40,12 +40,7 @@ def new shared temp-table tt-extrato
         field rec as recid
         field ord as int
             index ind-1 ord.
-
-//def var varquivo as char.
-
-
-
-    
+ 
 for each tt-extrato.
     delete tt-extrato.
 end.

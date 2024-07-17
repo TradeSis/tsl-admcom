@@ -42,7 +42,6 @@ update
     else valfa = no.
 
 
-//CHAMA CRED03_RUN
 CREATE ttparametros.
     ttparametros.posicao        = 1.
     ttparametros.codigofilial   = vetbcod.
