@@ -546,7 +546,7 @@ end procedure.
 procedure geracsv.
 def var vprimeiro as log.
 def var vvlf_acrescimo as dec.
-
+def var vvalorpmt as dec.
    def var varq as char format "x(76)".
    def var vcp  as char init ";".
    
@@ -593,6 +593,14 @@ def var vvlf_acrescimo as dec.
                     "vlr seguro" vcp
                 "IOF" vcp
          "Baru" vcp
+                /* 17072024 - ID 82801 - Inclusão de campos arquivo magnético 
+                        Quant pmt - Valor PMT - Plano - Tx.Juros */
+                "Quant pmt" vcp
+                "Valor PMT" vcp
+                "Plano" vcp
+                "Tx.Juros" vcp        
+                /**/        
+         
             skip.        
 
     
@@ -678,19 +686,31 @@ def var vvlf_acrescimo as dec.
                 find first sicred_contrato where sicred_contrato.contnum = contrato.contnum no-lock no-error.
                 if avail sicred_contrato
                 then find cobra where cobra.cobcod = sicred_contrato.cobcod no-lock no-error.
-                if not avail cobra
-                then do:
+
                     find first titulo where
                             titulo.empcod = 19 and
                             titulo.titnat = no and
                             titulo.etbcod = contrato.etbcod and
                             titulo.clifor = contrato.clicod and
                             titulo.modcod = contrato.modcod and
-                            titulo.titnum = string(contrato.contnum )
+                            titulo.titnum = string(contrato.contnum ) and
+                            titulo.titpar > 0
                             no-lock no-error.
+                    if not avail titulo
+                    then 
+                    find first titulo where
+                            titulo.empcod = 19 and
+                            titulo.titnat = no and
+                            titulo.etbcod = contrato.etbcod and
+                            titulo.clifor = contrato.clicod and
+                            titulo.modcod = contrato.modcod and
+                            titulo.titnum = string(contrato.contnum ) 
+                            no-lock no-error.
+                            
                     if avail titulo
-                    then         find cobra of titulo no-lock.
-                end.
+                    then if not avail cobra then   find cobra of titulo no-lock.
+                             
+                vvalorpmt = if avail titulo then titulo.titvlcob else 0.
 
                 vvlf_acrescimo = contrato.vltotal - contrato.vlentra - contrato.vlf_principal - contrato.vlseguro - contrato.vliof.
                 if vvlf_acrescimo < 0
@@ -728,6 +748,14 @@ def var vvlf_acrescimo as dec.
                     contrato.vlseguro vcp
                     contrato.vliof vcp
                     string(vbaru,"Sim/Nao") vcp
+                /* 17072024 - ID 82801 - Inclusão de campos arquivo magnético 
+                        Quant pmt - Valor PMT - Plano - Tx.Juros */
+                trim(string(contrato.nro_parcelas,"->>>>>>>>>>>>>>>>>>>>9")) vcp   /*Quant pmt*/
+                trim(string(vvalorpmt,"->>>>>>>>>>>>>>>>>>>>9.99")) vcp   /*Valor pmt*/
+                contrato.crecod vcp /* Plano */
+                trim(string(contrato.TxJuros,"->>>>>>>>>>>>>>>>>>>>9.99")) vcp  /* Tx.Juros */
+                /**/        
+                    
                      skip.
             end.         
         end.      
