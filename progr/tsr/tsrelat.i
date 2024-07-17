@@ -9,7 +9,7 @@ def var varquivo as char.
 vdir    = "/admcom/relat/".
 vdirweb = "/relatorios/".
 
-pidrelat = int(SESSION:PARAMETER) no-error.
+pidrelat = int(entry(1,SESSION:PARAMETER,",")) no-error.
 
 if pidrelat <> ? AND pidrelat <> 0
 then do:
@@ -47,6 +47,19 @@ procedure marcatsrelat.
 end procedure.
 
 
+FUNCTION convertedata RETURNS DATE
+    (INPUT pdata  AS CHAR):
+DEF VAR vdata AS DATE.
+        if NUM-ENTRIES(pdata,"-") = 3 
+        then do:
+            vdata  = DATE(INT(ENTRY(2,pdata,"-")),       
+                          INT(ENTRY(3,pdata,"-")),
+                          INT(ENTRY(1,pdata,"-"))).
+        end.
+        ELSE vdata   = DATE(pdata).
+    RETURN vdata.
+END FUNCTION.    
+        
 function calculadata RETURNS DATE
     (INPUT ptipoparam AS char,
      INPUT ptoday  AS DATE):

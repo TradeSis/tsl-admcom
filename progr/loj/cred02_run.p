@@ -2,7 +2,7 @@
 DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
 DEF OUTPUT PARAM    vpdf          AS CHAR.
 
-{/admcom/barramento/tsrelat/tsrelat.i}
+{tsr/tsrelat.i}
 
 {admcab-batch.i}
 DEF VAR hentrada AS HANDLE.
@@ -67,17 +67,29 @@ def new shared temp-table tt-extrato
     find estab where estab.etbcod = vetbcod no-lock.    
     valfa = ttparametros.alfa.
 
+   
     if ttparametros.dataFinal BEGINS "#" then do:
         vdtvenfim = calculadata(ttparametros.dataFinal,TODAY).
     end.
-    ELSE vdtvenfim   = DATE(ttparametros.dataFinal).
+    ELSE DO:
+        vdtvenfim =convertedata(ttparametros.dataFinal).
+    END.
     if ttparametros.dataInicial BEGINS "#" then do:
         vdtvenini = calculadata(ttparametros.dataInicial,vdtvenfim).
     end.
-    ELSE vdtvenini   = DATE(ttparametros.dataInicial).
-    
-    varquivo = "cre02-" + STRING(TODAY,"99999999") +
-                    replace(STRING(TIME,"HH:MM:SS"),":","").
+    ELSE DO:
+        vdtvenini  = convertedata(ttparametros.dataInicial).
+    END.
+ 
+    if AVAIL tsrelat then do:
+        varquivo = "cre02-ID" + STRING(tsrelat.idrelat) + "-" +  
+                        STRING(TODAY,"99999999") +
+                        replace(STRING(TIME,"HH:MM:SS"),":","").
+    end.
+    ELSE DO:
+        varquivo = "cre02-" + STRING(TODAY,"99999999") +
+                        replace(STRING(TIME,"HH:MM:SS"),":","").
+    END.
     
     {mdadmcab.i
         &Saida     = "VALUE(vdir + varquivo + """.txt""")"

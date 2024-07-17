@@ -1,6 +1,5 @@
 DEF VAR vdir AS CHAR.
 DEF VAR vpini AS CHAR.
-DEF VAR vpropath AS CHAR.
 DEF VAR vpf AS CHAR.
 
 vdir = "/admcom/barramento/tsrelat/".
@@ -10,9 +9,11 @@ repeat TRANSACTION:
     if vpini = "" or vpini = ? then next.
     
     if ENTRY(1,vpini,"=") = "PF"         THEN vpf = ENTRY(2,vpini,"=").
-    if ENTRY(1,vpini,"=") = "PROPATH"    THEN vpropath = ENTRY(2,vpini,"=").
+    if ENTRY(1,vpini,"=") = "PROPATH"    THEN propath = ENTRY(2,vpini,"=").
 end.
 input close.
+
+MESSAGE "PROPATH=" + PROPATH.
 
 def new global shared var scontador as int.
 scontador = 100000.
@@ -114,11 +115,17 @@ repeat:
                 END.  
                 ELSE DO:
                     MESSAGE   "c:\Progress\OpenEdge\bin\mbpro.bat -pf " + vpf + " -p " + 
-                                        vdir + tsrelat.progcod + ".p " + 
-                                        " -param " + string(tsrelat.idrelat) + " >> /admcom/barramento/log/tsrelatserver_" + tsrelat.progcod + ".log  &".
+                                        vdir + "tsdispara.p " + 
+                                        " -param ~"" + string(tsrelat.idrelat) + 
+                                        "," + tsrelat.progcod + 
+                                        "," + vdir +  "~"" +
+                                        " >> /admcom/barramento/log/tsrelatserver_" + tsrelat.progcod + "_" + STRING(TODAY,"99999999") + ".log   &" .
                     os-command silent value("c:\Progress\OpenEdge\bin\mbpro.bat -pf " + vpf + " -p " + 
-                                        vdir + tsrelat.progcod + ".p " + 
-                                        " -param " + string(tsrelat.idrelat) + " >> /admcom/barramento/log/tsrelatserver_" + tsrelat.progcod + ".log   &" ) .            
+                                        vdir + "tsdispara.p " + 
+                                        " -param ~"" + string(tsrelat.idrelat) + 
+                                        "," + tsrelat.progcod + 
+                                        "," + vdir +  "~"" +
+                                        " >> /admcom/barramento/log/tsrelatserver_" + tsrelat.progcod + "_" + STRING(TODAY,"99999999") + ".log   &" ) .            
                 
                 END.
             end.
