@@ -8,11 +8,10 @@ DEF OUTPUT PARAM    vpdf          AS CHAR.
 DEF VAR hentrada AS HANDLE.
 
 def temp-table ttparametros serialize-name "parametros"
-    field posicao       as int
     field codigoFilial  as int
-    field dataInicial   as date
-    field dataFinal     as date
-    field ordem         as int.
+    field dataInicial   as CHAR
+    field dataFinal     as CHAR
+    field alfa          AS LOG.
                         
 hEntrada = temp-table ttparametros:HANDLE.
 
@@ -66,12 +65,17 @@ def new shared temp-table tt-extrato
     /* parametrois vem do ttparametros */
     vetbcod = ttparametros.codigoFilial.
     find estab where estab.etbcod = vetbcod no-lock.    
-    if ttparametros.ordem = 1
-    then valfa = yes.
-    else valfa = no.
-    vdtvenini   = dataInicial.
-    vdtvenfim   = dataFinal.
+    valfa = ttparametros.alfa.
 
+    if ttparametros.dataFinal BEGINS "#" then do:
+        vdtvenfim = calculadata(ttparametros.dataFinal,TODAY).
+    end.
+    ELSE vdtvenfim   = DATE(ttparametros.dataFinal).
+    if ttparametros.dataInicial BEGINS "#" then do:
+        vdtvenini = calculadata(ttparametros.dataInicial,vdtvenfim).
+    end.
+    ELSE vdtvenini   = DATE(ttparametros.dataInicial).
+    
     varquivo = "cre02-" + STRING(TODAY,"99999999") +
                     replace(STRING(TIME,"HH:MM:SS"),":","").
     
