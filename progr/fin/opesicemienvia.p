@@ -742,7 +742,7 @@ procedure p-registro-10.
     /*   vai sobrescrever a variavel valoroperacao, com esta nova formula */
   if contrato.modcod = "CPN" or (contrato.modcod = "CRE" and contrato.tpcontrato = "N")
   then do:  
-    vvaloroperacao = contrato.vlf_principal - contrato.vlentra - contrato.vlseguro.
+    vvaloroperacao = contrato.vlf_principal - contrato.vlentra . /* helio 16/07/2024 nao subtrai o seguro*/
     if vvaloroperacao < 0
     then vvaloroperacao = 0.
   end.
