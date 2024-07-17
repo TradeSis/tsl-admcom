@@ -13,6 +13,7 @@
 /* helio 19072022 - projeto Criar Produtos - ADM - tipoontratoSicred */
 /* helio 13072022 - projeto Criar Produtos - ADM */
 
+def buffer bestab for estab.
 def var  vtitvltot as dec.
 
 def var vvaloroperacao as dec.
@@ -751,13 +752,14 @@ procedure p-registro-10.
     
   /* helio 12/07/2024 - Carol solicitou - para todos os contratos */
     /*   vai sobrescrever a variavel valoroperacao, com esta nova formula */
+    /* HELIO CORRETIVA */
   if contrato.modcod = "CPN" or (contrato.modcod = "CRE" and contrato.tpcontrato = "N")
   then do:  
-      vvaloroperacao = contrato.vlf_principal - contrato.vlentra - contrato.vlseguro.
+      vvaloroperacao = contrato.vlf_principal - contrato.vlentra . /* helio 16/07/2024 nao subtrai o seguro*/
       if vvaloroperacao < 0
       then vvaloroperacao = 0.
   end.
-  /**/
+  /* HELIO CORRETIVA */
   
   put unformat skip 
       "10"            /* 01  - 02  TIPO  FIXO –1  */
@@ -1104,6 +1106,7 @@ procedure p-registro-15.
     if lcontratoeletronico = no then return.
     
     vseq = vseq + 1.
+    find bestab where bestab.etbcod = contrato.etbcod no-lock.
     put unformat skip
       "15"                   /* 01-02 fixo "15" */
       contrato.contnum format "9999999999" /* 03 - 12 NÚMERO OPERAÇÃO  */
@@ -1113,8 +1116,8 @@ procedure p-registro-15.
       "Sistema Operacional Linux Versao Storex " + contrassin.versaocomponente    format "x(60)"
       contrassin.nomecomponente    format "x(15)"
       ""    format "x(15)"
-      ""    format "x(15)"
-      ""    format "x(15)"
+      bestab.latitude     format "x(15)"        /* HELIO 17072024 - DPGE Latitude Longitude */
+      bestab.longitude    format "x(15)"
         string(year(contrassin.dtinclu),"9999")  + "-" +
         string(month(contrassin.dtinclu),"99")   + "-" +
         string(day(contrassin.dtinclu),"99")     + " " + 
