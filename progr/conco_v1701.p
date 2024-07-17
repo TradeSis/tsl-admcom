@@ -66,10 +66,11 @@ repeat:
             clien.clinom no-label when avail clien format "x(41)"
             clien.ciccgc no-label when avail clien format "x(11)"
             contrato.dtinicial format "99/99/9999" colon 13
-            contrato.etbcod colon 45
+            contrato.etbcod colon 45 
+                    contrato.crecod label "Plano" colon 68
             contrato.banco  colon 13
             contrato.modcod colon 45
-            contrato.nro_parcelas  label "Qtd Parcelas" format ">>>"
+            contrato.nro_parcelas  label "Qtd Parcelas" format ">>>" colon 68
             
             with frame f-contrato1.
 
