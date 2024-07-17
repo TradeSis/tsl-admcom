@@ -2,10 +2,10 @@
 
 /* DEVE CONTER O MESMO NOME QUE ESTÁ GRAVADO NA TABELA TSRELAT.PROGCOD */
 
-{/admcom/progr/admbatch.i NEW}
+{admbatch.i NEW}
 DEF VAR lcjsonentrada AS LONGCHAR.
 DEF VAR vpdf   AS CHAR. 
-{/admcom/barramento/tsrelat/tsrelat.i}
+{tsr/tsrelat.i}
 
 message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/lon_cred01.p -> loj/cred02_run.p".
 
