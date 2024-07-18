@@ -1,7 +1,7 @@
 DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
 DEF OUTPUT PARAM    vpdf          AS CHAR.
 
-{/admcom/barramento/tsrelat/tsrelat.i}
+{tsr/tsrelat.i}
 
 {admcab-batch.i}
 DEF VAR hentrada AS HANDLE.
