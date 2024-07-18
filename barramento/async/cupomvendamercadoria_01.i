@@ -40,6 +40,9 @@ field valorEncargos as char
 field valorTroco as char 
 field valorTotalAPrazo as char 
 field optouNFPaulista as char 
+field versaoComponente as char
+field nomeComponente as char
+field versaoDdcComponente as char
 index x is unique primary  id asc.
 
 DEFINE TEMP-TABLE ttrecebimentos NO-UNDO SERIALIZE-NAME "recebimentos"

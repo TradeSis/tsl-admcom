@@ -1,13 +1,13 @@
-/* helio 26072023 NOVA«√O COM ENTRADA (BOLETO) + SEGURO PRESTAMISTA . SOLU«√O 3 */
+/* helio 26072023 NOVA√á√ÉO COM ENTRADA (BOLETO) + SEGURO PRESTAMISTA . SOLU√á√ÉO 3 */
 /* helio 06022023 - retirado onda3, deixei fico cobcod = 1, ajustes de calculo de screscimo e principal */
-/* helio 17022022 263458 - Revis„o da regra de novaÁıes */
-/* #H1 helio.neto 30072021 - ajustou a moecod, para a mesma regra de outras, que È pelo tipo de baixa */
+/* helio 17022022 263458 - Revis√£o da regra de nova√ß√µes */
+/* #H1 helio.neto 30072021 - ajustou a moecod, para a mesma regra de outras, que √© pelo tipo de baixa */
 
 /* Gestao de Boletos   - rotinas
    bol/efetivaacordo_v2101.p
    Efetiva acordo criando Contrato/Titulos e Baixando TitulosOriginais 
 #1 22.02.2018 Helio - Corretiva TP 22125274 - Acerto para baixar titulo origem
-   pelo valor do titulo, e nao o do parametro que È o valor da entrada do acordo
+   pelo valor do titulo, e nao o do parametro que √© o valor da entrada do acordo
 #2 TP 28872041 16.01.19 - Etbcod e modcod na origem
 */
 
@@ -120,7 +120,7 @@ then do:
                              then 13 else 10
             contrato.tpcontrato = "N".
 
-        /* helio 25.11.2021 ID 98001 - NovaÁıes cslog fora da estrutura padr„o para origem e novo.
+        /* helio 25.11.2021 ID 98001 - Nova√ß√µes cslog fora da estrutura padr√£o para origem e novo.
                 criando forma e pdvmoeda */
             find first pdvforma where      
                      pdvforma.etbcod     = pdvmov.etbcod and
@@ -160,12 +160,12 @@ then do:
             pdvforma.qtd_parcelas = contrato.nro_parcela.
             pdvforma.valor_ACF    = contrato.vlf_Acrescimo.
             pdvforma.valor        = contrato.vlTotal.
-        /* helio 25.11.2021 ID 98001 - NovaÁıes cslog fora da estrutura padr„o para origem e novo.
+        /* helio 25.11.2021 ID 98001 - Nova√ß√µes cslog fora da estrutura padr√£o para origem e novo.
                 criando forma e pdvmoeda */
 
     end.                                                    
 
-    /* helio 17022022 263458 - Revis„o da regra de novaÁıes */
+    /* helio 17022022 263458 - Revis√£o da regra de nova√ß√µes */
     
     for each cybacorigem of cybacordo /* #2 */ NO-LOCK.
         do vparc = 1 to num-entries(cybacorigem.ParcelasLista).
@@ -339,7 +339,7 @@ then do:
             titulo.titvlcob   = cybacparcela.vlCobrado + cybacparcela.vlseguro.
 
 
-        /* helio 25.11.2021 ID 98001 - NovaÁıes cslog fora da estrutura padr„o para origem e novo.
+        /* helio 25.11.2021 ID 98001 - Nova√ß√µes cslog fora da estrutura padr√£o para origem e novo.
                 criando forma e pdvmoeda */.
                 find first pdvmoeda where      
                      pdvmoeda.etbcod       = pdvmov.etbcod and
@@ -376,7 +376,7 @@ then do:
 
                 pdvmoeda.valor = titulo.titvlcob.
                 pdvmoeda.titdtven = titulo.titdtven.
-        /* helio 25.11.2021 ID 98001 - NovaÁıes cslog fora da estrutura padr„o para origem e novo.
+        /* helio 25.11.2021 ID 98001 - Nova√ß√µes cslog fora da estrutura padr√£o para origem e novo.
                 criando forma e pdvmoeda */.
         
         assign
@@ -436,7 +436,7 @@ then do:
             else cybacparcela.Situacao = "E".
             
             
-            /* helio 17022022 263458 - Revis„o da regra de novaÁıes */
+            /* helio 17022022 263458 - Revis√£o da regra de nova√ß√µes */
             
             titulo.cobcod = pcobcod. 
             titulo.vlf_acrescimo  = contrato.vlf_acrescimo / contrato.nro_parcela.

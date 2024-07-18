@@ -266,6 +266,7 @@ def var valteraprincipal as log.
             
             end.
             
+            
             for each ttparcelas where ttparcelas.idpai = ttcontrato.id.
                 /*
                 field dataEmissao as char 
@@ -1049,4 +1050,25 @@ index x is unique primary idpai asc id asc.
                 titpag.titvlpag = titpag.titvlpag + pdvmoeda.valor.            
             end.    
         end.
+        
+        /* helio 19022024 - assinatura eletronica */
+        message "assinatura" int(pdvforma.contnum) . 
+        find contrato where contrato.contnum = int(pdvforma.contnum) no-lock no-error.        
+        if avail contrato
+        then do:
+            message "availcontrato " contrato.clicod contrato.dtinicial. 
+            find last clibiometria where clibiometria.clicod = contrato.clicod and
+                                         clibiometria.data   = contrato.dtinicial
+                    no-lock no-error.            
+            if avail clibiometria 
+            then do:
+                message "avail clibiometria" clibiometria.idbiometria. 
+                run crd/passinctr.p (contrato.contnum,
+                                       clibiometria.idbiometria,
+                                       vversaoComponente,
+                                       vnomeComponente,
+                                       recid(pdvmov)).
+            end.
+        end.            
+
    end. 
