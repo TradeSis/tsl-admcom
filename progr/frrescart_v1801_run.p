@@ -3,12 +3,16 @@
 /* #3 Helio 04.04.18 - Versionamento com Regra definida 
     TITOBS[1] contem FEIRAO = YES - NAO PERTENCE A CARTEIRA 
     ou
-    TPCONTRATO = "L" - NAO PERTENCE A CARTEIRA  
+    TPCONTRATO = "L" - NAO PERTENCE A CARTEIRA
 */
 
 {admcab.i}
 {setbrw.i}
-DEF VAR lcJsonEntrada AS LONGCHAR.
+DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
+DEF OUTPUT PARAM    vpdf          AS CHAR.
+
+{tsr/tsrelat.i}
+
 DEF VAR hentrada AS HANDLE.
 
 def temp-table ttparametros serialize-name "parametros"
@@ -18,27 +22,45 @@ def temp-table ttparametros serialize-name "parametros"
     field clinovos              AS LOG
     field sel-mod               AS CHAR
     field considerarfeirao      AS LOG.
-hentrada =  temp-table ttparametros:HANDLE.
+                        
+hEntrada = temp-table ttparametros:HANDLE.
+
+hentrada:READ-JSON("longchar",lcjsonentrada, "EMPTY").
+                        
+find first ttparametros no-error.
 
 
-/* variaveis usadas na tela para pedir parametros */    
-def var vcre as log format "Geral/Facil" initial yes.
-def var vdti like titulo.titdtven.
-def var vdtf like titulo.titdtven.
-def var vclinovos as log format "Sim/Nao".
-def var v-feirao-nome-limpo as log format "Sim/Nao" initial no.
-def var v-fil17 as char extent 2 format "x(15)" init ["Nova","Antiga"].
 
-def var vpdf as char no-undo.
+/* #2 */
+def var par-parcial as log column-label "Par!cial" format "Par/Ori".
+def var par-parorigem like titulo.titpar column-label "Par!Ori".
+def var par-titvlcob as dec column-label "VlCarteira".
+def var par-titdtpag as date column-label "DtPag".
+def var par-titvlpag as dec column-label "VlPago".
+def var par-saldo as dec column-label "VlSaldo".
+def var par-tpcontrato as char format "x(1)" column-label "Tp".
+def var par-titdtemi as date column-label "Dtemi".
+def var par-titdesc as dec column-label "VlDesc".
+def var par-titjuro as dec column-label "VlJuro".
+/* #2 */
 
+def var recatu1         as recid.
+def var recatu2         as recid.
+def var reccont         as int.
 def var esqpos1         as int.
 def var esqpos2         as int.
 def var esqregua        as log.
+def var esqvazio        as log.
+def var esqascend     as log initial yes.
 def var esqcom1         as char format "x(15)" extent 5
     initial ["","RELATORIO","CLIENTE","",""].
 def var esqcom2         as char format "x(15)" extent 5
             initial ["","","","",""].
-
+def var esqhel1         as char format "x(80)" extent 5.
+def var esqhel2         as char format "x(12)" extent 5.
+            
+def var vclinovos as log format "Sim/Nao".
+def buffer btitulo for titulo.
 
 def var v-cont as integer.
 def var v-cod as char.
@@ -55,7 +77,7 @@ def temp-table tt-modalidade-selec
     field modcod as char
     index pk modcod.
 */
-                               
+def var vval-carteira as dec.                                
                                 
 form
    a-seelst format "x" column-label "*"
@@ -94,6 +116,7 @@ form " "
 
 def var etb-tit like titulo.etbcod.
 
+def var vcre as log format "Geral/Facil" initial yes.
 
 /*
 def temp-table tt-cli
@@ -109,7 +132,9 @@ def var pag-atraso as log.
 def buffer ctitulo for titulo.
 
 def var vdt like titulo.titdtven.
-def var varquivo as char format "x(30)".
+def var vdti like titulo.titdtven.
+def var v-feirao-nome-limpo as log format "Sim/Nao" initial no.
+def var vdtf like titulo.titdtven.
 def var wcrenov like titulo.titvlcob.
 
 def temp-table wtit no-undo /* #1 */
@@ -140,29 +165,31 @@ def temp-table bwtit no-undo
 vdti = today - 1.
 vdtf = vdti.
 
+def var v-fil17 as char extent 2 format "x(15)"
+    init ["Nova","Antiga"].
 def var vindex as int. 
+def var vcontador as int.
 
-repeat:
-    
-    update vcre label "Cliente" colon 25
-           help "Opcao: G=Geral; F=Carteira fácil"
-           vdti label "Data Inicial"  colon 25
-           vdtf label "Data Final"  colon 25
-           skip
-           vclinovos label 
-           "Somente clientes novos(até 30 pagas) que atrasaram parcela(s)"
-           with frame f1 side-label width 80.
-           
-    assign sresp = false.
-           
-    update sresp label "Seleciona Modalidades?" colon 25
-           help "Não = Modalidade CRE Padrão / Sim = Seleciona Modalidades"
-           with frame f1.
+/* parametros vem do ttparametros */
+vcre = ttparametros.cliente.
+vdti = ttparametros.dtinicial.
+vdtf = ttparametros.dtfinal. 
+vclinovos = ttparametros.clinovos.
+vmod-sel = ttparametros.sel-mod. 
 
-    
-    update v-feirao-nome-limpo label "Considerar apenas feirao" colon 25
-        when vcre = no /* #1 */
-           with frame f1.
+do vcontador = 1 to num-entries(vmod-sel,",").
+     
+     if entry(vcontador,vmod-sel,",") = "" then next.
+     
+     create tt-modalidade-selec.
+     tt-modalidade-selec.modcod = entry(vcontador,vmod-sel,",").
+   end.
+  
+v-feirao-nome-limpo = considerarfeirao.
+ 
+
+//repeat:
+
              
     /************          
     if sresp
@@ -194,49 +221,220 @@ else do:
     assign tt-modalidade-selec.modcod = "CRE".
 end.
 
-assign vmod-sel = "".
-for each tt-modalidade-selec.
-    assign vmod-sel = vmod-sel + trim(tt-modalidade-selec.modcod) + ",".
-end.
-display vmod-sel format "x(40)" no-label with frame f1.
-
-       
-    if vdti = ? or vdtf = ?
-       or vdti > vdtf 
+    if vcre = no
     then do:
-         message "Data invalida...".
-         Next.
-    end.     
+/*    
+        for each tt-cli:
+            delete tt-cli.
+        end.
+        
+        for each clien where clien.classe = 1 no-lock:
+    
+            display clien.clicod
+                    clien.clinom
+                    clien.datexp format "99/99/9999" with 1 down. pause 0.
+    
+            create tt-cli.
+            assign tt-cli.clicod = clien.clicod.
+        end.
+        */
+    end.    
 
-    vindex = 0.
-   repeat on endkey undo:
-         disp v-fil17 with frame f-17 1 down centered row 12 
-            no-label title " Filial 17 ".
-         choose field v-fil17 with frame f-17.
-         vindex = frame-index.  
-         leave. 
+    
+    for each wtit.
+        delete wtit.
     end.
     
-    
-    CREATE ttparametros.
-    ttparametros.cliente = vcre.
-    ttparametros.dtinicial = vdti.
-    ttparametros.dtfinal = vdtf.
-    ttparametros.clinovos = vclinovos.
-    ttparametros.sel-mod = vmod-sel.
-    ttparametros.considerarfeirao = v-feirao-nome-limpo.
-  
-    hentrada:WRITE-JSON("longchar",lcjsonentrada).
-    
-    RUN frrescart_v1801_run.p (INPUT  lcjsonentrada,
-                               OUTPUT vpdf).
+/* Banfin */
 
+    if vcre 
+    then do:
+        
+        for each estab no-lock:
+        
+            do vdt = vdti to vdtf:
+                for each tt-modalidade-selec no-lock,
+                
+                    each titulo
+                    where titulo.empcod = 19 and
+                          titulo.titnat = no and
+                          titulo.modcod = tt-modalidade-selec.modcod and
+                          titulo.etbcod = estab.etbcod and
+                          titulo.titdtven = vdt no-lock:
+
+                    if titulo.etbcod = 17 and
+                        vindex = 2 and
+                        titulo.titdtemi >= 10/20/2010
+                    then next.  
+                    else if titulo.etbcod = 17 and
+                        vindex = 1 and
+                        titulo.titdtemi < 10/20/2010
+                    then next.
+
+                    etb-tit = titulo.etbcod.
+                    run muda-etb-tit.
+
+                    /** {filtro-feiraonl.i} #1 */
+                    
+                    if vclinovos = yes
+                    then do:
+                        run cli-novo.
+                    end.
+
+                    find first tt-clinovo where 
+                       tt-clinovo.clicod = titulo.clifor
+                       no-error.
+                    if not avail tt-clinovo 
+                    and vclinovos
+                    then next. 
+                    
+                    find first wtit where wtit.wetb = etb-tit 
+                        no-error.
+                    if not avail wtit
+                    then do:
+                        create wtit.
+                        assign wtit.wetb = etb-tit.
+                    end.    
+
+                    par-tpcontrato = titulo.tpcontrato.
+                        /* #2
+                    run fbtituloposicao.p 
+                        (recid(titulo), 
+                         vdtf,
+                         output par-parcial,
+                         output par-parorigem,
+                         output par-titdtemi,
+                         output par-tpcontrato,
+                         output par-titvlcob,
+                         output par-titdtpag,
+                         output par-titvlpag ,
+                         output par-titdesc ,
+                         output par-titjuro,
+                         output par-saldo).
+                      */
+
+                    wtit.wvalor = wtit.wvalor + titulo.titvlcob.
+                    wtit.wpar   = wtit.wpar   + 1.
+                    
+                    /* #1 */
+                    /* #3 - regra esta correta */
+                    if  /* #3 se FEIRAO ou TPCONTRATO = "L"
+                              nao pertence a carteira
+                        */      
+                       acha("FEIRAO-NOME-LIMPO",titulo.titobs[1]) = "SIM" or
+                       titulo.tpcontrato = "L"  /* #3 */
+                    then do:
+                        /* #3  PRIORIZA FEIRAO */
+                        if acha("FEIRAO-NOME-LIMPO",titulo.titobs[1]) = "SIM"
+                        then 
+                          wtit.fei = wtit.fei + titulo.titvlcob.
+                        else
+                          wtit.lp  = wtit.lp  + titulo.titvlcob.
+                    end.
+                    else do:
+                        if titulo.tpcontrato = "N"  /* #3 */
+                        then
+                           wtit.nov  = wtit.nov + titulo.titvlcob.
+                        else
+                           wtit.cre  = wtit.cre + titulo.titvlcob.
+                    end.                
+                    /* #3 */
+                    /* #1 */
+
+                    display wtit.wetb titulo.clifor wtit.wvalor wtit.wpar
+                            vdt with 1 down. 
+                    create bwtit.
+                    assign bwtit.bwetbcod = etb-tit
+                           bwtit.bwclifor = titulo.clifor
+                           bwtit.bwtitvlcob = titulo.titvlcob
+                           bwtit.bwtitdtven = titulo.titdtven.
+                    pause 0.
+                end.
+            end.
+        end.
+    end.
+    else do:
+        for each /* tt-cli */ clien where clien.classe = 1 NO-LOCK,
+        
+            each tt-modalidade-selec,
+        
+            each titulo use-index iclicod where 
+                              titulo.clifor = clien.clicod and
+                              titulo.empcod = 19    and
+                              titulo.titnat = no    and
+                              titulo.modcod = tt-modalidade-selec.modcod and
+                              titulo.titdtven >= vdti and
+                              titulo.titdtven <= vdtf     
+                                   no-lock: 
+            
+                if titulo.etbcod = 17 and
+                   vindex = 2 and
+                   titulo.titdtemi >= 10/20/2010
+                then next.  
+                else if titulo.etbcod = 17 and
+                     vindex = 1 and
+                     titulo.titdtemi < 10/20/2010
+                then next.
+
+                etb-tit = titulo.etbcod.
+                
+                run muda-etb-tit.
+
+                par-tpcontrato = titulo.tpcontrato.
+                /* #2
+                    run fbtituloposicao.p 
+                        (recid(titulo), 
+                         vdtf,
+                         output par-parcial,
+                         output par-parorigem,
+                         output par-titdtemi,
+                         output par-tpcontrato,
+                         output par-titvlcob,
+                         output par-titdtpag,
+                         output par-titvlpag ,
+                         output par-titdesc ,
+                         output par-titjuro,
+                         output par-saldo).
+                */
+
+ 
+                {filtro-feiraonl.i}
+
+                if vclinovos = yes
+                then do:
+                    run cli-novo.
+                end.
+
+                find first tt-clinovo where 
+                       tt-clinovo.clicod = titulo.clifor
+                       no-error.
+                if not avail tt-clinovo 
+                    and vclinovos
+                then next. 
+            
+                find first wtit where wtit.wetb = etb-tit no-error.
+                if not avail wtit
+                then do:
+                    create wtit.
+                    assign wtit.wetb = etb-tit.
+                end.    
+                wtit.wvalor = wtit.wvalor + titulo.titvlcob.
+                wtit.wpar   = wtit.wpar   + 1.
+                display wtit.wetb wtit.wvalor wtit.wpar with 1 down.
+                create bwtit.
+                assign bwtit.bwetbcod = etb-tit
+                       bwtit.bwclifor = titulo.clifor
+                       bwtit.bwtitvlcob = titulo.titvlcob
+                       bwtit.bwtitdtven = titulo.titdtven.  
+                pause 0.
+            end.
+    end.
    
     /*Adri*/
     run p-montabrow.
     
             
-end.
+//end.
 
 procedure muda-etb-tit.
 
@@ -461,7 +659,51 @@ procedure p-cliente:
     
 end procedure.
 
+procedure cli-novo:
+    find first tt-clinovo where
+               tt-clinovo.clicod = titulo.clifor
+               no-error.
+    if not avail tt-clinovo
+    then do:
+        par-paga = 0.
+        pag-atraso = no.
 
+        for each ctitulo where
+                 ctitulo.clifor = titulo.clifor 
+                 no-lock:
+            if ctitulo.titpar = 0 then next.
+            if ctitulo.modcod = "DEV" or
+                ctitulo.modcod = "BON" or
+                ctitulo.modcod = "CHP"
+            then next.
+ 
+            if ctitulo.titsit = "LIB"
+            then next.
+
+            par-paga = par-paga + 1.
+            if par-paga = 31
+            then leave.
+            if ctitulo.titdtpag > ctitulo.titdtven 
+            then pag-atraso = yes.   
+            
+        end.
+        find first posicli where posicli.clicod = titulo.clifor
+               no-lock no-error.
+        if avail posicli
+        then par-paga = par-paga + posicli.qtdparpg.
+            
+        find first credscor where credscor.clicod = titulo.clifor
+                        no-lock no-error.
+        if avail credscor
+        then  par-paga = par-paga + credscor.numpcp.
+        
+        if par-paga <= 30 and pag-atraso = yes
+        then do:   
+            create tt-clinovo.
+            tt-clinovo.clicod = titulo.clifor.
+        end.
+    end. 
+end procedure.
 
 
 
