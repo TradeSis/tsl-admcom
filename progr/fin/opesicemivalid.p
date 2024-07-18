@@ -1,13 +1,13 @@
-/*** helio 12042023 - Qualitor 22363 - Erro no exportador / Data cÙnjuge. */
-/* helio 27032023 - QUALITOR 21842 - Filtro em par‚metros para IOF zerado ou n„o */
-/* helio #31012023 Erro ajuste no par‚metro de plano - Exportador - ID 158279. - encontrado erro */
+/*** helio 12042023 - Qualitor 22363 - Erro no exportador / Data c√¥njuge. */
+/* helio 27032023 - QUALITOR 21842 - Filtro em par√¢metros para IOF zerado ou n√£o */
+/* helio #31012023 Erro ajuste no par√¢metro de plano - Exportador - ID 158279. - encontrado erro */
 /* helio #23112022 id 156015 - Retirar filtro Contrato com Servicos e Vlr Acrescimo ZERO */ 
 /* helio #24102022 Id 154210 - */
 /* helio #17102022 ID 153621 - ajustes para nao pegar para validar registros recentemente (2 horas) 
-                             - modificado tambem que agora inicia como VALIDAR, e sÛ os validaos passam para ENVIAR */
+                             - modificado tambem que agora inicia como VALIDAR, e s√≥ os validaos passam para ENVIAR */
 
-/* #27092022 helio - (Lucas) Ajuste AcrÈscimo - Exportador/IntegraÁ„o */
-/* helio #16062022 - ID 148949 - Ajuste Data Admiss„o Cliente */
+/* #27092022 helio - (Lucas) Ajuste Acr√©scimo - Exportador/Integra√ß√£o */
+/* helio #16062022 - ID 148949 - Ajuste Data Admiss√£o Cliente */
 /* #02092022 helio - reativacao projeto cria produtos adm */
 /* helio #02082022 - projeto Criar Produtos - ADM - erro para vliof = 0 */
 /* helio 19072022 - projeto Criar Produtos - ADM - tipoontratoSicred */
@@ -115,8 +115,8 @@ pause 0 before-hide.
                 next.
             end.
                 
-            /*#16092022 - desativando, se a data estivar vazia ou invalida, incluir a data da operaÁ„o realizada. 
-            /*data admiss„o  */
+            /*#16092022 - desativando, se a data estivar vazia ou invalida, incluir a data da opera√ß√£o realizada. 
+            /*data admiss√£o  */
             if clien.proemp[1] <> ? and clien.proemp[1]  <> ""
             then 
             if 
@@ -132,7 +132,7 @@ pause 0 before-hide.
             #16092022 */
 
             
-/*** helio 12042023 - Qualitor 22363 - Erro no exportador / Data cÙnjuge.
+/*** helio 12042023 - Qualitor 22363 - Erro no exportador / Data c√¥njuge.
             retirado o teste no valildado, sera colocado no exportador
                 
 *            /*Data nascimento */
@@ -149,7 +149,7 @@ pause 0 before-hide.
 *            end.
 */
                         
-            /**{1}.dias_retroativo     = - dias m·ximo retroativos para operaÁ„o.**/
+            /**{1}.dias_retroativo     = - dias m√°ximo retroativos para opera√ß√£o.**/
             if contrato.dtinicial < today - sicred_param.dias_retroativo
             then do:
                 sicred_contrato.descerro = "Dias retroativos para operacao nao permitido".
@@ -175,7 +175,7 @@ pause 0 before-hide.
                 next.
             end.
             
-            /* helio 27032023 - QUALITOR 21842 - Filtro em par‚metros para IOF zerado ou n„o */
+            /* helio 27032023 - QUALITOR 21842 - Filtro em par√¢metros para IOF zerado ou n√£o */
             if sicred_param.permiteIOFZero
             then.
             else do:
@@ -267,7 +267,7 @@ pause 0 before-hide.
                     
                 end.
                 else do:
-                    sicred_contrato.descerro = "Valor Minimo de acrescimo permitido È " + string(sicred_param.valor_min_acrescimo,">>>>>>>9.99").
+                    sicred_contrato.descerro = "Valor Minimo de acrescimo permitido √© " + string(sicred_param.valor_min_acrescimo,">>>>>>>9.99").
                 end.    
                 hide message no-pause.
                 message today sicred_contrato.sstatus sicred_contrato.operacao sicred_contr.contnum sicred_contrato.descerro. 
@@ -309,7 +309,7 @@ pause 0 before-hide.
                     no-lock no-error.
                     if not avail titulo
                     then do:
-                    /* helio 25042023 - ID 24709 - arquivo exportaÁ„o com falha. */
+                    /* helio 25042023 - ID 24709 - arquivo exporta√ß√£o com falha. */
                         sicred_contrato.descerro = "Contato sem parcelas".
                         hide message no-pause.
                         message today sicred_contrato.sstatus sicred_contrato.operacao sicred_contr.contnum sicred_contrato.descerro. 
@@ -342,7 +342,7 @@ pause 0 before-hide.
                 if contrato.vlf_acrescimo >= 1
                 then do:
                     vfincod = 500.
-                    vcod-produto = 2.
+                    vcod-produto = 5.
                 end.
                 else do:
                     vfincod = 501.
@@ -354,7 +354,7 @@ pause 0 before-hide.
                 if contrato.vlf_acrescimo >= 1
                 then do:
                     vfincod = 500.
-                    vcod-produto = 5.
+                    vcod-produto = 2.
                 end.
                 else do:
                     vfincod = 501.
@@ -421,7 +421,7 @@ pause 0 before-hide.
             /**- cadastro de prazos do plano**/
             find first sicred_planos where
                         sicred_planos.fincod = sicred_contr.fincod 
-                        no-lock no-error. /* helio 08032022 ID 109702 - ExportaÁ„o de contratos fora das taxas permitidas
+                        no-lock no-error. /* helio 08032022 ID 109702 - Exporta√ß√£o de contratos fora das taxas permitidas
                                                                             suspeita (coloquei first)*/
             if not avail sicred_planos
             then do:
@@ -433,7 +433,7 @@ pause 0 before-hide.
                 next.                                     
             end.
             else do:
-                /**- vigÍncia do plano**/
+                /**- vig√™ncia do plano**/
                 if sicred_planos.dtvigencia <> ? and
                    sicred_planos.dtvigencia < contrato.dtinicial
                 then do:
@@ -502,8 +502,8 @@ pause 0 before-hide.
             end.
 
             
-            /*{1}.dias_min_privenc    - dias mÌnimo para primeiro vencimento
-              {1}.dias_max_venc       - dias m·ximo para primeiro vencimento**/
+            /*{1}.dias_min_privenc    - dias m√≠nimo para primeiro vencimento
+              {1}.dias_max_venc       - dias m√°ximo para primeiro vencimento**/
             if titulo.titdtven >= contrato.dtinicial + sicred_planos.dias_min_privenc and
                titulo.titdtven <= contrato.dtinicial + sicred_planos.dias_max_venc
             then.
@@ -517,8 +517,8 @@ pause 0 before-hide.
                 next.
             end.
             
-            /*{1}.taxa_minima         - taxa mÌnima permitida por plano
-              {1}.taxa_maxima         - taxa m·xima permitida por plano**/
+            /*{1}.taxa_minima         - taxa m√≠nima permitida por plano
+              {1}.taxa_maxima         - taxa m√°xima permitida por plano**/
             if contrato.TxJuros >= sicred_planos.taxa_minima and
                contrato.TxJuros <= sicred_planos.taxa_maxima
             then.   
@@ -533,7 +533,7 @@ pause 0 before-hide.
             end.
     
     
-            /*{1}.dias_valido_emissao - validade de emiss„o de contrato no plano*/
+            /*{1}.dias_valido_emissao - validade de emiss√£o de contrato no plano*/
             if contrato.dtinicial < today - sicred_planos.dias_valido_emissao
             then do:
                 sicred_contrato.descerro = "Data Emissao nao permitido no plano "
