@@ -72,7 +72,7 @@ def new shared var vachatextoval  as char.
 def new shared var vvalor-cartpre as int.
 
 def var vcre as log format "Geral/Facil" initial yes.
-
+def var vcontador as int.
 def temp-table tt-cli
     field clicod like clien.clicod.
 
@@ -153,7 +153,16 @@ def temp-table ttpdvdoc no-undo
  vdtini = ttparametros.dtinicial.           
  vdtfin = ttparametros.dtfinal.              
  v-relatorio-geral = ttparametros.relatoriogeral.        
- vmod-sel = ttparametros.sel-mod.             
+ vmod-sel = ttparametros.sel-mod. 
+ 
+ do vcontador = 1 to num-entries(vmod-sel,",").
+      
+      if entry(vcontador,vmod-sel,",") = "" then next.
+      
+      create tt-modalidade-selec.
+      tt-modalidade-selec.modcod = entry(vcontador,vmod-sel,",").
+    end.
+
  v-consulta-parcelas-LP = ttparametros.consultalp.          
  v-feirao-nome-limpo = ttparametros.considerarfeirao. 
  

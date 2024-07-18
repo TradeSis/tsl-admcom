@@ -161,9 +161,9 @@ repeat with 1 down side-label width 80 row 3:
             create tt-modalidade-selec.
             buffer-copy tt-modalidade-padrao to tt-modalidade-selec.
         end.
-        assign vmod-sel = "  ".
+        assign vmod-sel = "".
         for each tt-modalidade-selec.
-            assign vmod-sel = vmod-sel + tt-modalidade-selec.modcod + "  ".
+            assign vmod-sel = vmod-sel + trim(tt-modalidade-selec.modcod) + ",".
         end.
         
         display vmod-sel format "x(40)" no-label.
