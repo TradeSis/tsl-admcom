@@ -70,6 +70,16 @@ vsaida = "./json/servico/" + trim(tipoServico) + "_"
 hcupomvendaservicoEntrada:WRITE-JSON("FILE",vsaida, true).
 
 
+/* dpge/assinatura 03072024 */
+def var vversaoComponente as char.
+def var vnomeComponente as char.
+if avail ttcupomvendaservico
+then do:
+    vversaoComponente = ttcupomvendaservico.versaoComponente.
+    vnomeComponente   = ttcupomvendaservico.nomeComponente.
+end.
+if vversaoComponente = ? then vversaoComponente = "".
+if vnomeComponente   = ? then vnomeComponente = "".
 
 
 

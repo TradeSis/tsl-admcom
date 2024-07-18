@@ -80,6 +80,18 @@ vsaida = "./json/mercadoria/" + trim(ttcupomvendamercadoria.tipo) + "_" + trim(o
 **/
 
 find first ttcupomvendamercadoria no-error.  
+/* dpge/fassinatura 03072024 */
+def var vversaoComponente as char.
+def var vnomeComponente as char.
+if avail ttcupomvendamercadoria
+then do:
+    vversaoComponente = ttcupomvendamercadoria.versaoComponente.
+    vnomeComponente   = ttcupomvendamercadoria.nomeComponente.
+    message vversaoComponente vnomeComponente.
+end.
+if vversaoComponente = ? then vversaoComponente = "".
+if vnomeComponente   = ? then vnomeComponente = "".
+
 def var tiposervico as char.
 if trim(operacao) = "DEVOLUCAO" 
 then vctmcod = "108".

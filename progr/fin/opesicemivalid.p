@@ -336,36 +336,32 @@ pause 0 before-hide.
 
             vfincod = contrato.crecod.
             
-            /** #02092022  
-            if (contrato.tpcontrato = "N" or (avail titulo and titulo.tpcontrato = "N")) and contrato.modcod = "CRE" 
-            then vcod-produto = 2. 
-            else if contrato.modcod = "CPN" 
-                 then vcod-produto = 5.
-            **/
-                                                                 
-                                                                 
-            /* #02092022 */
-            if (contrato.tpcontrato = "N" or (avail titulo and titulo.tpcontrato = "N")) and contrato.modcod = "CRE"
+            /* helio 12/07/2024*/    
+            if contrato.modcod = "CPN" 
             then do:
-                /* 
-                        Plano 500:  produto 2 novação e 5 novação CP 
-                        Plano 501: produto 19 novação e 20 novação CP
-                */
-                if vfincod = 500 
-                then vcod-produto = 2.
-                if vfincod = 501
-                then vcod-produto = 19.
-                
-            end.    
-            if contrato.modcod = "CPN"
-            then do: 
-                if vfincod = 500 
-                then vcod-produto = 5. 
-                if vfincod = 501 
-                then vcod-produto = 20.  
-            end.   
-         
-           
+                if contrato.vlf_acrescimo >= 1
+                then do:
+                    vfincod = 500.
+                    vcod-produto = 2.
+                end.
+                else do:
+                    vfincod = 501.
+                    vcod-produto = 20.
+                end.
+            end.
+            if contrato.modcod = "CRE" and contrato.tpcontrato = "N"
+            then do:
+                if contrato.vlf_acrescimo >= 1
+                then do:
+                    vfincod = 500.
+                    vcod-produto = 5.
+                end.
+                else do:
+                    vfincod = 501.
+                    vcod-produto = 19.
+                end.
+            end.
+            
             if sicred_contrato.operacao = "TRANSFERE"
             then do:
                 if contrato.tpcontrato = "N"

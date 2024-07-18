@@ -1,5 +1,8 @@
 /* #10082022 helio - problema das baixas parciais continuava - formula estava ainda errada */
 /* helio 28022022 - iepro - ajuste relatorio divergencia de juros */
+/* dpge/assinatura 03072024 */
+def var vversaoComponente as char.
+def var vnomeComponente as char.
 
 DEFINE INPUT  PARAMETER lcJsonEntrada      AS LONGCHAR.
 def    output param     verro as char no-undo.

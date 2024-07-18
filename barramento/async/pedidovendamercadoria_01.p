@@ -1,4 +1,7 @@
 /* helio 13022023 - Projeto Cupom b2b - Grava retorno do Desconto. */
+/* dpge/assinatura 03072024 */
+def var vversaoComponente as char.
+def var vnomeComponente as char.
 
 DEFINE INPUT  PARAMETER lcJsonEntrada      AS LONGCHAR.
 def    output param     verro as char no-undo.
