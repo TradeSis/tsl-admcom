@@ -3,7 +3,7 @@
 /* #1 - 02.06.2017 - Voltou a testar pela acha do titobs[1] se é parcial */
 /* #2 - 21.02.2020 - TP 35920071 - Titulo não disponível*/
 {admcab.i}
-{setbrw.i}
+
 DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
 DEF OUTPUT PARAM    vpdf          AS CHAR.
 
@@ -166,29 +166,6 @@ def temp-table ttpdvdoc no-undo
  v-consulta-parcelas-LP = ttparametros.consultalp.          
  v-feirao-nome-limpo = ttparametros.considerarfeirao. 
  
- 
-form
-   a-seelst format "x" column-label "*"
-   tt-modalidade-padrao.modcod no-label
-   with frame f-nome
-       centered down title "Modalidades"
-       color withe/red overlay.    
-                                                        
-create tt-modalidade-padrao.
-assign tt-modalidade-padrao.modcod = "CRE".
-create tt-modalidade-padrao.
-assign tt-modalidade-padrao.modcod = "CPN".
-
-for each profin no-lock.
-    find modal of profin no-lock no-error.
-    if not avail modal
-    then next.
-    create tt-modalidade-padrao.
-    assign tt-modalidade-padrao.modcod = profin.modcod.
-        
-end.
-
-//repeat with 1 down side-label width 80 row 3:
 
     vtime = time.
     
@@ -200,10 +177,6 @@ end.
         end.
 
         for each clien where clien.classe = 1 no-lock:
-    
-            display clien.clicod
-                    clien.clinom
-                    clien.datexp format "99/99/9999" with 1 down. pause 0.
         
             create tt-cli.
             assign tt-cli.clicod = clien.clicod.
@@ -658,22 +631,7 @@ end.
         
         find estab where estab.etbcod = wfresumo.etbcod no-lock no-error.
         
-        display wfresumo.etbcod     column-label "Etb."
-                wfresumo.vlpago_etbcobra     column-label "Pgto!vlr!Prestacao"   (total)
-                wfresumo.vlpago_etborigem    column-label "Pgto!vlr!Fil Origem"   (total)
-                wfresumo.juros                column-label "juros!cobrado"                     (TOTAL)
-                wfresumo.vlpago_total       column-label "total!pago" (total)
-                wfresumo.qtdcont                                (total)
-                wfresumo.compra     column-label "Contratos"    (total)
-                wfresumo.repar      column-label "Reparc."    (total)
-                wfresumo.entrada    column-label "Entradas"     (total)
-                wfresumo.entmoveis  column-label "Entrada!Moveis"   (total)
-                wfresumo.entmoda    column-label "Entrada!Moda"     (total)
-                wfresumo.vista      column-label "V. Vista"     (total)
-                wfresumo.vltotal    column-label "TOTAL"        (total)
-                wfresumo.qtdparcial column-label "QtdParcial"   (total)
-                wfresumo.valparcial column-label "ValParcial"   (total)
-                    with frame flin width 390 down no-box.
+        
     end.
 
     put skip(2).
@@ -683,13 +641,6 @@ end.
         
         find pdvtmov where pdvtmov.ctmcod = wfresumoctm.ctmcod no-lock no-error.
         
-        display wfresumoctm.etbcod     column-label "Etb."
-                wfresumoctm.ctmcod  column-label "TBai"
-                pdvtmov.ctmnom
-                wfresumoctm.vlpago_etbcobra     column-label "Pgto!vlr!Prestacao"   (total)
-                wfresumoctm.juros                column-label "juros!cobrado"                     (TOTAL)
-                wfresumoctm.vlpago_total       column-label "total!pago" (total)
-                    with frame flin2 width 390 down no-box.
     end.
 
     view frame f1.
@@ -705,15 +656,7 @@ end.
         "Arquivo Juros por cliente gerado" skip
         varqjuro
         view-as alert-box.
-    
-    if opsys = "UNIX"
-    then do:
-        run visurel.p(varquivo,"").
-    end.
-    else do:
-        {mrod.i}
-    end.
-//end.
+
 
 procedure pr-pagamento.
     for each pdvtmov where pdvtmov.pagamento = yes no-lock,

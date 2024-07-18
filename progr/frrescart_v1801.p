@@ -17,7 +17,8 @@ def temp-table ttparametros serialize-name "parametros"
     field dtfinal               AS DATE
     field clinovos              AS LOG
     field sel-mod               AS CHAR
-    field considerarfeirao      AS LOG.
+    field considerarfeirao      AS LOG
+    FIELD vindex                AS INT.
 hentrada =  temp-table ttparametros:HANDLE.
 
 
@@ -202,13 +203,14 @@ display vmod-sel format "x(40)" no-label with frame f1.
     ttparametros.clinovos = vclinovos.
     ttparametros.sel-mod = vmod-sel.
     ttparametros.considerarfeirao = v-feirao-nome-limpo.
+    ttparametros.vindex = vindex.
   
     hentrada:WRITE-JSON("longchar",lcjsonentrada).
     
     RUN frrescart_v1801_run.p (INPUT  lcjsonentrada,
                                OUTPUT vpdf).
 
-   
+    message ("Arquivo " + vpdf + " gerado com sucesso!") view-as alert-box.
     
             
 end.

@@ -10,7 +10,7 @@
 
 DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
 DEF OUTPUT PARAM    vpdf          AS CHAR.
-MESSAGE "SOU O SEGUNDO PROGRAMA". PAUSE.
+
 {tsr/tsrelat.i}
 
 DEF VAR hentrada AS HANDLE.
@@ -21,14 +21,14 @@ def temp-table ttparametros serialize-name "parametros"
     field dtfinal               AS DATE
     field clinovos              AS LOG
     field sel-mod               AS CHAR
-    field considerarfeirao      AS LOG.
+    field considerarfeirao      AS LOG
+    FIELD vindex                AS INT.
                         
 hEntrada = temp-table ttparametros:HANDLE.
 
 hentrada:READ-JSON("longchar",lcjsonentrada, "EMPTY").
                         
 find first ttparametros no-error.
-
 
 
 /* #2 */
@@ -117,7 +117,7 @@ vdti = ttparametros.dtinicial.
 vdtf = ttparametros.dtfinal. 
 vclinovos = ttparametros.clinovos.
 vmod-sel = ttparametros.sel-mod. 
-/*vindex = ttparametros.vindex.*/
+vindex = ttparametros.vindex.
 
 do vcontador = 1 to num-entries(vmod-sel,",").
      
@@ -326,13 +326,18 @@ procedure muda-etb-tit.
     
 end procedure.
                     
-    if opsys = "UNIX"
-    then  varquivo = "../relat/frrescart" + string(day(today)) + "_" +
-                                            string(time) + ".txt".
-    else  varquivo = "..\relat\cartw" + string(day(today)).
- 
+     if AVAIL tsrelat then do:
+        varquivo = "frrescart_v1801-ID" + STRING(tsrelat.idrelat) + "-" +  
+                        STRING(TODAY,"99999999") +
+                        replace(STRING(TIME,"HH:MM:SS"),":","").
+    end.
+    ELSE DO:
+        varquivo = "frrescart_v1801-" + STRING(TODAY,"99999999") +
+                        replace(STRING(TIME,"HH:MM:SS"),":","").
+    END.
+    
     {mdadmcab.i
-        &Saida     = "value(varquivo)"
+        &Saida     = "VALUE(vdir + varquivo + """.txt""")"
         &Page-Size = "64"
         &Cond-Var  = "130"
         &Page-Line = "66"
@@ -359,14 +364,14 @@ end procedure.
              with frame f2 down width 140.
     end.            
     output close.
-    if opsys = "UNIX"
-    then do:
-        run visurel.p(varquivo,"").
-    end.
-    else do:
-        {mrod.i}.
-    end.     
     
+     run pdfout.p (INPUT vdir + varquivo + ".txt",
+                  input vdir,
+                  input varquivo + ".pdf",
+                  input "Landscape", /* Landscape/Portrait */
+                  input 7,
+                  input 1,
+                  output vpdf).
 /* helio 1807 deixar comentado
 procedure p-cliente:
 
