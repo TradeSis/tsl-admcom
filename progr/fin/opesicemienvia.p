@@ -761,17 +761,6 @@ procedure p-registro-10.
   end.
   /**/
     
-  /* helio 12/07/2024 - Carol solicitou - para todos os contratos */
-    /*   vai sobrescrever a variavel valoroperacao, com esta nova formula */
-    /* HELIO CORRETIVA */
-  if contrato.modcod = "CPN" or (contrato.modcod = "CRE" and contrato.tpcontrato = "N")
-  then do:  
-      vvaloroperacao = contrato.vlf_principal - contrato.vlentra . /* helio 16/07/2024 nao subtrai o seguro*/
-      if vvaloroperacao < 0
-      then vvaloroperacao = 0.
-  end.
-  /* HELIO CORRETIVA */
-  
   put unformat skip 
       "10"            /* 01  - 02  TIPO  FIXO �1  */
       contrato.contnum format "9999999999" /* 03 - 12 N�MERO OPERA��O  */
