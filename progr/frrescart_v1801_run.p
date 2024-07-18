@@ -7,10 +7,10 @@
 */
 
 {admcab.i}
-{setbrw.i}
+
 DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
 DEF OUTPUT PARAM    vpdf          AS CHAR.
-
+MESSAGE "SOU O SEGUNDO PROGRAMA". PAUSE.
 {tsr/tsrelat.i}
 
 DEF VAR hentrada AS HANDLE.
@@ -44,20 +44,6 @@ def var par-titdesc as dec column-label "VlDesc".
 def var par-titjuro as dec column-label "VlJuro".
 /* #2 */
 
-def var recatu1         as recid.
-def var recatu2         as recid.
-def var reccont         as int.
-def var esqpos1         as int.
-def var esqpos2         as int.
-def var esqregua        as log.
-def var esqvazio        as log.
-def var esqascend     as log initial yes.
-def var esqcom1         as char format "x(15)" extent 5
-    initial ["","RELATORIO","CLIENTE","",""].
-def var esqcom2         as char format "x(15)" extent 5
-            initial ["","","","",""].
-def var esqhel1         as char format "x(80)" extent 5.
-def var esqhel2         as char format "x(12)" extent 5.
             
 def var vclinovos as log format "Sim/Nao".
 def buffer btitulo for titulo.
@@ -66,53 +52,10 @@ def var v-cont as integer.
 def var v-cod as char.
 def var vmod-sel as char.
 
-def temp-table tt-modalidade-padrao 
-    field modcod as char
-    index pk modcod.
-
-def NEW SHARED temp-table tt-modalidade-selec /* #4 */
+DEF temp-table tt-modalidade-selec /* #4 */
     field modcod as char.
-/*             
-def temp-table tt-modalidade-selec
-    field modcod as char
-    index pk modcod.
-*/
 def var vval-carteira as dec.                                
                                 
-form
-   a-seelst format "x" column-label "*"
-   tt-modalidade-padrao.modcod no-label
-        with frame f-nome
-             centered down title "Modalidades"
-             color withe/red overlay.    
-                                                        
-create tt-modalidade-padrao.
-assign tt-modalidade-padrao.modcod = "CRE".
-
-for each profin no-lock.
-    create tt-modalidade-padrao.
-    assign tt-modalidade-padrao.modcod = profin.modcod.        
-end.
-
-form
- esqcom1
-    with frame f-com1
-                 row 3  no-box no-labels side-labels column 1 centered.
-form
-    esqcom2
-    with frame f-com2
-                 row screen-lines no-box no-labels side-labels column 1
-                 centered.
-assign
-    esqregua = yes
-    esqpos1  = 1
-    esqpos2  = 1.
-
-
-form " " 
-     " "
-     with frame f-linha 10 down color with/cyan /*no-box*/
-     centered.
 
 def var etb-tit like titulo.etbcod.
 
@@ -162,20 +105,19 @@ def temp-table bwtit no-undo
     field bwtitvlcob like titulo.titvlcob
     field bwtitdtven like titulo.titdtven.
 
-vdti = today - 1.
-vdtf = vdti.
-
 def var v-fil17 as char extent 2 format "x(15)"
     init ["Nova","Antiga"].
 def var vindex as int. 
 def var vcontador as int.
 
 /* parametros vem do ttparametros */
+
 vcre = ttparametros.cliente.
 vdti = ttparametros.dtinicial.
 vdtf = ttparametros.dtfinal. 
 vclinovos = ttparametros.clinovos.
 vmod-sel = ttparametros.sel-mod. 
+/*vindex = ttparametros.vindex.*/
 
 do vcontador = 1 to num-entries(vmod-sel,",").
      
@@ -187,66 +129,11 @@ do vcontador = 1 to num-entries(vmod-sel,",").
   
 v-feirao-nome-limpo = considerarfeirao.
  
-
-//repeat:
-
-             
-    /************          
-    if sresp
-    then do:
-        bl_sel_filiais:
-        repeat:
-            run p-seleciona-modal.
-                                                      
-            if keyfunction(lastkey) = "end-error"
-            then leave bl_sel_filiais.
-        end.
-    end.
-    else do:
-        create tt-modalidade-selec.
-        assign tt-modalidade-selec.modcod = "CRE".
-    end.
-    
-    assign vmod-sel = "  ".
-    for each tt-modalidade-selec.
-        assign vmod-sel = vmod-sel + tt-modalidade-selec.modcod + "  ".
-    end.
-        
-    display vmod-sel format "x(40)" no-label with frame f1.
-    ******/
-    if sresp
-then run selec-modal.p ("REC"). /* #4 */
-else do:
-    create tt-modalidade-selec.
-    assign tt-modalidade-selec.modcod = "CRE".
-end.
-
-    if vcre = no
-    then do:
-/*    
-        for each tt-cli:
-            delete tt-cli.
-        end.
-        
-        for each clien where clien.classe = 1 no-lock:
-    
-            display clien.clicod
-                    clien.clinom
-                    clien.datexp format "99/99/9999" with 1 down. pause 0.
-    
-            create tt-cli.
-            assign tt-cli.clicod = clien.clicod.
-        end.
-        */
-    end.    
-
     
     for each wtit.
         delete wtit.
     end.
     
-/* Banfin */
-
     if vcre 
     then do:
         
@@ -341,8 +228,6 @@ end.
                     /* #3 */
                     /* #1 */
 
-                    display wtit.wetb titulo.clifor wtit.wvalor wtit.wpar
-                            vdt with 1 down. 
                     create bwtit.
                     assign bwtit.bwetbcod = etb-tit
                            bwtit.bwclifor = titulo.clifor
@@ -420,7 +305,6 @@ end.
                 end.    
                 wtit.wvalor = wtit.wvalor + titulo.titvlcob.
                 wtit.wpar   = wtit.wpar   + 1.
-                display wtit.wetb wtit.wvalor wtit.wpar with 1 down.
                 create bwtit.
                 assign bwtit.bwetbcod = etb-tit
                        bwtit.bwclifor = titulo.clifor
@@ -430,9 +314,7 @@ end.
             end.
     end.
    
-    /*Adri*/
-    run p-montabrow.
-    
+   
             
 //end.
 
@@ -444,60 +326,6 @@ procedure muda-etb-tit.
     
 end procedure.
                     
-procedure p-montabrow:
-
-disp "                              CONTROLE DE CARTEIRA  " 
-            with frame f3 1 down width 80                                       
-            color message no-box no-label row 4 centered.
-                                                  
-disp " " with frame f2 1 down width 80 color message no-box no-label            
-    row 20.                                                                     
-def buffer btbcntgen for tbcntgen.                            
-def var i as int.
-
-l1: repeat:
-    disp esqcom1 with frame f-com1.
-    disp esqcom2 with frame f-com2.
-    hide frame f-linha no-pause.
-    assign a-seeid= -1 a-recid = -1 a-seerec = ? 
-           esqpos1 = 1 esqpos2 = 1. 
-    clear frame f-linha all.
-    {sklclstb.i  
-        &color = with/cyan
-        &file = wtit 
-        &cfield = wtit.wetb
-        &noncharacter = /* 
-        &ofield = "wvalor wpar "  
-        &aftfnd1 = " "
-        &where  = " "
-        &aftselect1 = " run aftselect.
-                       /*a-seeid = -1.*/
-                        if esqcom1[esqpos1] = ""  EXCLUI"" or
-                           esqcom2[esqpos2] = ""  CLASSE""
-                        then do:
-                            next l1.
-                        end.
-                        else next keys-loop. "
-        &go-on = TAB 
-        &naoexiste1 = "  " 
-        &otherkeys1 = " run controle. "
-        &locktype = " "
-        &form   = " frame f-linha "
-    }   
-    if keyfunction(lastkey) = "end-error"
-    then DO:
-        leave l1.       
-    END.
-end.
-hide frame f1 no-pause.
-hide frame f2 no-pause.
-hide frame ff2 no-pause.
-hide frame f-linha no-pause.
-
-end procedure. /*p-montabrow*/  
-
-procedure relatorio:
-
     if opsys = "UNIX"
     then  varquivo = "../relat/frrescart" + string(day(today)) + "_" +
                                             string(time) + ".txt".
@@ -539,85 +367,7 @@ procedure relatorio:
         {mrod.i}.
     end.     
     
-end procedure.
-
-procedure controle:
-
-def var ve as int.
-
-            if keyfunction(lastkey) = "TAB"
-            then do:
-                if esqregua
-                then do:
-                    esqpos1 = 1.
-                    do ve = 1 to 5:
-                    color display normal esqcom1[ve] with frame f-com1.
-                    end.
-                    color display message esqcom2[esqpos2] with frame f-com2.
-                end.
-                else do:
-                    do ve = 1 to 5:
-                    color display normal esqcom2[ve] with frame f-com2.
-                    end.
-                    esqpos2 = 1.
-                    color display message esqcom1[esqpos1] with frame f-com1.
-                end.
-                esqregua = not esqregua.
-            end.
-            if keyfunction(lastkey) = "cursor-right"
-            then do:
-                if esqregua
-                then do:
-                    color display normal esqcom1[esqpos1] with frame f-com1.
-                    esqpos1 = if esqpos1 = 5 then 5 else esqpos1 + 1.
-                    color display messages esqcom1[esqpos1] with frame f-com1.
-                end.
-                else do:
-                    color display normal esqcom2[esqpos2] with frame f-com2.
-                    esqpos2 = if esqpos2 = 5 then 5 else esqpos2 + 1.
-                    color display messages esqcom2[esqpos2] with frame f-com2.
-                end.
-                next.
-            end.
-            if keyfunction(lastkey) = "cursor-left"
-            then do:
-                if esqregua
-                then do:
-                    color display normal esqcom1[esqpos1] with frame f-com1.
-                    esqpos1 = if esqpos1 = 1 then 1 else esqpos1 - 1.
-                    color display messages esqcom1[esqpos1] with frame f-com1.
-                end.
-                else do:
-                    color display normal esqcom2[esqpos2] with frame f-com2.
-                    esqpos2 = if esqpos2 = 1 then 1 else esqpos2 - 1.
-                    color display messages esqcom2[esqpos2] with frame f-com2.
-                end.
-                next.
-            end.
-end procedure.
-
-procedure aftselect:
-
-    clear frame f-linha1 all.
-    if esqcom1[esqpos1] = "RELATORIO"
-    THEN DO on error undo:
-       run relatorio.
-    END.
-    if esqcom1[esqpos1] = "CLIENTE"
-    THEN DO:
-        run p-cliente.
-    END.
-    if esqcom1[esqpos1] = "  EXCLUI"
-    THEN DO:
-        
-    END.
-    if esqcom2[esqpos2] = "    "
-    THEN DO on error undo:
-    
-    END.
-
-end procedure.
-
+/* helio 1807 deixar comentado
 procedure p-cliente:
 
     if opsys = "UNIX"
@@ -658,6 +408,7 @@ procedure p-cliente:
     end.     
     
 end procedure.
+*/
 
 procedure cli-novo:
     find first tt-clinovo where
@@ -704,58 +455,6 @@ procedure cli-novo:
         end.
     end. 
 end procedure.
-
-
-
-procedure p-seleciona-modal:
-            
-{sklcls.i
-    &File   = tt-modalidade-padrao
-    &help   = "                ENTER=Marca F4=Retorna F8=Marca Tudo"
-    &CField = tt-modalidade-padrao.modcod    
-    &Ofield = " tt-modalidade-padrao.modcod"
-    &Where  = " true"
-    &noncharacter = /*
-    &LockType = "NO-LOCK"
-    &UsePick = "*"          
-    &PickFld = "tt-modalidade-padrao.modcod" 
-    &PickFrm = "x(4)" 
-    &otherkeys1 = "
-        if keyfunction(lastkey) = ""CLEAR""
-        then do:
-            V-CONT = 0.
-            for each tt-modalidade-padrao no-lock:
-                a-seelst = a-seelst + "","" + tt-modalidade-padrao.modcod.
-                v-cont = v-cont + 1.
-            end.
-            message ""                         SELECIONADAS "" 
-            V-CONT ""FILIAIS                                   ""
-            .
-                         a-seeid = -1.
-            a-recid = -1.
-            next keys-loop.
-        end. "
-    &Form = " frame f-nome" 
-}. 
-
-hide frame f-nome.
-v-cont = 2.
-repeat :
-    v-cod = "".
-    if num-entries(a-seelst) >= v-cont
-    then v-cod = entry(v-cont,a-seelst).
-
-    v-cont = v-cont + 1.
-
-    if v-cod = ""
-    then leave.
-    create tt-modalidade-selec.
-    assign tt-modalidade-selec.modcod = v-cod.
-end.
-
-
-end.
-
 
 
 
