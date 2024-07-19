@@ -1,4 +1,5 @@
 DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
+DEF OUTPUT  PARAM    arquivo AS CHAR.
 
 {tsr/tsrelat.i}
 
@@ -52,7 +53,9 @@ varquivo = "/admcom/import/cdlpoa/cdleld-cp-pag-"
 
 
 output to value(varquivo).
-
+/* Lucas - retorno do varquivo */
+arquivo = varquivo.
+output to value(arquivo). 
 
 put "cpf;codigocliente;contrato;datavencimento;datapagamento;valorparcela;valorpago;moeda;estab recebimento;modalidade;" skip. 
 
@@ -95,11 +98,6 @@ put
 
 
 output close. 
-
-
-
-message "Arquivo gerado: " varquivo.
-pause.
 
 
 

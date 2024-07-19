@@ -15,6 +15,7 @@ hentrada =  temp-table ttparametros:HANDLE.
 def var etb_ini as int initial 1.
 def var etb_fim as int  initial 30.
 
+def var arquivo as char no-undo.
 
 update etb_ini colon 15 label "EP- Clientes com dias de pagamentos de "
     etb_fim label "ate".
@@ -26,9 +27,11 @@ CREATE ttparametros.
     
     hentrada:WRITE-JSON("longchar",lcjsonentrada).
     
-    RUN cdleld_run.p (INPUT  lcjsonentrada).
+    RUN cdleld_run.p (INPUT  lcjsonentrada,
+                      OUTPUT arquivo).
     
-    message ("Arquivo gerado com sucesso!") view-as alert-box.
+    
+    message ("Arquivo " + arquivo + " gerado com sucesso!") view-as alert-box.
 
 
 

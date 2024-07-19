@@ -76,14 +76,8 @@ for each estab where
               no-lock:
     if vetbcod > 900 then next.
 
-    disp estab.etbcod label "Filial" 
-        with frame f-sho row 10 no-box color message width 80 side-label.
-     
-    pause 0.
         
     do dLoopDate = vdti to vdtf:          
-        disp dLoopDate label "Data" with frame f-sho.
-        pause 0.
         
         vtotal = 0.
         vjuro = 0.

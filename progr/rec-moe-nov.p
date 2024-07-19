@@ -116,7 +116,7 @@ CREATE ttparametros.
     hentrada:WRITE-JSON("longchar",lcjsonentrada).
     
     RUN rec-moe-nov_run.p (INPUT  lcjsonentrada,
-                          OUTPUT vpdf).
+                           OUTPUT vpdf).
    
     
     message ("Arquivo " + vpdf + " gerado com sucesso!") view-as alert-box.
