@@ -5,29 +5,31 @@
 {admcab.i}
 {setbrw.i}
 
-def var vtipocxa as char.
-def var vmodcod  as char. 
-def var v-cont as integer.
-def var v-cod as char.
-def var vmod-sel as char.
+DEF VAR lcJsonEntrada AS LONGCHAR.
+DEF VAR hentrada AS HANDLE.
+
+def temp-table ttparametros serialize-name "parametros"
+    field etbcod                AS int
+    field dtinicial             AS DATE
+    field dtfinal               AS DATE
+    field sel-mod               AS CHAR
+    field considerarfeirao      AS LOG.
+    
+hentrada =  temp-table ttparametros:HANDLE.
+
+
+
+/* variaveis usadas na tela para pedir parametros */    
 def var vetbcod like estab.etbcod.
 def var vdti    as date format "99/99/9999".
 def var vdtf    as date format "99/99/9999".
+ def var vmod-sel as char.
 def var v-feirao-nome-limpo as log format "Sim/Nao" initial no.
-def var vjuro as dec.
+def var vpdf as char no-undo.
+ 
 
-def temp-table tt-nov no-undo
-    field etbcod like estab.etbcod
-    field tipocxa as char format "x(3)" column-label "CXA"
-    field modcod  like titulo.modcod
-    field data as date
-    field valor as dec
-    field juro as dec
-    field cont as int
-    index i1 is unique primary data etbcod tipocxa modcod.
-
-def var vtotal as dec.
-def var vcont as int init 0.
+def var v-cont as integer.
+def var v-cod as char.
 
 form vetbcod label "Filial" colon 25
      estab.etbnom no-label
@@ -42,8 +44,7 @@ def temp-table tt-modalidade-padrao
 def temp-table tt-modalidade-selec
     field modcod as char
     index pk modcod.
-
-def var vval-carteira as dec.                                
+                                
                                 
 form
    a-seelst format "x" column-label "*"
@@ -93,9 +94,9 @@ else do:
     assign tt-modalidade-selec.modcod = "CRE".
 end.
     
-assign vmod-sel = "  ".
+assign vmod-sel = "".
 for each tt-modalidade-selec.
-    assign vmod-sel = vmod-sel + tt-modalidade-selec.modcod + "  ".
+    assign vmod-sel = vmod-sel + trim(tt-modalidade-selec.modcod) + ",".
 end.
       
 display vmod-sel format "x(40)" no-label with frame f-per.
@@ -103,158 +104,25 @@ display vmod-sel format "x(40)" no-label with frame f-per.
 update v-feirao-nome-limpo label "Considerar apenas feirao" colon 25
     with frame f-per.
 
-def var dLoopDate as date.
 
-for each estab where
-             (if vetbcod > 0
-              then estab.etbcod = vetbcod else true)
-              no-lock:
-    if vetbcod > 900 then next.
+
+CREATE ttparametros.
+    ttparametros.etbcod   = vetbcod.
+    ttparametros.dtinicial    = vdti.
+    ttparametros.dtfinal      = vdtf. 
+    ttparametros.sel-mod           = vmod-sel.
+    ttparametros.considerarfeirao = v-feirao-nome-limpo.
     
-    disp estab.etbcod label "Filial" 
-        with frame f-sho row 10 no-box color message width 80 side-label.
-        
-    pause 0.
-        
-    do dLoopDate = vdti to vdtf:          
-        disp dLoopDate label "Data" with frame f-sho.
-        pause 0.
-        
-        vtotal = 0.
-        vjuro = 0.
-        for each tt-modalidade-selec,
-            each titulo where
-                 titulo.etbcobra = estab.etbcod and
-                 titulo.titdtpag = dLoopDate and
-                 titulo.modcod = tt-modalidade-selec.modcod and
-                 titulo.moecod = "NOV" no-lock:
+    hentrada:WRITE-JSON("longchar",lcjsonentrada).
+    
+    RUN rec-moe-nov_run.p (INPUT  lcjsonentrada,
+                          OUTPUT vpdf).
+   
+    
+    message ("Arquivo " + vpdf + " gerado com sucesso!") view-as alert-box.
+   
 
-                 
-            if v-feirao-nome-limpo
-            then do:
-                run filtro-feiraonl (output sresp).
-                if not sresp
-                then next.
-            end.
-                  vtotal = /*vtotal +*/ titulo.titvlcob.
-            vjuro  = /*vjuro  +*/ titulo.titjuro.
-            vcont  = /*vcont  +*/ 1.
 
-            vtipocxa = if titulo.cxacod = ? or 
-                          titulo.cxacod = 0 
-                       then string(titulo.etbcobra,"999") 
-                       else if titulo.cxacod >= 30 or  
-                               titulo.etbcod = 140 
-                            then "P2K" 
-                            else "ADM".
-            
-            vmodcod = titulo.modcod.
-            if vetbcod = 0 
-            then do:
-                vtipocxa = "".
-                vmodcod  = "".
-            end.    
-                                                                      
-            find first tt-nov where tt-nov.data = DLoopDate and
-                                    tt-nov.etbcod = 0 and
-                                    tt-nov.tipocxa = vtipocxa and
-                                    tt-nov.modcod = vmodcod 
-                                    no-error.
-            if not avail tt-nov
-            then do:
-                create tt-nov.
-                tt-nov.etbcod = 0.
-                tt-nov.data = dLoopDate.    
-                tt-nov.tipocxa = vtipocxa.
-                tt-nov.modcod = vmodcod.
-            end.
-            tt-nov.valor = tt-nov.valor + vtotal.
-            tt-nov.cont  = tt-nov.cont + 1.
-                
-            find first tt-nov where 
-                                tt-nov.data = dLoopDate and
-                                tt-nov.etbcod = estab.etbcod and
-                                tt-nov.tipocxa = vtipocxa and
-                                tt-nov.modcod = vmodcod
-
-                                no-error.
-            if not avail tt-nov
-            then do:
-                create tt-nov.
-                tt-nov.data = dLoopDate.
-                tt-nov.etbcod = estab.etbcod.    
-                tt-nov.tipocxa = vtipocxa.
-                tt-nov.modcod = vmodcod.
-                
-            end.
-            tt-nov.valor = tt-nov.valor + vtotal.
-            tt-nov.juro  = tt-nov.juro + vjuro.
-            tt-nov.cont  = tt-nov.cont + 1.
-                
-            find first tt-nov where tt-nov.data = ? and
-                                tt-nov.etbcod = estab.etbcod and
-                                tt-nov.tipocxa = vtipocxa and
-                                tt-nov.modcod = vmodcod
-
-                                no-error.
-            if not avail tt-nov
-            then do:
-                create tt-nov.
-                tt-nov.data = ?.
-                tt-nov.etbcod = estab.etbcod.    
-                tt-nov.tipocxa = vtipocxa.
-                tt-nov.modcod = vmodcod.
-                
-            end.
-            tt-nov.valor = tt-nov.valor + vtotal.
-            tt-nov.juro  = tt-nov.juro  + vjuro.
-            tt-nov.cont  = tt-nov.cont  + 1.
-        end.
-    end.
-    vcont = 0.
-end.
-
-def var varquivo as char.
-varquivo = "/admcom/relat/rec-moe-nov" + string(mtime).
-
-{mdad_l.i
-        &Saida     = "value(varquivo)"
-        &Page-Size = "0"
-        &Cond-Var  = "150"
-        &Page-Line = "66"
-        &Nom-Rel   = ""rec-moe-nov""
-        &Nom-Sis   = """SISTEMA CONTABIL/FISCAL"""
-        &Tit-Rel   = """ CLIENTES "" +
-                        string(vdti,""99/99/9999"") + "" A "" +
-                        string(vdtf,""99/99/9999"") "
-        &Width     = "210"
-        &Form      = "frame f-cabcab"}
-
-disp with frame f-per.
-
-for each tt-nov where 
-        tt-nov.data = ? and
-        tt-nov.etbcod < 900 
-        no-lock
-        break by tt-nov.etbcod
-              by tt-nov.tipocxa
-              by tt-nov.modcod.
-    find estab where estab.etbcod = tt-nov.etbcod no-lock.
-    disp tt-nov.etbcod column-label "Estab."
-         estab.etbnom column-label "Filial"
-         tt-nov.tipocxa
-         tt-nov.modcod
-         
-         tt-nov.valor(total)  format ">>>,>>>,>>9.99" column-label "Total (R$)"
-         tt-nov.juro(total)   format ">>>,>>9.99" column-label "Juro P2K"
-         tt-nov.cont(total) column-label "Total (qtd)"
-         with frame f-disp down.
-    down with frame f-disp.     
-end.
-
-output close.
-
-run visurel.p(varquivo, "").
 
 
 procedure p-seleciona-modal:
