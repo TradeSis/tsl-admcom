@@ -7,11 +7,11 @@ DEF OUTPUT PARAM    vpdf          AS CHAR.
 {admcab-batch.i}
 DEF VAR hentrada AS HANDLE.
 
-def temp-table ttparametros serialize-name "parametros"
-    field codigoFilial  as char
+def temp-table ttparametros no-undo serialize-name "parametros"
+    field codigoFilial  as int
     field dataInicial   as CHAR
     field dataFinal     as CHAR
-    field ordem          AS char.
+    field alfa          AS log.
                         
 hEntrada = temp-table ttparametros:HANDLE.
 
@@ -63,9 +63,9 @@ def new shared temp-table tt-extrato
     /* retirada parte que pede parametros */
     
     /* parametrois vem do ttparametros */
-    vetbcod = int(ttparametros.codigoFilial).
+    vetbcod = ttparametros.codigoFilial.
     find estab where estab.etbcod = vetbcod no-lock.    
-    valfa = IF int(ttparametros.ordem) = 1 THEN TRUE ELSE FALSE.
+    valfa = ttparametros.alfa.
 
    
     if ttparametros.dataFinal BEGINS "#" then do:
@@ -92,10 +92,7 @@ def new shared temp-table tt-extrato
     END.
 
     
-    message vetbcod valfa vdtvenini vdtvenfim. pause.
-    
-    
-    {mdadmcab.i
+   {mdadmcab.i
         &Saida     = "VALUE(vdir + varquivo + """.txt""")"
         &Page-Size = "0"
         &Cond-Var  = "145"
