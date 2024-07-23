@@ -14,8 +14,8 @@ DEF VAR hentrada AS HANDLE.
 def temp-table ttparametros serialize-name "parametros"
     field etbcod                as int
     field cliente               as LOG
-    field dtinicial             as DATE
-    field dtfinal               AS DATE
+    field dtinicial             as CHAR
+    field dtfinal               AS CHAR
     field relatoriogeral        AS LOG
     field sel-mod               AS CHAR
     field consultalp            AS LOG
@@ -150,8 +150,8 @@ def temp-table ttpdvdoc no-undo
  /* parametros vem do ttparametros */
  vetbcod = ttparametros.etbcod. 
  vcre = ttparametros.cliente.  
- vdtini = ttparametros.dtinicial.           
- vdtfin = ttparametros.dtfinal.              
+ vdtini = convertedata(ttparametros.dtinicial).           
+ vdtfin = convertedata(ttparametros.dtfinal).              
  v-relatorio-geral = ttparametros.relatoriogeral.        
  vmod-sel = ttparametros.sel-mod. 
  

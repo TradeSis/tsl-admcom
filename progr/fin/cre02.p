@@ -10,8 +10,8 @@ DEF VAR hentrada AS HANDLE.
 def temp-table ttparametros serialize-name "parametros"
     field etbcod                as int
     field cliente               as LOG
-    field dtinicial             as DATE
-    field dtfinal               AS DATE
+    field dtinicial             as CHAR
+    field dtfinal               AS CHAR
     field relatoriogeral        AS LOG
     field sel-mod               AS CHAR
     field consultalp            AS LOG
@@ -180,8 +180,8 @@ repeat with 1 down side-label width 80 row 3:
     CREATE ttparametros.
     ttparametros.etbcod = vetbcod. 
     ttparametros.cliente = vcre.  
-    ttparametros.dtinicial = vdtini.           
-    ttparametros.dtfinal = vdtfin.              
+    ttparametros.dtinicial = string(vdtini,"99/99/9999").           
+    ttparametros.dtfinal = string(vdtfin,"99/99/9999").              
     ttparametros.relatoriogeral = v-relatorio-geral.        
     ttparametros.sel-mod = vmod-sel.             
     ttparametros.consultalp = v-consulta-parcelas-LP.          
