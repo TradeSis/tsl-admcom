@@ -901,15 +901,12 @@ Procedure p-valven.
       first clien where clien.clicod = bttvven.clicod no-lock,
       each ttvven where ttvven.clicod = bttvven.clicod and
                         ttvven.vrecid <> ?
-                     break by bttvven.valmont desc
+                     break 
                            by ttvven.titvlcob desc:
       
      display
-        ttvven.etbcod column-label "Fil." /* when first-of(bttvven.valmont)*/                ttvven.clinom /*
-           when first-of(bttvven.valmont) 
-                        */   
-            column-label "Nome do Cliente" 
-            format "x(20)"
+        ttvven.etbcod column-label "Fil." 
+        ttvven.clinom  column-label "Nome do Cliente"  format "x(20)"
         clien.fone column-label "Fone"
         clien.fax column-label "Celular"
         ttvven.clicod      column-label "Cod."           

@@ -482,7 +482,7 @@ procedure p-imprime:
     end.
     else if valfa = 4
     then do:
-        for each tt-titulo where tt-titulo.imp = no :
+        for each tt-titulo where tt-titulo.imp = no by tt-titulo.titvlcob desc:
             find clien where clien.clicod = tt-titulo.clifor no-lock no-error.
              display tt-titulo.etbcod column-label "Fil." 
                 tt-titulo.clinom column-label "Nome do Cliente"
