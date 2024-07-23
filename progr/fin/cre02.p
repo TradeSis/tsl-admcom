@@ -28,6 +28,8 @@ def var v-relatorio-geral as log format "Sim/Nao" label "Relatorio GERAL".
 def var v-consulta-parcelas-LP as logical format "Sim/Nao" initial no.
 def var v-feirao-nome-limpo as log format "Sim/Nao" initial no.
 def var vpdf as char no-undo.
+DEF VAR    varqpagamentos          AS CHAR no-undo.
+DEF VAR    varqjuro          AS CHAR no-undo.
 
 def var smodal as log format "Sim/Nao".
 def var precestorno as recid.
@@ -191,8 +193,19 @@ repeat with 1 down side-label width 80 row 3:
     hentrada:WRITE-JSON("longchar",lcjsonentrada).
     
     RUN fin/cre02_run.p (INPUT  lcjsonentrada,
-                         OUTPUT vpdf).
+                         OUTPUT vpdf,
+                         OUTPUT varqpagamentos,
+                         OUTPUT varqjuro).
 
+   message color red/with
+        "Arquivo relatorio gerado" skip
+        vpdf  skip(1)
+
+        "Arquivo pagamentos analitico por documento gerado" skip
+        varqpagamentos  skip(1)
+        "Arquivo Juros por cliente gerado" skip
+        varqjuro
+        view-as alert-box.
 end.
 
 

@@ -5,6 +5,8 @@
 {admbatch.i NEW}
 DEF VAR lcjsonentrada AS LONGCHAR.
 DEF VAR vpdf   AS CHAR. 
+DEF VAR    varqpagamentos          AS CHAR.
+DEF VAR    varqjuro          AS CHAR.
 {tsr/tsrelat.i}
 
 message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/fin_cre02.p -> fin/cre02_run.p".
@@ -12,7 +14,9 @@ message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/fin_cre02.
 run marcatsrelat ("INICIO").
 
 RUN fin/cre02_run.p (INPUT  lcjsonentrada,
-                      OUTPUT vpdf).
+                      OUTPUT vpdf,
+                      OUTPUT varqpagamentos,
+                      OUTPUT varqjuro).
 
 run marcatsrelat (vdirweb + vpdf).
 
