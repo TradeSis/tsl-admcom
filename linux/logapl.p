@@ -160,13 +160,14 @@ def var v-down           as int.
     for each aplicativo where aplicativo.ativo NO-LOCK:
         v-down = v-down + 1.
     end.
-
+/* helio 13/07/2024
 if not connected("suporte")
 then do.
     message "Nao conectado o banco Suporte. Informe o CPD".
         pause 4 no-message.
     quit.
 end.
+*/
             /*
 if sfuncod = 1101 or  /* CLAUDIR */
    sfuncod = 65 or   /* JOÃO */
