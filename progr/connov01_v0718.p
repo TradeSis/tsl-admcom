@@ -12,12 +12,12 @@ DEF VAR lcJsonEntrada AS LONGCHAR.
 DEF VAR hentrada AS HANDLE.
 
 def temp-table ttparametros no-undo serialize-name "parametros"
-    field codigoFilial      as char
+    field codigoFilial      as int
     field dataInicial       as char
     field dataFinal         as char
-    field considerarFeirao  as char
+    field considerarFeirao  as log
     field mod-sel           as char
-    field vindex            as char.
+    field vindex            as int.
 
 hentrada =  temp-table ttparametros:HANDLE.
 
@@ -109,12 +109,12 @@ REPEAT:
     pause 0.
 
     CREATE ttparametros.
-    ttparametros.mod-sel            = string(vmod-sel).
-    ttparametros.codigofilial       = string(vetbcod).
+    ttparametros.mod-sel            = vmod-sel.
+    ttparametros.codigofilial       = vetbcod.
     ttparametros.datainicial        = string(vdti,"99/99/9999").
     ttparametros.datafinal          = string(vdtf,"99/99/9999"). 
-    ttparametros.considerarFeirao   = string(int(v-feirao-nome-limpo)).
-    ttparametros.vindex             = string(vindex).
+    ttparametros.considerarFeirao   = v-feirao-nome-limpo.
+    ttparametros.vindex             = vindex.
     
     hentrada:WRITE-JSON("longchar",lcjsonentrada).
     

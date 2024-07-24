@@ -13,12 +13,12 @@ DEF OUTPUT PARAM    vpdf          AS CHAR.
 DEF VAR hentrada AS HANDLE.
 
 def temp-table ttparametros no-undo serialize-name "parametros"
-    field codigoFilial      as char
+    field codigoFilial      as int
     field dataInicial       as char
     field dataFinal         as char
-    field considerarFeirao  as char
+    field considerarFeirao  as log
     field mod-sel           as char
-    field vindex            as char.
+    field vindex            as int.
                         
 hEntrada = temp-table ttparametros:HANDLE.
 
@@ -98,15 +98,12 @@ def var vindex as int.
 def var vval-carteira as dec.  
 def var vconta as int.                              
                                 
-    vetbcod = int(ttparametros.codigoFilial).
-    vindex = int(ttparametros.vindex).
-    v-feirao-nome-limpo = IF int(ttparametros.considerarFeirao) = 1 THEN TRUE ELSE FALSE.
+    vetbcod = ttparametros.codigoFilial.
+    vindex  = ttparametros.vindex.
+    v-feirao-nome-limpo = ttparametros.considerarFeirao .
     vmod-sel = ttparametros.mod-sel. 
-    
     do vconta = 1 to num-entries(vmod-sel,",").
-      
       if entry(vconta,vmod-sel,",") = "" then next.
-      
       create tt-modalidade-selec.
       tt-modalidade-selec.modcod = entry(vconta,vmod-sel,",").
     end. 
@@ -610,6 +607,7 @@ procedure sel-contrato.
     
     end.            
 end procedure.
+
 
 
 
