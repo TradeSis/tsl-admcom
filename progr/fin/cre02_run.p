@@ -29,12 +29,12 @@ hentrada:READ-JSON("longchar",lcjsonentrada, "EMPTY").
                         
 find first ttparametros no-error.
 
-
-def var vtime as int. 
+def var vtime as int.
+ 
 def var smodal as log format "Sim/Nao".
-//def buffer opdvdoc for pdvdoc.
-//def buffer xpdvdoc for pdvdoc.
-//def buffer bpdvdoc for pdvdoc.
+def buffer opdvdoc for pdvdoc.
+def buffer xpdvdoc for pdvdoc.
+def buffer bpdvdoc for pdvdoc.
 
 def var precestorno as recid.
 
@@ -42,8 +42,12 @@ def var vdt  like plani.pladat.
 def var i as int.
 def var vdtini      like titulo.titdtemi    label "Data Inicial".
 def var vdtfin      like titulo.titdtemi    label "Data Final".
+def var sresumo     as   log format "Resumo/Geral" initial yes.
 def var v-feirao-nome-limpo as log format "Sim/Nao" initial no.
 def var v-relatorio-geral as log format "Sim/Nao" label "Relatorio GERAL".
+def var wpar        as int format ">>9" .
+def var vjuro       like titulo.titjuro.
+def var vdesc       like titulo.titdesc.
 
 def temp-table ttpagamento no-undo
     field etbcod    as int
@@ -74,7 +78,7 @@ def new shared var vachatextoval  as char.
 def new shared var vvalor-cartpre as int.
 
 def var vcre as log format "Geral/Facil" initial yes.
-def var vcontador as int.
+
 def temp-table tt-cli
     field clicod like clien.clicod.
 
@@ -128,6 +132,12 @@ def var v-cont as integer.
 def var v-cod as char.
 def var vmod-sel as char.
 def var vetbaux like vetbcod.
+
+def var vcontador as int.
+
+def temp-table tt-modalidade-padrao
+    field modcod as char
+    index pk modcod.
             
 def temp-table tt-modalidade-selec
     field modcod as char
@@ -144,7 +154,7 @@ def temp-table ttpdvdoc no-undo
                    field seqfp    like  pdvmoeda.seqfp
                        field titpar   like  pdvmoeda.titpar
                            field primeiraf as log.
- 
+                           
  /* parametros vem do ttparametros */
  vetbcod = ttparametros.etbcod. 
  vcre = ttparametros.cliente.  
@@ -162,8 +172,8 @@ def temp-table ttpdvdoc no-undo
     end.
 
  v-consulta-parcelas-LP = ttparametros.consultalp.          
- v-feirao-nome-limpo = ttparametros.considerarfeirao. 
- 
+ v-feirao-nome-limpo = ttparametros.considerarfeirao.
+
 
     vtime = time.
     
@@ -227,7 +237,10 @@ def temp-table ttpdvdoc no-undo
                 {filtro-feiraonl.i}
 
                 i = i  + 1.
-                
+                /*display estab.etbcod contrato.dtinicial i
+                        with frame f1 no-label 1 down
+                            title " Contratos ". pause 0.
+                  */
                 if vcre = no
                 then do:
                     find first tt-cli where 
@@ -368,7 +381,11 @@ def temp-table ttpdvdoc no-undo
                     end.
                      
                     wfresumo.vista = wfresumo.vista - vvalor-cartpre.
-                   
+                    /*vlauxt = vlauxt - vvalor-cartpre.
+                    run Pi-Cria-Anali(input "plani", input 2, 
+                                       input plani.modcod, input vlauxt,
+                                       input 1).
+                    vlauxt = 0. */
                  end.
                  else do:
                     
@@ -389,18 +406,136 @@ def temp-table ttpdvdoc no-undo
                  end.   
             end.
             
+            /*
+            for each titulo where titulo.etbcobra = estab.etbcod and
+                                  titulo.titdtpag = vdt 
+                                   no-lock.
+                
+                find first tt-modalidade-selec no-error.
+                if avail tt-modalidade-selec
+                then do:
+                    find first tt-modalidade-selec where
+                        tt-modalidade-selec.modcod = titulo.modcod
+                        no-error.
+                    if not avail tt-modalidade-selec
+                    then next.
+                end.        
+
+                if titulo.tpcontrato = "L"
+                then assign v-parcela-lp = yes.
+                else assign v-parcela-lp = no.
+
+                if v-consulta-parcelas-LP = yes
+                and v-parcela-lp = no
+                then next.
+                
+                {filtro-feiraonl.i}
+
+                if titulo.titpar = 0
+                then do:
+                    find first wfresumo where 
+                                wfresumo.etbcod = estab.etbcod 
+                                no-error.
+                    if not avail wfresumo
+                    then do:
+                        create wfresumo.
+                        assign wfresumo.etbcod = estab.etbcod.  
+                    end.
+    
+                    if titulo.etbcod   = estab.etbcod 
+                    then do:
+                        wfresumo.entrada = wfresumo.entrada + titulo.titvlpag.
+                        run partilha-entrada.
+                    end.
+                    next.
+                end.
+
+                if vcre = no
+                then do:
+                    find first tt-cli where tt-cli.clicod = titulo.clifor 
+                                                                no-error.
+                    if not avail tt-cli
+                    then next.
+                end.
+
+            end.
+            */
+            
             run pr-pagamento.
-                   
+                    
+            /*
+            for each tt-modalidade-selec,
+            
+                each titulo where  titulo.titnat = no and
+                                  titulo.modcod = tt-modalidade-selec.modcod and
+                                  titulo.titdtpag = vdt and
+                                  titulo.etbcod = estab.etbcod no-lock:
+                
+                if titulo.tpcontrato = "L"
+                then assign v-parcela-lp = yes.
+                else assign v-parcela-lp = no.
+
+                if v-consulta-parcelas-LP = yes
+                and v-parcela-lp = no
+                then next.
+                              
+                if titulo.titpar = 0
+                then next.
+
+                {filtro-feiraonl.i}
+
+                if vcre = no
+                then do:
+                    find first tt-cli where tt-cli.clicod = titulo.clifor
+                                                                no-error.
+                    if not avail tt-cli
+                    then next.
+                end.
+
+                if titulo.titpar = 0
+                then do:
+                    find first wfresumo where 
+                                wfresumo.etbcod = estab.etbcod 
+                                no-error.
+                    if not avail wfresumo
+                    then do:
+                        create wfresumo.
+                        assign wfresumo.etbcod = estab.etbcod.  
+                    end.
+    
+                    if titulo.etbcod   = estab.etbcod 
+                    then do:
+                        wfresumo.entrada = wfresumo.entrada + titulo.titvlpag.
+                        run partilha-entrada.
+                    end.
+                    next.
+                end.
+
+                find first wfresumo where 
+                                    wfresumo.etbcod = estab.etbcod 
+                                    no-error.
+                if not avail wfresumo
+                then do: 
+                    create wfresumo.
+                    assign wfresumo.etbcod = estab.etbcod.
+                     
+                end.
+                
+                if titulo.clifor > 1
+                then wfresumo.vlpago_etborigem  = wfresumo.vlpago_etborigem + titulo.titvlcob.
+            end.
+            */
             
         end.
     end.
-    
-    
-    hide message no-pause.
-    message "gerando relatorios...".
         
     
     for each ttcliente: delete ttcliente. end.
+    /*
+    def var vp as log.
+    def var vforma as char.
+    def var vmoenom like moeda.moenom.
+    */
 
     varqpagamentos = "../relat/cre02_resumomensal_pagamentos_" + string(today,"99999999") + "_" + replace(string(vtime,"HH:MM:SS"),":","") + ".csv".
     
@@ -497,7 +632,22 @@ def temp-table ttpdvdoc no-undo
         
         find estab where estab.etbcod = wfresumo.etbcod no-lock no-error.
         
-        
+        display wfresumo.etbcod     column-label "Etb."
+                wfresumo.vlpago_etbcobra     column-label "Pgto!vlr!Prestacao"   (total)
+                wfresumo.vlpago_etborigem    column-label "Pgto!vlr!Fil Origem"   (total)
+                wfresumo.juros                column-label "juros!cobrado"                     (TOTAL)
+                wfresumo.vlpago_total       column-label "total!pago" (total)
+                wfresumo.qtdcont                                (total)
+                wfresumo.compra     column-label "Contratos"    (total)
+                wfresumo.repar      column-label "Reparc."    (total)
+                wfresumo.entrada    column-label "Entradas"     (total)
+                wfresumo.entmoveis  column-label "Entrada!Moveis"   (total)
+                wfresumo.entmoda    column-label "Entrada!Moda"     (total)
+                wfresumo.vista      column-label "V. Vista"     (total)
+                wfresumo.vltotal    column-label "TOTAL"        (total)
+                wfresumo.qtdparcial column-label "QtdParcial"   (total)
+                wfresumo.valparcial column-label "ValParcial"   (total)
+                    with frame flin width 390 down no-box.
     end.
 
     put skip(2).
@@ -507,11 +657,19 @@ def temp-table ttpdvdoc no-undo
         
         find pdvtmov where pdvtmov.ctmcod = wfresumoctm.ctmcod no-lock no-error.
         
+        display wfresumoctm.etbcod     column-label "Etb."
+                wfresumoctm.ctmcod  column-label "TBai"
+                pdvtmov.ctmnom
+                wfresumoctm.vlpago_etbcobra     column-label "Pgto!vlr!Prestacao"   (total)
+                wfresumoctm.juros                column-label "juros!cobrado"                     (TOTAL)
+                wfresumoctm.vlpago_total       column-label "total!pago" (total)
+                    with frame flin2 width 390 down no-box.
     end.
 
     view frame f1.
 
     output close.
+    
     run pdfout.p (INPUT vdir + varquivo + ".txt",
                   input vdir,
                   input varquivo + ".pdf",
@@ -519,6 +677,7 @@ def temp-table ttpdvdoc no-undo
                   input 7,
                   input 1,
                   output vpdf).
+
 
 procedure pr-pagamento.
     for each pdvtmov where pdvtmov.pagamento = yes no-lock,
@@ -560,6 +719,11 @@ procedure pr-pagamento.
         then.
         else next. 
 
+        /*
+        if titulo.titvltot = pdvdoc.titvlcob * -1 then next. /* estorno */
+        */
+
+        
         create ttpagamento.
         ttpagamento.pdvdoc = recid(pdvdoc).
         ttpagamento.titulo =  recid(titulo).
@@ -765,7 +929,7 @@ procedure pr-pagamento_old : /* helio 26052022 - pacote de melhorias cobranca */
 end procedure.
 
 
-/*
+
 procedure partilha-entrada:
     
     find contrato where contrato.contnum = int(titulo.titnum) 
@@ -806,9 +970,9 @@ procedure partilha-entrada:
     end.        
 end procedure.
 
-*/
 
- /*
+
+
  procedure pesquisaEstorno.
 def input  param pmeurec as recid.
 def output param pestrec as recid.
@@ -837,4 +1001,4 @@ for each xpdvdoc where xpdvdoc.contnum = bpdvdoc.contnum and
       
 end.
 end procedure.
- */
+
