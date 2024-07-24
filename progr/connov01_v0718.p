@@ -10,7 +10,7 @@ tt-modalidade-padrao.modcod = "CPN".
 
 DEF VAR lcJsonEntrada AS LONGCHAR.
 DEF VAR hentrada AS HANDLE.
-
+def var varquivo as char.
 def temp-table ttparametros no-undo serialize-name "parametros"
     field codigoFilial      as int
     field dataInicial       as char
@@ -120,10 +120,10 @@ REPEAT:
     
     RUN connov01_v0718_run.p (INPUT  lcjsonentrada,
                               input yes, /* tela */
+                              output varquivo,
                               OUTPUT vpdf).
     
-   
-    message ("Arquivo " + vpdf + " gerado com sucesso!") view-as alert-box.
+    run visurel.p(varquivo,"").    
     
 end.
 

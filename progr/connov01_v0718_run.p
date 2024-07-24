@@ -6,6 +6,7 @@
 {admcab.i}
 DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
 def input  param    ptela         as log.
+def output param    varquivo1     as char.
 DEF OUTPUT PARAM    vpdf          AS CHAR.
 
 {tsr/tsrelat.i}
@@ -275,7 +276,7 @@ def var vconta as int.
                   input 7,
                   input 1,
                   output vpdf).
-
+    varquivo1 = vdir + varquivo + ".txt".
 
 procedure por-filial:
     
