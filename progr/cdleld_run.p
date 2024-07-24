@@ -1,8 +1,6 @@
 DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
 DEF OUTPUT PARAM    arquivo          AS CHAR.
 
-{tsr/tsrelat.i}
-
 DEF VAR hentrada AS HANDLE.
 
 def temp-table ttparametros serialize-name "parametros"
@@ -37,6 +35,7 @@ def var fatorusar as dec.
 def var statuscli as char.
 def var statusmoecod like titulo.moecod.
 
+def var varquivo  as character.
 def var varquivo2 as character.                               
 def var varquivo3 as character.
 
@@ -51,6 +50,9 @@ varquivo = "/admcom/import/cdlpoa/cdleld-cp-pag-"
 + string(year(today))  
 +  "-" + string(time) + ".csv".
 
+/* parametros vem do ttparametros */
+etb_ini = ttparametros.etb_ini.
+etb_fim = ttparametros.etb_fim.
 
 output to value(varquivo).
 
