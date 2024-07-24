@@ -1,6 +1,5 @@
 {admcab.i}
 
-{setbrw.i}
 DEF INPUT  PARAM    lcJsonEntrada AS LONGCHAR.
 DEF OUTPUT PARAM    vpdf          AS CHAR.
 
@@ -47,7 +46,7 @@ def var vetbi   like estab.etbcod.
 def var vetbf   like estab.etbcod.
 def var vtotjur like plani.platot.
 def var vtotpre like plani.platot.
-
+def stream stela.
 def var vdata like plani.pladat.
 
 def temp-table tt-modalidade-padrao
@@ -58,8 +57,10 @@ def temp-table tt-modalidade-selec
     field modcod as char
     index pk modcod.
 
-def var vval-carteira as dec. 
-def var vconta as int.
+def var vval-carteira as dec.                                
+def var vcontador as int.
+
+/* repeat: Lucas 240720204 - removido bloco repeat*/
 
     /* parametros vem do ttparametros */
     vetbcod = ttparametros.etbcod.
@@ -68,21 +69,20 @@ def var vconta as int.
     v-consulta-parcelas-LP = ttparametros.consultalp.
     vmod-sel = ttparametros.mod-sel. 
     
-    do vconta = 1 to num-entries(vmod-sel,",").
+    do vcontador = 1 to num-entries(vmod-sel,",").
       
-      if entry(vconta,vmod-sel,",") = "" then next.
+      if entry(vcontador,vmod-sel,",") = "" then next.
       
       create tt-modalidade-selec.
-      tt-modalidade-selec.modcod = entry(vconta,vmod-sel,",").
+      tt-modalidade-selec.modcod = entry(vcontador,vmod-sel,",").
     end.
 
     v-feirao-nome-limpo = ttparametros.considerarfeirao.
-
-
+    
     varquivo = "recper-" + STRING(TODAY,"99999999") +
                     replace(STRING(TIME,"HH:MM:SS"),":","").
     
-
+    /* output stream stela to terminal. Lucas 240720204 - removido */
         {mdadmcab.i
             &Saida     = "VALUE(vdir + varquivo + """.txt""")"
             &Page-Size = "64"
@@ -134,9 +134,14 @@ def var vconta as int.
             then next.
 
             {filtro-feiraonl.i}
-
+            /* Lucas 240720204 - removido 
+            display stream stela
+                    titulo.etbcod
+                    titulo.titdtpag
+                    vtotpre
+                    vtotjur with frame f-1 centered row 10.  
             
-            pause 0.
+            pause 0.   */
             
             assign vtotpre = vtotpre + titulo.titvlcob
                    vtotjur = vtotjur + titulo.titjuro.
@@ -152,16 +157,17 @@ def var vconta as int.
                              with frame f-down down width 200.
     end.
     output close.
-    output stream stela close.
-    if opsys = "UNIX"
-    then do:
-        run visurel.p(varquivo,"").
-    end.
-    else do:
-        {mrod.i}
-    end.
+    /* output stream stela close.  Lucas 240720204 - removido */
+    run pdfout.p (INPUT vdir + varquivo + ".txt",
+                  input vdir,
+                  input varquivo + ".pdf",
+                  input "Landscape", /* Landscape/Portrait */
+                  input 7,
+                  input 1,
+                  output vpdf).
+                  
+/* end. */
 
-
-
+/* Lucas 240720204 - procedure p-seleciona-modal, removido para programa 1 */
 
 

@@ -101,9 +101,10 @@ repeat:
     update v-feirao-nome-limpo label "Considerar apenas feirao" colon 25
            with frame f-dep.
 
+    /* Lucas 24072024 - removido para teste 
     disp " Prepare a Impressora para Imprimir Relatorio " with frame
-                                f-pre centered row 16.
-    pause.
+                                f-pre centered row 16.  
+    pause.                                              */
     
     CREATE ttparametros.
     ttparametros.etbcod = vetbcod.
