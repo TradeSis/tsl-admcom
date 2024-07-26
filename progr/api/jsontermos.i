@@ -156,62 +156,62 @@ procedure trocamnemos.
 if avail ttpedidoCartaoLebes
 then do:
     if ttpedidoCartaoLebes.codigoLoja <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{codigoLoja\}",ttpedidoCartaoLebes.codigoLoja).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{codigoLoja~}",ttpedidoCartaoLebes.codigoLoja).
     if vdataTransacao <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{dataTransacao\}",string(vdataTransacao,"99/99/9999")).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{dataTransacao~}",string(vdataTransacao,"99/99/9999")).
     if vdataTransacaoExtenso <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{dataTransacao.extenso\}",vdataTransacaoExtenso).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{dataTransacao.extenso~}",vdataTransacaoExtenso).
 
     if ttpedidoCartaoLebes.numeroComponente <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{numeroComponente\}",ttpedidoCartaoLebes.numeroComponente).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{numeroComponente~}",ttpedidoCartaoLebes.numeroComponente).
     if ttpedidoCartaoLebes.codigoVendedor <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{codigoVendedor\}",ttpedidoCartaoLebes.codigoVendedor).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{codigoVendedor~}",ttpedidoCartaoLebes.codigoVendedor).
     if ttpedidoCartaoLebes.valorTotal <> ?
-    then  tttermos.conteudo = replace(tttermos.conteudo,"\{valorTotal\}",ttpedidoCartaoLebes.valorTotal).
+    then  tttermos.conteudo = replace(tttermos.conteudo,"~{valorTotal~}",ttpedidoCartaoLebes.valorTotal).
     if ttpedidoCartaoLebes.codigoCliente <>?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{codigoCliente\}",ttpedidoCartaoLebes.codigoCliente).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{codigoCliente~}",ttpedidoCartaoLebes.codigoCliente).
     if ttpedidoCartaoLebes.numeroNotaFiscal <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{numeroNotaFiscal\}",ttpedidoCartaoLebes.numeroNotaFiscal).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{numeroNotaFiscal~}",ttpedidoCartaoLebes.numeroNotaFiscal).
 end.
 
 if avail ttcliente
 then do:
     if ttcliente.cpf <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{cpfCnpjCliente\}",ttcliente.cpf).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{cpfCnpjCliente~}",ttcliente.cpf).
 
     if ttcliente.rg <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{rg\}",ttcliente.rg).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{rg~}",ttcliente.rg).
     if ttcliente.nome <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{nomeCliente\}",ttcliente.nome).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{nomeCliente~}",ttcliente.nome).
     if ttcliente.dataNascimento <> ?
     then do:
         vdia = int(substring(entry(3,ttcliente.dataNascimento,"-"),1,2)).        
         vmes = int(entry(2,ttcliente.dataNascimento,"-")).
         vano = int(entry(1,ttcliente.dataNascimento,"-")).
         vdataNascimento        = date(vmes,vdia,vano).
-        tttermos.conteudo = replace(tttermos.conteudo,"\{dataNascimento\}",string(vdataNascimento,"99/99/9999")).
+        tttermos.conteudo = replace(tttermos.conteudo,"~{dataNascimento~}",string(vdataNascimento,"99/99/9999")).
     end.
     if ttcliente.cep <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{endereco.cep\}",ttcliente.cep).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{endereco.cep~}",ttcliente.cep).
     if ttcliente.logradouro <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{endereco.logradouro\}",ttcliente.logradouro).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{endereco.logradouro~}",ttcliente.logradouro).
     if ttcliente.numero <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{endereco.numero\}",ttcliente.numero).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{endereco.numero~}",ttcliente.numero).
     if ttcliente.complemento <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{endereco.complemento\}",ttcliente.complemento).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{endereco.complemento~}",ttcliente.complemento).
     if ttcliente.bairro <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{endereco.bairro\}",ttcliente.bairro).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{endereco.bairro~}",ttcliente.bairro).
     if ttcliente.cidade <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{endereco.cidade\}",ttcliente.cidade).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{endereco.cidade~}",ttcliente.cidade).
     if ttcliente.uf <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{endereco.estado\}",ttcliente.uf).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{endereco.estado~}",ttcliente.uf).
     if ttcliente.pais <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{endereco.pais\}",ttcliente.pais).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{endereco.pais~}",ttcliente.pais).
     if ttcliente.email <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{email\}",ttcliente.email).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{email~}",ttcliente.email).
     if ttcliente.telefone = ?
     then ttcliente.telefone= "".
-    tttermos.conteudo = replace(tttermos.conteudo,"\{telefone\}",ttcliente.telefone).
+    tttermos.conteudo = replace(tttermos.conteudo,"~{telefone~}",ttcliente.telefone).
 
 end.
 
@@ -219,67 +219,67 @@ if avail ttcartaolebes
 then do:
 
     if vparcelas-lista <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{parcelas.lista\}",vparcelas-lista).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{parcelas.lista~}",vparcelas-lista).
     if vparcelas-valor <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{parcelas.valor\}",vparcelas-valor).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{parcelas.valor~}",vparcelas-valor).
     if ttcartaoLebes.qtdParcelas <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{qtdParcelas\}",ttcartaoLebes.qtdParcelas).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{qtdParcelas~}",ttcartaoLebes.qtdParcelas).
     if ttcartaoLebes.valorEntrada <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{valorEntrada\}",ttcartaoLebes.valorEntrada).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{valorEntrada~}",ttcartaoLebes.valorEntrada).
     if ttcartaoLebes.valorAcrescimo <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{valorAcrescimo\}",ttcartaoLebes.valorAcrescimo).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{valorAcrescimo~}",ttcartaoLebes.valorAcrescimo).
     if ttcartaoLebes.dataPrimeiroVencimento <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{dataPrimeiroVencimento\}",ttcartaoLebes.dataPrimeiroVencimento).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{dataPrimeiroVencimento~}",ttcartaoLebes.dataPrimeiroVencimento).
     if ttcartaoLebes.dataUltimoVencimento <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{dataUltimoVencimento\}",ttcartaoLebes.dataUltimoVencimento).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{dataUltimoVencimento~}",ttcartaoLebes.dataUltimoVencimento).
     if ttcartaoLebes.numeroContrato <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{numeroContrato\}",ttcartaoLebes.numeroContrato).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{numeroContrato~}",ttcartaoLebes.numeroContrato).
     if ttcartaoLebes.cet <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{cet\}",ttcartaoLebes.cet).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{cet~}",ttcartaoLebes.cet).
     if ttcartaoLebes.cetAno <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{cetAno\}",ttcartaoLebes.cetAno).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{cetAno~}",ttcartaoLebes.cetAno).
     if ttcartaoLebes.taxaMes <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{taxaMes\}",ttcartaoLebes.taxaMes).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{taxaMes~}",ttcartaoLebes.taxaMes).
     if ttcartaoLebes.valorIOF <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{valorIOF\}",ttcartaoLebes.valorIOF).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{valorIOF~}",ttcartaoLebes.valorIOF).
     if viofPerc <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{iof.perc\}",trim(string(viofPerc,">>>>>>>>9.99"))).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{iof.perc~}",trim(string(viofPerc,">>>>>>>>9.99"))).
     if vprincipal <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{principal\}",trim(string(vprincipal,">>>>>>>>9.99"))).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{principal~}",trim(string(vprincipal,">>>>>>>>9.99"))).
     if vprincipalPerc <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{principal.perc\}",trim(string(vprincipalPerc,">>>>>>>>9.99"))).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{principal.perc~}",trim(string(vprincipalPerc,">>>>>>>>9.99"))).
     
     if ttcartaoLebes.numeroBilheteSeguroPrestamista <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{numeroBilheteSeguroPrestamista\}",ttcartaoLebes.numeroBilheteSeguroPrestamista).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{numeroBilheteSeguroPrestamista~}",ttcartaoLebes.numeroBilheteSeguroPrestamista).
 
     if ttcartaoLebes.numeroSorteSeguroPrestamista <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{numeroSorte\}",ttcartaoLebes.numeroSorteSeguroPrestamista).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{numeroSorte~}",ttcartaoLebes.numeroSorteSeguroPrestamista).
     
     if vvalorSeguroPrestamista <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{sp18\}",trim(string(vvalorSeguroPrestamista,">>>>>>>>9.99"))).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{sp18~}",trim(string(vvalorSeguroPrestamista,">>>>>>>>9.99"))).
     if vvalorSeguroPrestamistaLiquido <> ?                                    
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{sp16\}",trim(string(vvalorSeguroPrestamistaLiquido,">>>>>>>>9.99"))).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{sp16~}",trim(string(vvalorSeguroPrestamistaLiquido,">>>>>>>>9.99"))).
     if vvalorSeguroPrestamistaIof <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{sp17\}",trim(string(vvalorSeguroPrestamistaIof,">>>>>>>>9.99"))).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{sp17~}",trim(string(vvalorSeguroPrestamistaIof,">>>>>>>>9.99"))).
     if vvalorSeguroPrestamista29 <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{sp29\}",trim(string(vvalorSeguroPrestamista29,">>>>>>>>9.99"))).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{sp29~}",trim(string(vvalorSeguroPrestamista29,">>>>>>>>9.99"))).
     if vvalorSeguroPrestamista30 <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{sp30\}",trim(string(vvalorSeguroPrestamista30,">>>>>>>>9.99"))).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{sp30~}",trim(string(vvalorSeguroPrestamista30,">>>>>>>>9.99"))).
     
     
     if vdatainivigencia12 <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{sp12\}",string(vdatainivigencia12,"99/99/9999")).
-    else tttermos.conteudo = replace(tttermos.conteudo,"\{sp12\}","").
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{sp12~}",string(vdatainivigencia12,"99/99/9999")).
+    else tttermos.conteudo = replace(tttermos.conteudo,"~{sp12~}","").
     
     if vdatafimvigencia13 <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{sp13\}",string(vdatafimvigencia13,"99/99/9999")).
-    else tttermos.conteudo = replace(tttermos.conteudo,"\{sp13\}","").
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{sp13~}",string(vdatafimvigencia13,"99/99/9999")).
+    else tttermos.conteudo = replace(tttermos.conteudo,"~{sp13~}","").
    
 
 end.
 
     if vprodutos-lista <> ?
-    then tttermos.conteudo = replace(tttermos.conteudo,"\{produtos.lista\}",vprodutos-lista).
+    then tttermos.conteudo = replace(tttermos.conteudo,"~{produtos.lista~}",vprodutos-lista).
 
 end procedure.
 
