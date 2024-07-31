@@ -114,13 +114,13 @@ repeat:
                                         " -param " + string(tsrelat.idrelat) + ">> /admcom/barramento/log/tsrelatserver.log  & " ) .            
                 END.  
                 ELSE DO:
-                    MESSAGE   "c:\Progress\OpenEdge\bin\mbpro.bat -pf " + vpf + " -p " + 
+                    MESSAGE   "call c:\Progress\OpenEdge\bin\mbpro.bat -pf " + vpf + " -p " + 
                                         vdir + "tsdispara.p " + 
                                         " -param ~"" + string(tsrelat.idrelat) + 
                                         "," + tsrelat.progcod + 
                                         "," + vdir +  "~"" +
-                                        " >>  /admcom/barramento/log/" + tsrelat.progcod + "_" + STRING(TODAY,"99999999") + ".log   &" .
-                    os-command silent value("c:\Progress\OpenEdge\bin\mbpro.bat -pf " + vpf + " -p " + 
+                                        " >> /admcom/barramento/log/tsrelat-disparo_" + STRING(TODAY,"99999999") + ".log   &" .
+                    os-command silent value("call c:\Progress\OpenEdge\bin\mbpro.bat -pf " + vpf + " -p " + 
                                         vdir + "tsdispara.p " + 
                                         " -param ~"" + string(tsrelat.idrelat) + 
                                         "," + tsrelat.progcod + 
