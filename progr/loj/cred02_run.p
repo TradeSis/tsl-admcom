@@ -8,6 +8,7 @@ DEF OUTPUT PARAM    vpdf          AS CHAR.
 DEF VAR hentrada AS HANDLE.
 
 def temp-table ttparametros no-undo serialize-name "parametros"
+    field posicao       as int
     field codigoFilial  as int
     field dataInicial   as CHAR
     field dataFinal     as CHAR
@@ -18,6 +19,7 @@ hEntrada = temp-table ttparametros:HANDLE.
 hentrada:READ-JSON("longchar",lcjsonentrada, "EMPTY").
                         
 find first ttparametros no-error.
+if not avail ttparametros then return.
 
 def var ii as int.
 def var vdata like plani.pladat.
@@ -41,7 +43,7 @@ def temp-table tt-depen
     field nome   as char format "x(20)".
     
 
-def new shared temp-table tt-extrato 
+def shared temp-table tt-extrato 
         field rec as recid
         field ord as int
             index ind-1 ord.
@@ -81,15 +83,15 @@ def new shared temp-table tt-extrato
         vdtvenini  = convertedata(ttparametros.dataInicial).
     END.
  
-    if AVAIL tsrelat then do:
-        varquivo = "cre02-ID" + STRING(tsrelat.idrelat) + "-" +  
-                        STRING(TODAY,"99999999") +
-                        replace(STRING(TIME,"HH:MM:SS"),":","").
-    end.
-    ELSE DO:
-        varquivo = "cre02-" + STRING(TODAY,"99999999") +
-                        replace(STRING(TIME,"HH:MM:SS"),":","").
-    END.
+if AVAIL tsrelat then do:
+    varquivo = "cred01_I-ID" + STRING(tsrelat.idrelat) + "-" +  
+                    STRING(TODAY,"99999999") +
+                    replace(STRING(TIME,"HH:MM:SS"),":","").
+end.
+ELSE DO:
+    varquivo = "cred01_I-" + STRING(TODAY,"99999999") +
+                    replace(STRING(TIME,"HH:MM:SS"),":","").
+END.
 
     
    {mdadmcab.i
@@ -97,7 +99,7 @@ def new shared temp-table tt-extrato
         &Page-Size = "0"
         &Cond-Var  = "145"
         &Page-Line = "0"
-        &Nom-Rel   = """cre02_a"""
+        &Nom-Rel   = """cred01_I"""
         &Nom-Sis   = """SISTEMA CREDIARIO"""
      &Tit-Rel   = """POSICAO FINANCEIRA GERAL P/FILIAL - CLIENTE - PERIODO DE ""
                        + string(vdtvenini) + "" A "" + string(vdtvenfim) "

@@ -7,6 +7,7 @@ DEF VAR lcJsonEntrada AS LONGCHAR.
 DEF VAR hentrada AS HANDLE.
 
 def temp-table ttparametros no-undo serialize-name "parametros"
+    field posicao       as int
     field codigoFilial  as int
     field dataInicial   as CHAR
     field dataFinal     as CHAR
@@ -43,13 +44,13 @@ def temp-table tt-depen
     field fone   as char
     field dtnasc like plani.pladat  
     field nome   as char format "x(20)".
-    
+*/    
 
 def new shared temp-table tt-extrato 
         field rec as recid
         field ord as int
             index ind-1 ord.
-*/
+
 REPEAT:
     /* eklimina o que não é usado para pedir parametros  
     for each tt-extrato:
