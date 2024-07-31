@@ -27,7 +27,7 @@ def NEW shared temp-table tt-extrato
                             
     find first ttparametros no-error.
     if not avail ttparametros then return.
-    message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/lon_cred01.p -> POSICAO=" ttparametros.posicao.
+    message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/loj_cred01.p -> POSICAO=" ttparametros.posicao.
     if ttparametros.posicao = 1
     then do:
         message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/loj_cred01.p -> loj/cred02_run.p".
