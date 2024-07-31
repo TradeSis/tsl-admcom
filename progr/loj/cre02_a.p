@@ -28,7 +28,7 @@ def var vcont-cli  as char format "x(14)" extent 5
                " Novacao      "].
 def var valfa as int.
 
-def NEW shared temp-table tt-extrato no-undo /* _run */
+def NEW shared temp-table tt-extrato 
     field rec      as recid
     field ord      as int
     field cidade as char
@@ -38,8 +38,8 @@ def NEW shared temp-table tt-extrato no-undo /* _run */
     field titdtven like titulo.titdtven
     field etbcod   like estab.etbcod
     index ind-1 ord
-    index i-bairro  bairro
-    index i1        bairro cidade clinom titdtven
+    index i-bairro bairro
+    index i1 bairro cidade clinom titdtven
     index i-rec     rec.
     
 def new shared temp-table tt-bairro

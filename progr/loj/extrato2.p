@@ -465,11 +465,11 @@ for each tt-extrato use-index i1
 
         if tt-titulo.titdtven < today
         then do:
-            find fin.tabjur 
-              where fin.tabjur.etbcod = setbcod and
-                    fin.tabjur.nrdias = today - tt-titulo.titdtven
+            find tabjur 
+              where tabjur.etbcod = setbcod and
+                    tabjur.nrdias = today - tt-titulo.titdtven
               no-lock no-error.
-            if not avail fin.tabjur
+            if not avail tabjur
             then do:
                 message "Fator para" today - tt-titulo.titdtven
                         "dias de atraso, nao cadastrado".
@@ -477,7 +477,7 @@ for each tt-extrato use-index i1
                 undo.
             end.
             assign 
-              vjuro  = (tt-titulo.titvlcob * fin.tabjur.fator) - 
+              vjuro  = (tt-titulo.titvlcob * tabjur.fator) - 
                        tt-titulo.titvlcob
               vtotjuro = vtotjuro + vjuro
               vtotal = tt-titulo.titvlcob + vjuro
@@ -739,11 +739,11 @@ for each tt-extrato where tt-extrato.bairro = tt-bairro.bairro and
 
         if titulo.titdtven < today
         then do:
-            find fin.tabjur 
-              where fin.tabjur.etbcod = setbcod and
-                    fin.tabjur.nrdias = today - titulo.titdtven
+            find tabjur 
+              where tabjur.etbcod = setbcod and
+                    tabjur.nrdias = today - titulo.titdtven
               no-lock no-error.
-            if not avail fin.tabjur
+            if not avail tabjur
             then do:
                 message "Fator para" today - titulo.titdtven
                         "dias de atraso, nao cadastrado".
@@ -751,7 +751,7 @@ for each tt-extrato where tt-extrato.bairro = tt-bairro.bairro and
                 undo.
             end.
             assign 
-              vjuro  = (titulo.titvlcob * fin.tabjur.fator) - 
+              vjuro  = (titulo.titvlcob * tabjur.fator) - 
                        titulo.titvlcob
               vtotjuro = vtotjuro + vjuro
               vtotal = titulo.titvlcob + vjuro
@@ -1006,11 +1006,11 @@ for each tt-extrato where tt-extrato.bairro = tt-bairro.bairro and
 
         if titulo.titdtven < today
         then do:
-            find fin.tabjur 
-              where fin.tabjur.etbcod = setbcod and
-                    fin.tabjur.nrdias = today - titulo.titdtven
+            find tabjur 
+              where tabjur.etbcod = setbcod and
+                    tabjur.nrdias = today - titulo.titdtven
               no-lock no-error.
-            if not avail fin.tabjur
+            if not avail tabjur
             then do:
                 message "Fator para" today - titulo.titdtven
                         "dias de atraso, nao cadastrado".
@@ -1018,7 +1018,7 @@ for each tt-extrato where tt-extrato.bairro = tt-bairro.bairro and
                 undo.
             end.
             assign 
-              vjuro  = (titulo.titvlcob * fin.tabjur.fator) - 
+              vjuro  = (titulo.titvlcob * tabjur.fator) - 
                        titulo.titvlcob
               vtotjuro = vtotjuro + vjuro
               vtotal = titulo.titvlcob + vjuro

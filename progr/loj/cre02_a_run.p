@@ -92,7 +92,7 @@ def temp-table tt-titulo no-undo
     field imp as log
     index i1 clinom.     
     
- def shared temp-table tt-extrato no-undo /* _run */
+def  shared temp-table tt-extrato 
     field rec      as recid
     field ord      as int
     field cidade as char
@@ -102,9 +102,10 @@ def temp-table tt-titulo no-undo
     field titdtven like titulo.titdtven
     field etbcod   like estab.etbcod
     index ind-1 ord
-    index i-bairro  bairro
-    index i1        bairro cidade clinom titdtven
+    index i-bairro bairro
+    index i1 bairro cidade clinom titdtven
     index i-rec     rec.
+
 
  def new shared temp-table tt-bairro
     field cidade as char
