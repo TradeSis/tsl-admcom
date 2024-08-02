@@ -79,7 +79,7 @@ DEF VAR vano AS INT.
         then do:
             vmes = INT(substring(ENTRY(2,ptipoparam,"-"),1,2)) NO-ERROR.
             if vmes = ? THEN vmes = MONTH(ptoday).
-            vano = INT(substring(ENTRY(2,ptipoparam,"-"),2)) NO-ERROR.
+            vano = INT(substring(ENTRY(2,ptipoparam,"-"),3)) NO-ERROR.
             if vano = ? THEN vano = YEAR(ptoday).
             vmes = vmes + 1.
             if vmes = 13 THEN vano = vano + 1.
@@ -95,7 +95,7 @@ DEF VAR vano AS INT.
         then do:
             vdata = ptoday.
         end.
-         if ptipoparam BEGINS "#HOJE-"
+         if ptipoparam BEGINS "#HOJE-" // #HOJE-5
         then do:
             vdia  = INT(substring(ENTRY(2,ptipoparam,"-"),1)) NO-ERROR.
             if vdia = ? THEN vdia = 0.
