@@ -4,13 +4,13 @@
 
 {admbatch.i NEW}
 DEF VAR lcjsonentrada AS LONGCHAR.
-def var varquivo2 as char.
+def var arquivo as CHAR. 
 {tsr/tsrelat.i}
-def temp-table ttparametros no-undo serialize-name "parametros"
-    field dataInicial   as char
-    field dataFinal     as char.
+def temp-table ttparametros serialize-name "parametros"
+    field etb_ini       AS INT
+    field etb_fim       AS INT.
 
-message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/aco13j.p -> aco13j_run.p".
+message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/cdleld.p -> cdleld_run.p".
 
 run marcatsrelat ("INICIO").
 DEF VAR hentrada AS HANDLE.
@@ -26,15 +26,15 @@ if not avail ttparametros then return.
 
 disp ttparametros with side-labels.
 
-message "aco13j_run.p".
+message "cdleld_run.p".
 
-RUN aco13j_run.p (INPUT  lcjsonentrada,
-                  OUTPUT varquivo2).
+RUN cdleld_run.p (INPUT  lcjsonentrada,
+                      OUTPUT arquivo).
 
-message "aco13j_run.p FIM".
+message "cdleld_run.p FIM".
 
-run marcatsrelat (vdirweb + varquivo2).
+run marcatsrelat (vdirweb + arquivo).
 
-message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/aco13j.p -> aco13j_run.p " varquivo2.
+message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/cdleld.p -> cdleld_run.p " arquivo.
 
 
