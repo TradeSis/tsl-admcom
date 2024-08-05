@@ -158,6 +158,8 @@ def temp-table ttpdvdoc no-undo
                            
  /* parametros vem do ttparametros */
  vetbcod = ttparametros.etbcod. 
+ if vetbcod <> 0 then setbcod = vetbcod.
+
  vcre = ttparametros.cre.  
  if ttparametros.dtfin BEGINS "#" then do:
     vdtfin = calculadata(ttparametros.dtfin,TODAY).
@@ -166,7 +168,7 @@ ELSE DO:
     vdtfin = convertedata(ttparametros.dtfin).
 END.
 if ttparametros.dtini BEGINS "#" then do:
-    vdtini = calculadata(ttparametros.dtini,vdtfin).
+    vdtini = calculadata(ttparametros.dtini,TODAY).
 end.
 ELSE DO:
     vdtini  = convertedata(ttparametros.dtini).
@@ -617,7 +619,10 @@ v-relatorio-geral = ttparametros.relatorio-geral.
         
 
     if AVAIL tsrelat then do:
-        varquivo = "cre02_resumomensal_" + string(setbcod) + "-ID" + STRING(tsrelat.idrelat) + "-" +  
+        if tsrelat.relatnom <> tsrelat.PROGCOD
+        then varquivo = replace(tsrelat.relatnom," ","") .
+        else varquivo = replace(tsrelat.relatnom," ","") +
+                    "_" + string(setbcod) + "-ID" + STRING(tsrelat.idrelat) + "-" +  
                         STRING(TODAY,"99999999") +
                         replace(STRING(TIME,"HH:MM:SS"),":","").
     end.

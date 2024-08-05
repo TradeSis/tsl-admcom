@@ -67,29 +67,69 @@ DEF VAR vdata AS DATE INIT TODAY.
 DEF VAR vdia AS INT.
 DEF VAR vmes AS INT.
 DEF VAR vano AS INT.
+def var vmenos as int.
 
-        if ptipoparam = "#DIAPRIMES"
+        if ptipoparam BEGINS "#DIAPRIMES"
         then do:
+            vmenos = 0.
+            if num-entries(ptipoparam,"-") = 2
+            then vmenos = INT(ENTRY(2,ptipoparam,"-")) NO-ERROR.
+            if vmenos = ? then vmenos = 0.
+
             if day(ptoday) = 1
-            then vdata = ptoday - 1.
-            else vdata = ptoday.
-            vdata = date(month(vdata),01,year(vdata)).
-        end.
-        if ptipoparam BEGINS "#DIAULTMES-"
-        then do:
-            vmes = INT(substring(ENTRY(2,ptipoparam,"-"),1,2)) NO-ERROR.
-            if vmes = ? THEN vmes = MONTH(ptoday).
-            vano = INT(substring(ENTRY(2,ptipoparam,"-"),3)) NO-ERROR.
-            if vano = ? THEN vano = YEAR(ptoday).
-            vmes = vmes + 1.
-            if vmes = 13 THEN vano = vano + 1.
-            vdata = DATE(vmes,01,vano) - 1.
+            then ptoday = ptoday - 1.
+            
+            vmes = month(ptoday) - vmenos.
+            vano = year(ptoday).
+            if vmes <= 0
+            then do:
+                vano = vano - 1.
+                vmes = 12 - (vmes * -1).
+                if vmes <= 0
+                then do:
+                    vano = vano - 1.
+                    vmes = 12 - (vmes * -1).
+                end.
+            end.
+            vdata = date(vmes,01,vano).               
         end.
 
         if ptipoparam = "#DIAULTMES"
         then do:
             vdata = ptoday - 1.
         end.
+
+        if ptipoparam BEGINS "#DIAULTMES-"
+        then do:
+            vmenos = 0.
+            if num-entries(ptipoparam,"-") = 2
+            then vmenos = INT(ENTRY(2,ptipoparam,"-")) NO-ERROR.
+            if vmenos = ? then vmenos = 0.
+            if day(ptoday) = 1
+            then ptoday = ptoday - 1.
+
+            vmes = month(ptoday) + 1 - vmenos.
+            vano = year(ptoday).
+            if vmes = 13
+            then do:
+                vmes = 1.    
+                vano = vano + 1.
+            end.
+
+            if vmes <= 0
+            then do:
+                vano = vano - 1.
+                vmes = 12 - (vmes * -1).
+                if vmes <= 0
+                then do:
+                    vano = vano - 1.
+                    vmes = 12 - (vmes * -1).
+                end.
+            end.
+            vdata = date(vmes,01,vano) - 1.               
+
+        end.
+
 
         if ptipoparam = "#HOJE"
         then do:

@@ -11,10 +11,10 @@ DEF VAR    varqjuro          AS CHAR.
 def temp-table ttparametros serialize-name "parametros"
     field etbcod                as int
     field cre               as LOG
-    field dtini             as CHAR
-    field dtfin               AS CHAR
+    field dtini             as CHAR format "x(20)"
+    field dtfin               AS CHAR format "x(20)"
     field relatorio-geral        AS LOG
-    field sel-mod               AS CHAR
+    field sel-mod               AS CHAR format "x(20)"
     field consulta-parcelas-LP            AS LOG
     field feirao-nome-limpo      AS LOG.
 
