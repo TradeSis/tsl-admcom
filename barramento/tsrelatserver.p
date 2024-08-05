@@ -97,6 +97,29 @@ repeat:
     vini = no.
   
     par-pause = 10.
+        /* agendamento */
+        for each tsrelagend where tsrelagend.dtprocessar <= today no-lock.
+            message "   agendamento" tsrelagend.dtprocessar
+                string(tsrelagend.hrprocessar,"HH:MM:SS")
+                tsrelagend.progcod
+                tsrelagend.nomerel .
+                
+            if tsrelagend.dtprocessar < today
+            then do:
+                
+                run agendamento.
+               
+               
+            end.
+            if tsrelagend.dtprocessar = today
+            then do:
+                if tsrelagend.hrprocessar <= time
+                then do:
+                    run agendamento.
+                end.
+                                
+            end.
+        end.
     
         for each tsrelat where
             tsrelat.dtproc = ?
@@ -145,3 +168,82 @@ par-men.
 
 end procedure.
 
+
+
+procedure agendamento.
+def var vano as int.
+def var vmes as int.
+def var vdata as date.
+
+do on error undo:
+    
+    find current tsrelagend exclusive.
+
+    create tsrelat.
+    tsrelat.idrelat = next-value(tsrelat).
+    tsrelat.usercod        = tsrelagend.usercod.
+    tsrelat.dtinclu        = today.
+    tsrelat.hrinclu        = time.
+    tsrelat.progcod        = tsrelagend.progcod.
+    tsrelat.REMOTE_ADDR    = tsrelagend.REMOTE_ADDR.
+    tsrelat.nomeRel        = tsrelagend.nomeRel.
+    tsrelat.dtProc         = ?.
+    copy-lob tsrelagend.parametrosjson to tsrelat.parametrosjson.
+
+    if tsrelagend.periodicidade = "M"
+    then do:
+        vano = year(today).
+        vmes = month(today) + 1.
+        if vmes = 13 then vano = vano + 1.
+        
+        tsrelagend.dtprocessar = date(vmes,tsrelagend.diadomes1,vano).
+
+    end.
+
+    if tsrelagend.periodicidade = "D"
+    then do:
+        tsrelagend.dtprocessar = today + tsrelagend.periododias.
+    end.
+
+    if tsrelagend.periodicidade = "Q"
+    then do:
+        vano = year(today).
+        vmes = month(today) + 1.
+        if vmes = 13 then vano = vano + 1.
+        if tsrelagend.diadomes1 <= day(today)
+        then tsrelagend.dtprocessar = date(vmes,tsrelagend.diadomes2,vano).
+        else tsrelagend.dtprocessar = date(vmes,tsrelagend.diadomes1,vano).
+    end.
+    
+    if tsrelagend.periodicidade = "S"
+    then do:
+        def var vproxdia as int init 0.
+        if weekday(today) < tsrelagend.diasemana1
+        then vproxdia = tsrelagend.diasemana1. 
+        else if weekday(today) < tsrelagend.diasemana2 and
+                tsrelagend.diasemana2 <> ?
+             then vproxdia = tsrelagend.diasemana2.
+             else if tsrelagend.diasemana3 <> ?
+                  then vproxdia = tsrelagend.diasemana3.
+       
+        if vproxdia <> ?
+        then  do vdata = today + 1 to today + 7.
+            if weekday(vdata) = vproxdia
+            then do:
+                tsrelagend.dtprocessar = vdata.
+                leave.
+            end.
+        end.
+    end.
+
+
+    if tsrelagend.periodicidade = "U"
+    then do:
+        delete tsrelagend.
+    end.
+
+
+end.
+
+
+end procedure.
