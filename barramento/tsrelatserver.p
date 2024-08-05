@@ -208,27 +208,34 @@ do on error undo:
     if tsrelagend.periodicidade = "Q"
     then do:
         vano = year(today).
-        vmes = month(today) + 1.
+        vmes = month(today).
         if vmes = 13 then vano = vano + 1.
         if tsrelagend.diadomes1 <= day(today)
-        then tsrelagend.dtprocessar = date(vmes,tsrelagend.diadomes2,vano).
-        else tsrelagend.dtprocessar = date(vmes,tsrelagend.diadomes1,vano).
+        then do:
+            if tsrelagend.diadomes2 = 0
+            then do:
+                vmes = month(today) + 1.
+                if vmes = 13 then vano = vano + 1.
+                tsrelagend.dtprocessar = date(vmes,tsrelagend.diadomes1,vano).
+            end.
+            else do:
+                if tsrelagend.diadomes2 <= day(today)
+                then do:
+                    vmes = month(today) + 1.
+                    if vmes = 13 then vano = vano + 1.
+                end.
+                tsrelagend.dtprocessar = date(vmes,tsrelagend.diadomes2,vano).    
+            end.
+        end.
+        else do:
+            tsrelagend.dtprocessar = date(vmes,tsrelagend.diadomes1,vano).
+        end.
     end.
     
     if tsrelagend.periodicidade = "S"
     then do:
-        def var vproxdia as int init 0.
-        if weekday(today) < tsrelagend.diasemana1
-        then vproxdia = tsrelagend.diasemana1. 
-        else if weekday(today) < tsrelagend.diasemana2 and
-                tsrelagend.diasemana2 <> ?
-             then vproxdia = tsrelagend.diasemana2.
-             else if tsrelagend.diasemana3 <> ?
-                  then vproxdia = tsrelagend.diasemana3.
-       
-        if vproxdia <> ?
-        then  do vdata = today + 1 to today + 7.
-            if weekday(vdata) = vproxdia
+        do vdata = today + 1 to today + 7.
+            if weekday(vdata) = tsrelagend.diasemana1
             then do:
                 tsrelagend.dtprocessar = vdata.
                 leave.
