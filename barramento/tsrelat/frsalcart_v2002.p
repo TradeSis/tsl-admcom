@@ -9,10 +9,10 @@ DEF VAR vpdf   AS CHAR.
 def temp-table ttparametros NO-UNDO serialize-name "parametros"
     field cre               as log
     field codigoFilial      as int
-    field mod-sel           as char
-    field dataInicial       as char
-    field dataFinal         as char
-    field dataReferencia    as char
+    field mod-sel           as char  format "x(20)"
+    field dataInicial       as char  format "x(20)"
+    field dataFinal         as char  format "x(20)"
+    field dataReferencia    as char  format "x(20)"
     field consulta-parcelas-LP   as log
     field feirao-nome-limpo      as log
     field abreporanoemi          as log

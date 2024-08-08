@@ -7,9 +7,9 @@ DEF VAR lcjsonentrada AS LONGCHAR.
 def var vpdf as character.
 {tsr/tsrelat.i}
 def temp-table ttparametros NO-UNDO serialize-name "parametros"
-    field mod-sel       as char
-    field dataInicial   as char
-    field dataFinal     as char
+    field mod-sel       as char     format "x(20)"
+    field dataInicial   as char     format "x(20)"
+    field dataFinal     as char  format "x(20)"
     field feirao-nome-limpo    as log.
 
 message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/resliq.p -> fin/resliq_run.p".

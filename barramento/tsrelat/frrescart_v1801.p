@@ -8,10 +8,10 @@ DEF VAR vpdf   AS CHAR.
 {tsr/tsrelat.i}
 def temp-table ttparametros serialize-name "parametros"
     field cre               as LOG
-    field dti            as char
-    field dtf               AS char
+    field dti            as char     format "x(20)"
+    field dtf               AS char  format "x(20)"
     field clinovos              AS LOG
-    field sel-mod               AS CHAR
+    field sel-mod               AS CHAR  format "x(20)"
     field feirao-nome-limpo      AS LOG
     FIELD vindex                AS INT.
 

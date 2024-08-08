@@ -8,9 +8,9 @@ def var vpdf as character.
 {tsr/tsrelat.i}
 def temp-table ttparametros serialize-name "parametros"
     field etbcod                AS int
-    field dtinicial             AS DATE
-    field dtfinal               AS DATE
-    field sel-mod               AS CHAR
+    field dtinicial             AS char     format "x(20)"
+    field dtfinal               AS char     format "x(20)"
+    field sel-mod               AS CHAR     format "x(20)"
     field considerarfeirao      AS LOG.
 
 message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/rec-moe-nov.p -> rec-moe-nov_run.p".

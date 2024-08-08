@@ -8,12 +8,12 @@ DEF VAR vpdf   AS CHAR.
 {tsr/tsrelat.i}
 def temp-table ttparametros serialize-name "parametros"
     FIELD etbcod            AS INT
-    FIELD dti       AS char
-    FIELD dtf         AS char
-    FIELD dtveni        AS char
-    FIELD dtvenf         AS char
+    FIELD dti       AS char     format "x(20)"
+    FIELD dtf         AS char     format "x(20)"
+    FIELD dtveni        AS char     format "x(20)"
+    FIELD dtvenf         AS char     format "x(20)"
     FIELD consulta-parcelas-LP        AS LOG
-    FIELD mod-sel           AS CHAR
+    FIELD mod-sel           AS CHAR     format "x(20)"
     FIELD feirao-nome-limpo  AS LOG.
 
 message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/recper.p -> recper_run.p".

@@ -8,10 +8,10 @@ DEF VAR vpdf   AS CHAR.
 {tsr/tsrelat.i}
 def temp-table ttparametros no-undo serialize-name "parametros"
     field codigoFilial      as int
-    field dataInicial       as char
-    field dataFinal         as char
+    field dataInicial       as char  format "x(20)"
+    field dataFinal         as char  format "x(20)"
     field considerarFeirao  as log
-    field mod-sel           as char
+    field mod-sel           as char  format "x(20)"
     field vindex            as int.
 
 message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/connov01_v0718.p -> connov01_v0718_run.p".

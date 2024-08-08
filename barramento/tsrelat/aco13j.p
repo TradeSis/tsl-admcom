@@ -7,8 +7,8 @@ DEF VAR lcjsonentrada AS LONGCHAR.
 def var varquivo2 as char.
 {tsr/tsrelat.i}
 def temp-table ttparametros no-undo serialize-name "parametros"
-    field dataInicial   as char
-    field dataFinal     as char.
+    field dataInicial   as char  format "x(20)"
+    field dataFinal     as char format "x(20)".
 
 message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/aco13j.p -> aco13j_run.p".
 

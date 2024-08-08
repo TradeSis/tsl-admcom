@@ -12,8 +12,8 @@ DEF VAR hentrada AS HANDLE.
 def temp-table ttparametros no-undo serialize-name "parametros"
     field posicao       as int
     field codigoFilial  as int
-    field dataInicial   as CHAR
-    field dataFinal     as CHAR
+    field dataInicial   as CHAR  format "x(20)"
+    field dataFinal     as CHAR  format "x(20)"
     field alfa          AS log.
 
 def NEW shared temp-table tt-extrato 
@@ -27,6 +27,10 @@ def NEW shared temp-table tt-extrato
                             
     find first ttparametros no-error.
     if not avail ttparametros then return.
+    
+
+disp ttparametros with side-labels.
+
     message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/loj_cred01.p -> POSICAO=" ttparametros.posicao.
     if ttparametros.posicao = 1
     then do:
