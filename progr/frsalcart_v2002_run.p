@@ -189,6 +189,14 @@ def var vval-carteira as dec.
         ELSE DO:
             vdtref  = convertedata(ttparametros.dataReferencia).
         END.
+        /* ajuste mesmo que as datas venham erradas */
+        if vporestab
+        then vdtref = ?.
+        else do:
+            vdti = ?.
+            vdtf = ?.
+        end.
+        /* */
    
 
 if vcre = no
