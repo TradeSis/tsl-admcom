@@ -620,7 +620,7 @@ v-relatorio-geral = ttparametros.relatorio-geral.
 
     if AVAIL tsrelat then do:
         varquivo = replace(tsrelat.nomerel," ","") +
-                    "-" + string(setbcod) + "-ID" + STRING(tsrelat.idrelat) + "-" +  
+                       "-ID" + STRING(tsrelat.idrelat) + "-" +  
                         STRING(TODAY,"99999999") +
                         replace(STRING(TIME,"HH:MM:SS"),":","").
     end.

@@ -154,9 +154,10 @@ def var vtpcontrato as char format "x(1)" label "T". /*#1 */
     pause. */
     
     if AVAIL tsrelat then do:
-        varquivo = "cre03_a-ID" + STRING(tsrelat.idrelat) + "-" +  
-                        STRING(TODAY,"99999999") +
-                        replace(STRING(TIME,"HH:MM:SS"),":","").
+        varquivo = replace(tsrelat.nomerel," ","") +
+        "-ID" + STRING(tsrelat.idrelat) + "-" +  
+         STRING(TODAY,"99999999") +
+         replace(STRING(TIME,"HH:MM:SS"),":","").
     end.
     ELSE DO:
         varquivo = "cre03_a-" + STRING(TODAY,"99999999") +

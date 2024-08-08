@@ -84,9 +84,10 @@ def shared temp-table tt-extrato
     END.
  
 if AVAIL tsrelat then do:
-    varquivo = "cred01_I-ID" + STRING(tsrelat.idrelat) + "-" +  
-                    STRING(TODAY,"99999999") +
-                    replace(STRING(TIME,"HH:MM:SS"),":","").
+    varquivo = replace(tsrelat.nomerel," ","") +
+    "-ID" + STRING(tsrelat.idrelat) + "-" +  
+     STRING(TODAY,"99999999") +
+     replace(STRING(TIME,"HH:MM:SS"),":","").
 end.
 ELSE DO:
     varquivo = "cred01_I-" + STRING(TODAY,"99999999") +

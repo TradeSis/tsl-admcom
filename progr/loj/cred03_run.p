@@ -61,9 +61,10 @@ ELSE DO:
 END.
 
 if AVAIL tsrelat then do:
-    varquivo = "cred01_II-ID" + STRING(tsrelat.idrelat) + "-" +  
-                    STRING(TODAY,"99999999") +
-                    replace(STRING(TIME,"HH:MM:SS"),":","").
+    varquivo = replace(tsrelat.nomerel," ","") +
+    "-ID" + STRING(tsrelat.idrelat) + "-" +  
+     STRING(TODAY,"99999999") +
+     replace(STRING(TIME,"HH:MM:SS"),":","").
 end.
 ELSE DO:
     varquivo = "cred01_II-" + STRING(TODAY,"99999999") +

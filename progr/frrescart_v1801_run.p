@@ -336,9 +336,10 @@ procedure muda-etb-tit.
 end procedure.
                     
      if AVAIL tsrelat then do:
-        varquivo = "frrescart-ID" + STRING(tsrelat.idrelat) + "-" +  
-                        STRING(TODAY,"99999999") +
-                        replace(STRING(TIME,"HH:MM:SS"),":","").
+        varquivo = replace(tsrelat.nomerel," ","") +
+        "-ID" + STRING(tsrelat.idrelat) + "-" +  
+         STRING(TODAY,"99999999") +
+         replace(STRING(TIME,"HH:MM:SS"),":","").
     end.
     ELSE DO:
         varquivo = "frrescart-" + STRING(TODAY,"99999999") +

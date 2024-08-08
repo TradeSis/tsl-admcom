@@ -147,9 +147,10 @@ end.
 
 
 if AVAIL tsrelat then do:
-    varquivo = "resliq-ID" + STRING(tsrelat.idrelat) + "-" +  
-                    STRING(TODAY,"99999999") +
-                    replace(STRING(TIME,"HH:MM:SS"),":","").
+    varquivo = replace(tsrelat.nomerel," ","") +
+    "-ID" + STRING(tsrelat.idrelat) + "-" +  
+     STRING(TODAY,"99999999") +
+     replace(STRING(TIME,"HH:MM:SS"),":","").
 end.
 ELSE DO:
     varquivo = "resliq-" + STRING(TODAY,"99999999") +

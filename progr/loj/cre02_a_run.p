@@ -162,9 +162,10 @@ def var v-feirao-nome-limpo as log format "Sim/Nao" initial no.
     run p-gera.
 
     if AVAIL tsrelat then do:
-        varquivo = "cre02_a" + string(setbcod) + "-ID" + STRING(tsrelat.idrelat) + "-" +  
-                        STRING(TODAY,"99999999") +
-                        replace(STRING(TIME,"HH:MM:SS"),":","").
+        varquivo = replace(tsrelat.nomerel," ","") +
+        "-ID" + STRING(tsrelat.idrelat) + "-" +  
+         STRING(TODAY,"99999999") +
+         replace(STRING(TIME,"HH:MM:SS"),":","").
     end.
     ELSE DO:
         varquivo = "cre02_a" + string(setbcod) + "-" + STRING(TODAY,"99999999") +

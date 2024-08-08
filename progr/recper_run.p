@@ -99,9 +99,10 @@ def var vcontador as int.
     v-feirao-nome-limpo = ttparametros.feirao-nome-limpo.
     
     if AVAIL tsrelat then do:
-        varquivo = "recper-ID" + STRING(tsrelat.idrelat) + "-" +  
-                        STRING(TODAY,"99999999") +
-                        replace(STRING(TIME,"HH:MM:SS"),":","").
+        varquivo = replace(tsrelat.nomerel," ","") +
+            "-ID" + STRING(tsrelat.idrelat) + "-" +  
+             STRING(TODAY,"99999999") +
+             replace(STRING(TIME,"HH:MM:SS"),":","").
     end.
     ELSE DO:
         varquivo = "recper-" + STRING(TODAY,"99999999") +

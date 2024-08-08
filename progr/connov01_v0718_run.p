@@ -138,9 +138,10 @@ def var vconta as int.
         
 
     if AVAIL tsrelat then do:
-        varquivo = "connov01-ID" + STRING(tsrelat.idrelat) + "-" +  
-                        STRING(TODAY,"99999999") +
-                        replace(STRING(TIME,"HH:MM:SS"),":","").
+        varquivo = replace(tsrelat.nomerel," ","") +
+            "-ID" + STRING(tsrelat.idrelat) + "-" +  
+            STRING(TODAY,"99999999") +
+            replace(STRING(TIME,"HH:MM:SS"),":","").
     end.
     ELSE DO:
         varquivo = "connov01-" + STRING(TODAY,"99999999") +

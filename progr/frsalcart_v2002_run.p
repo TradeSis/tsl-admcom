@@ -1017,9 +1017,10 @@ def buffer bestab for estab.
     
 
         if AVAIL tsrelat then do:
-            varquivo = "frsalcart-ID" + STRING(tsrelat.idrelat) + "-" +  
-                            STRING(TODAY,"99999999") +
-                            replace(STRING(TIME,"HH:MM:SS"),":","").
+            varquivo = replace(tsrelat.nomerel," ","") +
+            "-ID" + STRING(tsrelat.idrelat) + "-" +  
+             STRING(TODAY,"99999999") +
+             replace(STRING(TIME,"HH:MM:SS"),":","").
         end.
         ELSE DO:
             varquivo = "frsalcart-" + STRING(TODAY,"99999999") +

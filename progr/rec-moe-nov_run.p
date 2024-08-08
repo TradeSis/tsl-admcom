@@ -187,9 +187,10 @@ end.
 
 
     if AVAIL tsrelat then do:
-        varquivo = "rec-moe-nov-ID" + STRING(tsrelat.idrelat) + "-" +  
-                        STRING(TODAY,"99999999") +
-                        replace(STRING(TIME,"HH:MM:SS"),":","").
+        varquivo = replace(tsrelat.nomerel," ","") +
+        "-ID" + STRING(tsrelat.idrelat) + "-" +  
+         STRING(TODAY,"99999999") +
+         replace(STRING(TIME,"HH:MM:SS"),":","").
     end.
     ELSE DO:
         varquivo = "rec-moe-nov-" + STRING(TODAY,"99999999") +
