@@ -50,15 +50,15 @@ then do:
             if vnumdia > 1766
             then vnumdia = 1766.
             
-            find fin.tabjur where fin.tabjur.etbcod = par-etbcod
-                              and fin.tabjur.nrdias = vnumdia
+            find tabjur where tabjur.etbcod = par-etbcod
+                              and tabjur.nrdias = vnumdia
                             no-lock no-error.
-            if not avail fin.tabjur and par-etbcod > 0
-            then find fin.tabjur where fin.tabjur.etbcod = 0
-                               and fin.tabjur.nrdias = vnumdia no-lock no-error.
+            if not avail tabjur and par-etbcod > 0
+            then find tabjur where tabjur.etbcod = 0
+                               and tabjur.nrdias = vnumdia no-lock no-error.
 
             
-            varred = par-titvlcob * fin.tabjur.fator.
+            varred = par-titvlcob * tabjur.fator.
             
             vv = (int(varred) - varred) - round(int(varred) - varred, 1).
             if vv < 0 
