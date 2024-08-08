@@ -327,8 +327,6 @@ v-feirao-nome-limpo = ttparametros.feirao-nome-limpo.
    
    
             
-//end.
-
 procedure muda-etb-tit.
 
     if etb-tit = 10 and
