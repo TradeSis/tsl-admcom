@@ -147,9 +147,19 @@ repeat:
             then do:    
                 if opsys = "UNIX"
                 then do:
+                    MESSAGE   "/usr/dlc/bin/mbpro -pf " + vpf + " -p " + 
+                        vdir + "tsdispara.p " + 
+                        " -param ~"" + string(tsrelat.idrelat) + 
+                        "," + tsrelat.progcod + 
+                        "," + vdir +  "~"" +
+                        " >> /admcom/barramento/log/tsrelat-disparo_" + STRING(TODAY,"99999999") + ".log   &" .
+
                     os-command silent value("/usr/dlc/bin/mbpro -pf " + vpf + " -p " + 
-                                        vdir + tsrelat.progcod + ".p " + 
-                                        " -param " + string(tsrelat.idrelat) + ">> /admcom/barramento/log/tsrelatserver.log  & " ) .            
+                        vdir + "tsdispara.p " + 
+                        " -param ~"" + string(tsrelat.idrelat) + 
+                        "," + tsrelat.progcod + 
+                        "," + vdir +  "~"" +
+                        " >> /admcom/barramento/log/tsrelat-disparo_" + STRING(TODAY,"99999999") + ".log   &" ) .            
                 END.  
                 ELSE DO:
                     MESSAGE   "call c:\Progress\OpenEdge\bin\mbpro.bat -pf " + vpf + " -p " + 
