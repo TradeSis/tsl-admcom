@@ -739,7 +739,7 @@ procedure geracsv.
     def var cmodnom   as char.
    def var vi as int. def var ctpcontrato as char.
 def var vbaru as log.
-    
+def var vvalorpmt as dec.    
    def var varq as char format "x(76)".
    def var vcp  as char init ";".
    varq = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
@@ -782,6 +782,13 @@ def var vbaru as log.
                 "codigoPedido-Ecom" vcp
                 "IOF" vcp
                 "Baru" vcp
+                /* 17072024 - ID 82801 - Inclusão de campos arquivo magnético 
+                        Quant pmt - Valor PMT - Plano - Tx.Juros */
+                "Quant pmt" vcp
+                "Valor PMT" vcp
+                "Plano" vcp
+                "Tx.Juros" vcp        
+                /**/        
                 skip.
 
     for each ttcontrato.
@@ -799,6 +806,7 @@ def var vbaru as log.
                           titulo.titpar = 1
                              no-lock no-error.
                              
+        vvalorpmt = titulo.titvlcob.
         find cobra where cobra.cobcod = titulo.cobcod no-lock no-error.
         find modal where modal.modcod = contrato.modcod no-lock no-error.
         ccarteira = (if titulo.cobcod <> ? 
@@ -859,6 +867,15 @@ def var vbaru as log.
              else "" ) vcp
             trim(string(contrato.vliof,"->>>>>>>>>>>>>>>>>>>>9.99")) vcp /* helio 15052023 */
             string(vbaru,"Sim/Nao") vcp 
+            
+                /* 17072024 - ID 82801 - Inclusão de campos arquivo magnético 
+                        Quant pmt - Valor PMT - Plano - Tx.Juros */
+                trim(string(contrato.nro_parcelas,"->>>>>>>>>>>>>>>>>>>>9")) vcp   /*Quant pmt*/
+                trim(string(vvalorpmt,"->>>>>>>>>>>>>>>>>>>>9.99")) vcp   /*Valor pmt*/
+                contrato.crecod vcp /* Plano */
+                trim(string(contrato.TxJuros,"->>>>>>>>>>>>>>>>>>>>9.99")) vcp  /* Tx.Juros */
+                /**/        
+            
                skip.
     end.
     
