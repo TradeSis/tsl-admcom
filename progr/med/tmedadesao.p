@@ -5,6 +5,8 @@
 
 def input param psituacao   as char.
 def input param ctitle      as char.
+def input param pdtini      as date.
+def input param pdtfim      as date.
 def buffer bclien for clien.
 
 def var pcpf        as dec format "99999999999".             
@@ -21,7 +23,7 @@ def var recatu2     as reci.
 def var reccont         as int.
 def var esqpos1         as int.
 def var esqcom1         as char format "x(11)" extent 6
-    initial ["conteudo",""," csv",""].
+    initial ["conteudo",""," csv"," csv 2"].
 
 form
     esqcom1
@@ -75,9 +77,18 @@ then do:
         side-labels.
         
    ctitle = ctitle + " / periodo: " + string(vdtini,"99/99/9999") + " a " + string(vdtfim,"99/99/9999").
+    disp 
+    ctitle format "x(70)" no-label
+        with frame ftit
+            side-labels
+            row 3
+            centered
+            no-box
+            color messages.
 
 end.    
-else do:
+if psituacao = "CLIENTE"
+then do:
     disp 
         ctitle format "x(70)" no-label
         with frame ftit
@@ -94,8 +105,7 @@ else do:
             row 9 centered side-labels overlay.
 
     ctitle = ctitle + " / Cliente: " + string(pcpf).
-end.
-disp 
+    disp 
     ctitle format "x(70)" no-label
         with frame ftit
             side-labels
@@ -103,9 +113,18 @@ disp
             centered
             no-box
             color messages.
+end.
 
-
-disp 
+if psituacao = "CSV2"
+then do:
+    vdtini = pdtini.
+    vdtfim = vdtfim.
+    empty temp-table ttadesao.
+    run montatt.
+    run geracsv2.
+    return.    
+end.
+form 
     vtotservico    label "Filtrado"      format "zzzzzzzz9.99" colon 65
         with frame ftot
             side-labels
@@ -164,6 +183,8 @@ repeat:
 
         esqcom1[2] = if medadesao.dtcanc = ? then "cancela" else "".
         esqcom1[5] = " csv". 
+        esqcom1[6] = " csv 2". 
+        
         esqcom1[3] = "repasses". 
         esqcom1[4] = "historico".
 
@@ -312,6 +333,11 @@ repeat:
              then do: 
                 run geraCSV.
             end.
+             if esqcom1[esqpos1] = " csv 2 "
+             then do: 
+                run geracsv2.
+            end.
+            
             
             if esqcom1[esqpos1] = "conteudo"
             then do:
@@ -593,7 +619,7 @@ end procedure.
 
 procedure montatt.
 
-    if psituacao = "VENDAS"
+    if psituacao = "VENDAS" or psituacao = "CSV2"
     then do:
         for each medadesao where  medadesao.dataTransacao >= vdtini and
                                   medadesao.dataTransacao <= vdtfim
@@ -621,3 +647,182 @@ procedure montatt.
     end.    
 
 end procedure.
+
+
+procedure geraCSV2.
+def var pordem as int.
+ 
+def var varqcsv as char format "x(65)".
+    varqcsv = "/admcom/relat/medadesao2_" + lc(psituacao) + "_" + 
+                string(today,"999999") + replace(string(time,"HH:MM:SS"),":","") + ".csv".
+    
+/*    
+    disp varqcsv no-label colon 12
+                            with side-labels width 80 frame f1
+                            row 15 title "csv protestos ativos"
+                            overlay.
+*/
+if psituacao <> "CSV2"
+then do:
+    message "Aguarde...". 
+    pause 1 no-message.
+end.
+
+output to value(varqcsv).
+
+put unformatted 
+"ID_CONTRATO_PLANO;ID_BENEFICIARIO_TIPO;NOME;CODIGO_EXTERNO;ID_CLIENTE;CPF_TITULAR;CPF;"
+"RG;DATA_NASCIMENTO;SEXO;ESTADO_CIVIL;NOME_MAE;TELEFONE_FIXO;TELEFONE_COMERCIAL;CELULAR;EMAIL;CEP;LOGRADOURO;NUMERO;COMPLEMENTO;BAIRRO;CIDADE;UF;"
+"TIPO_PLANO;TIPO_OPERACAO;DATA_ADESAO;CAP_NUM_SERIE;CAP_NUM_SORTE;DATA_FIM_VIGENCIA"
+skip.
+    for each ttadesao.
+        find medadesao where recid(medadesao) = ttadesao.rec no-lock.
+        run geraCsvImp2.
+    end.  
+
+output close.
+if psituacao <> "CSV2"
+then do:
+        hide message no-pause.
+        message "Arquivo csv gerado " varqcsv.
+        hide frame f1 no-pause.
+        pause.    
+end.        
+end procedure.
+
+procedure geraCsvImp2.
+def var vlrcobradocustas as dec.
+def var vlrcobrado as dec.
+def var vcp as char init ";".
+
+        
+def var vnomecliente    as char.        
+def var vnomepaciente   as char.
+def var vstatus         as char.
+def var vvlrrepasse     as dec.
+def var vvendedor       as char.
+def var vcxacod         as int.
+def var vdtinivig       as date.
+def var vdtfimvig       as date.
+def var vtipoplano as char.
+def var vcelular as char.
+def var vdtnasc as char.
+def var vgenero as char.
+def var         vemail as char.
+def var         vcep as char.
+def var         vrua as char.
+def var         vnumero as char.
+def var         vcompl as char.
+def var         vbairro as char.
+def var         vcidade as char.
+def var         vuf as char.
+
+    find medadedados of medadesao where medadedados.idcampo = "proposta.dataInicioVigencia" no-lock no-error.
+    vdtinivig   = if avail medadedados 
+        then date(int(entry(2,medadedados.conteudo,"-")), int(entry(3,medadedados.conteudo,"-")),int(entry(1,medadedados.conteudo,"-")))
+        else ?.
+    find medadedados of medadesao where medadedados.idcampo = "proposta.dataFimVigencia" no-lock no-error.
+    vdtfimvig   = if avail medadedados 
+        then date(int(entry(2,medadedados.conteudo,"-")), int(entry(3,medadedados.conteudo,"-")),int(entry(1,medadedados.conteudo,"-")))
+        else ?.
+
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.nome" no-lock no-error.
+    vnomepaciente   = if avail medadedados then medadedados.conteudo else "".
+
+    release clien.
+    if medadesao.clicod <> 0 and medadesao.clicod <> ?
+    then do:
+        find clien where clien.clicod = medadesao.clicod no-lock no-error.    
+    end.        
+    vnomecliente =  if avail clien then clien.clinom else vnomepaciente.
+    
+    vstatus = if medadesao.dtcanc = ? then "ATIVA" else if medadesao.dtcanc - medadesao.datatransacao <= 8 then "ANULADO" else "CANCELADA". 
+    
+    find medadedados of medadesao where medadedados.idcampo = "proposta.codigoVendedor" no-lock no-error.
+    vvendedor = (if avail medadedados then medadedados.conteudo else "") + "-" .
+    if avail medadedados
+    then do:
+        find func where func.etbcod = medadesao.etbcod and func.funcod = int(medadedados.conteudo) no-lock no-error.
+        if avail func then vvendedor = vvendedor + func.funnom.
+    end.
+    find cmon of medadesao no-lock no-error.
+    vcxacod = if avail cmon then cmon.cxacod else 0.
+
+    /*****
+    /* helio 06122023 */
+    vnomecliente = vnomepaciente. 
+    release bclien.
+    find contrato of medadesao no-lock no-error.
+    if avail contrato
+    then do:
+        find bclien of contrato no-lock.
+        vnomecliente = if avail bclien then bclien.clinom  else "".
+    end.
+    ***/
+
+    vtipoplano = "101530".
+    if medadesao.idmedico = "DOC24_57" then vtipoplano = "101299".
+    if medadesao.idmedico = "DOC24_58" then vtipoplano = "101300".
+
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.dataNascimento" no-lock no-error.
+    vdtnasc  = if avail medadedados then medadedados.conteudo else "".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.genero" no-lock no-error.
+    vgenero  = if avail medadedados then medadedados.conteudo else "".
+
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.celular" no-lock no-error.
+    vcelular   = if avail medadedados then medadedados.conteudo else "".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.email" no-lock no-error.
+    vemail  = if avail medadedados then medadedados.conteudo else "".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.endereco.cep" no-lock no-error.
+    vcep   = if avail medadedados then medadedados.conteudo else "".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.endereco.rua" no-lock no-error.
+    vrua   = if avail medadedados then medadedados.conteudo else "".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.endereco.numero" no-lock no-error.
+    vnumero   = if avail medadedados then medadedados.conteudo else "".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.endereco.complemento" no-lock no-error.
+    vcompl   = if avail medadedados then medadedados.conteudo else "".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.endereco.bairro" no-lock no-error.
+    vbairro  = if avail medadedados then medadedados.conteudo else "".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.endereco.cidade" no-lock no-error.
+    vcidade   = if avail medadedados then medadedados.conteudo else "".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.endereco.uf" no-lock no-error.
+    vuf   = if avail medadedados then medadedados.conteudo else "".
+    
+                
+    put unformatted 
+        "100578037;" /* ID_CONTRATO_PLANO */
+        "1;"        /* ID_BENEFICIARIO_TIPO */
+        vnomepaciente    vcp    /* NOME*/
+        ";"
+        "10159;"
+        string(medadesao.cpf,"99999999999")       vcp
+        ";"
+        ";"
+        vdtnasc vcp
+        vgenero vcp
+        ";"
+        ";"
+        ";"
+        ";"
+        vcelular vcp
+        vemail vcp
+        vcep vcp
+        vrua vcp
+        vnumero vcp
+        vcompl vcp
+        vbairro vcp
+        vcidade vcp
+        vuf vcp
+        vtipoplano vcp
+        if medadesao.dtcanc = ? then "ADESAO" else "CANCELAMENTO" vcp
+        string(medadesao.dataTransacao,"99/99/9999") vcp
+        ";"
+        ";"
+        if vdtfimvig = ? then "" else string(vdtfimvig,"99/99/9999")       vcp
+        skip.        
+        
+
+end procedure.
+ 
+
+
