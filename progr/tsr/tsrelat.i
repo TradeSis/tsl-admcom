@@ -50,13 +50,15 @@ end procedure.
 FUNCTION convertedata RETURNS DATE
     (INPUT pdata  AS CHAR):
 DEF VAR vdata AS DATE.
+        vdata = ?.
         if NUM-ENTRIES(pdata,"-") = 3 
         then do:
             vdata  = DATE(INT(ENTRY(2,pdata,"-")),       
                           INT(ENTRY(3,pdata,"-")),
-                          INT(ENTRY(1,pdata,"-"))).
+                          INT(ENTRY(1,pdata,"-"))) no-error.
         end.
-        ELSE vdata   = DATE(pdata).
+        ELSE vdata   = DATE(pdata) no-error.
+    
     RETURN vdata.
 END FUNCTION.    
         
