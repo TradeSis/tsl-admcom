@@ -135,7 +135,7 @@ def var vmenos as int.
         then do:
             vdata = ptoday.
         end.
-         if ptipoparam BEGINS "#HOJE-" // #HOJE-5
+         if ptipoparam BEGINS "#HOJE-" 
         then do:
             vdia  = INT(substring(ENTRY(2,ptipoparam,"-"),1)) NO-ERROR.
             if vdia = ? THEN vdia = 0.
