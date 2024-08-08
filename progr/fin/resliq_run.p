@@ -79,7 +79,7 @@ def var vconta as int.
         vdtfin =convertedata(ttparametros.dataFinal).
     END.
     if ttparametros.dataInicial BEGINS "#" then do:
-        vdtini = calculadata(ttparametros.dataInicial,vdtfin).
+        vdtini = calculadata(ttparametros.dataInicial,TODAY).
     end.
     ELSE DO:
         vdtini  = convertedata(ttparametros.dataInicial).

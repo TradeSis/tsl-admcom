@@ -54,7 +54,7 @@ ELSE DO:
     vdtvenfim =convertedata(ttparametros.dataFinal).
 END.
 if ttparametros.dataInicial BEGINS "#" then do:
-    vdtvenini = calculadata(ttparametros.dataInicial,vdtvenfim).
+    vdtvenini = calculadata(ttparametros.dataInicial,TODAY).
 end.
 ELSE DO:
     vdtvenini  = convertedata(ttparametros.dataInicial).

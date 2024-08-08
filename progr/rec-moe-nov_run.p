@@ -64,7 +64,7 @@ ELSE DO:
     vdtf =convertedata(ttparametros.dtfinal).
 END.
 if ttparametros.dtinicial BEGINS "#" then do:
-    vdti = calculadata(ttparametros.dtinicial,vdtf).
+    vdti = calculadata(ttparametros.dtinicial,TODAY).
 end.
 ELSE DO:
     vdti  = convertedata(ttparametros.dtinicial).

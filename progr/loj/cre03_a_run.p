@@ -143,7 +143,7 @@ def var vtpcontrato as char format "x(1)" label "T". /*#1 */
         vdtvenfim =convertedata(ttparametros.dataFinal).
     END.
     if ttparametros.dataInicial BEGINS "#" then do:
-        vdtvenini = calculadata(ttparametros.dataInicial,vdtvenfim).
+        vdtvenini = calculadata(ttparametros.dataInicial,TODAY).
     end.
     ELSE DO:
         vdtvenini  = convertedata(ttparametros.dataInicial).

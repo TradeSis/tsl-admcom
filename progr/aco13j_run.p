@@ -51,7 +51,7 @@ def buffer xcontrato for contrato.
         vdtfim =convertedata(ttparametros.dataFinal).
     END.
     if ttparametros.dataInicial BEGINS "#" then do:
-        vdtini = calculadata(ttparametros.dataInicial,vdtfim).
+        vdtini = calculadata(ttparametros.dataInicial,TODAY).
     end.
     ELSE DO:
         vdtini  = convertedata(ttparametros.dataInicial).

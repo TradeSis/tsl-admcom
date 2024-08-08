@@ -178,7 +178,7 @@ def var vval-carteira as dec.
             vdtf =convertedata(ttparametros.dataFinal).
         END.
         if ttparametros.dataInicial BEGINS "#" then do:
-            vdti = calculadata(ttparametros.dataInicial,vdtf).
+            vdti = calculadata(ttparametros.dataInicial,TODAY).
         end.
         ELSE DO:
             vdti  = convertedata(ttparametros.dataInicial).
