@@ -4,7 +4,7 @@ DEF VAR vpini AS CHAR.
 DEF VAR vpf AS CHAR.
 
 vdir = "/admcom/barramento/tsrelat/".
-INPUT FROM VALUE(vdir + "tsrelat.ini").
+INPUT FROM VALUE("/admcom/barramento/tsrelat.ini").
 repeat TRANSACTION:
     IMPORT UNFORMATTED vpini.
     if vpini = "" or vpini = ? then next.
