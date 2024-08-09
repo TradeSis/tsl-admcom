@@ -14,7 +14,7 @@ def temp-table ttparametros serialize-name "parametros"
     FIELD dtveni        AS char
     FIELD dtvenf         AS char
     FIELD consulta-parcelas-LP        AS LOG
-    FIELD mod-sel           AS CHAR
+    FIELD  mod-sel           AS CHAR
     FIELD feirao-nome-limpo  AS LOG.
                         
 hEntrada = temp-table ttparametros:HANDLE.
