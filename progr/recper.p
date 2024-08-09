@@ -1,34 +1,32 @@
 {admcab.i}
 
 {setbrw.i}
-DEF VAR varquivo AS CHAR.
-DEF VAR lcJsonEntrada AS LONGCHAR.
-DEF VAR hentrada AS HANDLE.
-
-def temp-table ttparametros serialize-name "parametros"
-    FIELD etbcod            AS INT
-    FIELD dti       AS char
-    FIELD dtf         AS char
-    FIELD dtveni        AS char
-    FIELD dtvenf         AS char
-    FIELD consulta-parcelas-LP        AS LOG
-    FIELD mod-sel           AS CHAR
-    FIELD feirao-nome-limpo  AS LOG.
-hentrada =  temp-table ttparametros:HANDLE.
-
-/* variaveis usadas na tela para pedir parametros */ 
-def var vetbcod                     like estab.etbcod.
-def var vdti                        as date format "99/99/9999".
-def var vdtf                        as date format "99/99/9999".
-def var vdtveni                     as date format "99/99/9999".
-def var vdtvenf                     as date format "99/99/9999".
-def var v-consulta-parcelas-LP      as logical format "Sim/Nao" initial no.
-def var v-feirao-nome-limpo         as log format "Sim/Nao" initial no.
-def var vpdf                        as char no-undo.
 
 def var v-cont as integer.
 def var v-cod as char.
 def var vmod-sel as char.
+
+def var vdtpag like titulo.titdtpag.
+def var vetbcod like estab.etbcod.
+def stream stela.
+
+def var vdti    as date format "99/99/9999".
+def var vdtf    as date format "99/99/9999".
+
+def var vdtveni    as date format "99/99/9999".
+def var vdtvenf    as date format "99/99/9999".
+
+def var v-consulta-parcelas-LP as logical format "Sim/Nao" initial no.
+def var v-parcela-lp as log.
+def var v-feirao-nome-limpo as log format "Sim/Nao" initial no.
+
+def var vetbi   like estab.etbcod.
+def var vetbf   like estab.etbcod.
+def var vtotjur like plani.platot.
+def var vtotpre like plani.platot.
+def stream stela.
+def var vdata like plani.pladat.
+def var varquivo as char.
 
 def temp-table tt-modalidade-padrao
     field modcod as char
@@ -37,6 +35,8 @@ def temp-table tt-modalidade-padrao
 def temp-table tt-modalidade-selec
     field modcod as char
     index pk modcod.
+
+def var vval-carteira as dec.                                
                                 
 form
    a-seelst format "x" column-label "*"
@@ -92,9 +92,9 @@ repeat:
         assign tt-modalidade-selec.modcod = "CRE".
     end.
     
-    assign vmod-sel = "".
+    assign vmod-sel = "  ".
     for each tt-modalidade-selec.
-        assign vmod-sel = vmod-sel + trim(tt-modalidade-selec.modcod) + ",".
+        assign vmod-sel = vmod-sel + tt-modalidade-selec.modcod + "  ".
     end.
 
     display vmod-sel format "x(40)" no-label with frame f-dep.
@@ -102,36 +102,98 @@ repeat:
     update v-feirao-nome-limpo label "Considerar apenas feirao" colon 25
            with frame f-dep.
 
-    /* Lucas 24072024 - removido para teste 
     disp " Prepare a Impressora para Imprimir Relatorio " with frame
-                                f-pre centered row 16.  
-    pause.                                              */
+                                f-pre centered row 16.
+    pause.
+    if opsys = "UNIX"
+    then varquivo = "/admcom/relat/rel01." + string(time).
+    else varquivo = "l:\relat\rel01." + string(time).
     
-    CREATE ttparametros.
-    ttparametros.etbcod = vetbcod.
-    ttparametros.dti = string(vdti).
-    ttparametros.dtf = string(vdtf).
-    ttparametros.dtveni = string(vdtveni).
-    ttparametros.dtvenf = string(vdtvenf).
-    ttparametros.consulta-parcelas-LP = v-consulta-parcelas-LP.
-    ttparametros.mod-sel = vmod-sel.
-    ttparametros.feirao-nome-limpo = v-feirao-nome-limpo. 
-    
-    hentrada:WRITE-JSON("longchar",lcjsonentrada).
-    
-    RUN recper_run.p (INPUT  lcjsonentrada,
-                      output varquivo,
-                      OUTPUT vpdf).
-  
-   
-    message ("Arquivo " + vpdf + " gerado com sucesso!") view-as alert-box.
-    
+    output stream stela to terminal.
+        {mdadmcab.i
+            &Saida     = "value(varquivo)"
+            &Page-Size = "64"
+            &Cond-Var  = "160"
+            &Page-Line = "66"
+            &Nom-Rel   = ""recper""
+            &Nom-Sis   = """SISTEMA FINANCEIRO"""
+            &Tit-Rel   = """RECEBIMENTO POR PERIODO - Periodo: "" + 
+                          string(vdti,""99/99/9999"") + "" ATE "" + 
+                          string(vdtf,""99/99/9999"")"
+            &Width     = "160"
+            &Form      = "frame f-cabcab"}
+
+    for each estab where if vetbcod = 0
+                         then true
+                         else estab.etbcod = vetbcod no-lock:
+        vtotpre = 0.
+        vtotjur = 0.
+                                 
+        do vdtpag = vdti to vdtf:                         
+        for each tt-modalidade-selec,
+        
+            each titulo use-index titdtpag
+                    where titulo.empcod = 19           and
+                          titulo.titnat = no           and
+                          titulo.modcod = tt-modalidade-selec.modcod and
+                          titulo.titsit = "PAG"        and
+                          titulo.etbcod = estab.etbcod and
+                          titulo.titdtpag = vdtpag     no-lock.
+
+            if titulo.titdtven >= vdtveni   and 
+               titulo.titdtven <= vdtvenf 
+            then.
+            else next.
+
+/***
+            if acha("RENOVACAO",fin.titulo.titobs[1]) = "SIM"
+***/
+            if fin.titulo.tpcontrato = "L"
+            then assign v-parcela-lp = yes.
+            else assign v-parcela-lp = no.
+                                                
+            if v-consulta-parcelas-LP = no
+                and v-parcela-lp = yes
+            then next.
+                            
+            if v-consulta-parcelas-LP = yes
+                and v-parcela-lp = no
+            then next.
+
+            {filtro-feiraonl.i}
+
+            display stream stela
+                    titulo.etbcod
+                    titulo.titdtpag
+                    vtotpre
+                    vtotjur with frame f-1 centered row 10.
+            
+            pause 0.
+            
+            assign vtotpre = vtotpre + titulo.titvlcob
+                   vtotjur = vtotjur + titulo.titjuro.
+         
+        end.
+        end.
+         
+        display estab.etbcod  column-label "Filial"
+                vtotpre(total) column-label "Total!Prestacoes"
+                vtotjur(total) column-label "Total!Juros"
+                (vtotpre + vtotjur)(total) format "->>>,>>>,>>9.99"
+                                       column-label "Total!Receb." 
+                             with frame f-down down width 200.
+    end.
+    output close.
+    output stream stela close.
     if opsys = "UNIX"
     then do:
         run visurel.p(varquivo,"").
     end.
-
+    else do:
+        {mrod.i}
+    end.
 end.
+
 
 procedure p-seleciona-modal:
             
@@ -181,5 +243,4 @@ end.
 
 
 end.
-
 
