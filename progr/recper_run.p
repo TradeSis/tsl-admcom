@@ -79,7 +79,7 @@ def var vcontador as int.
         vdtvenf = convertedata(ttparametros.dtvenf).
     END.
     if ttparametros.dtveni BEGINS "#" then do:
-        vdtveni = calculadata(ttparametros.dtveni,vdtvenf).
+        vdtveni = calculadata(ttparametros.dtveni,TODAY).
     end.
     ELSE DO:
         vdtveni  = convertedata(ttparametros.dtveni).
