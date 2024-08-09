@@ -78,9 +78,6 @@ def var vmenos as int.
             then vmenos = INT(ENTRY(2,ptipoparam,"-")) NO-ERROR.
             if vmenos = ? then vmenos = 0.
 
-            if day(ptoday) = 1
-            then ptoday = ptoday - 1.
-            
             vmes = month(ptoday) - vmenos.
             vano = year(ptoday).
             if vmes <= 0
@@ -96,20 +93,13 @@ def var vmenos as int.
             vdata = date(vmes,01,vano).               
         end.
 
-        if ptipoparam = "#DIAULTMES"
-        then do:
-            vdata = ptoday - 1.
-        end.
-
-        if ptipoparam BEGINS "#DIAULTMES-"
+        if ptipoparam BEGINS "#DIAULTMES"
         then do:
             vmenos = 0.
             if num-entries(ptipoparam,"-") = 2
             then vmenos = INT(ENTRY(2,ptipoparam,"-")) NO-ERROR.
             if vmenos = ? then vmenos = 0.
-            if day(ptoday) = 1
-            then ptoday = ptoday - 1.
-
+            
             vmes = month(ptoday) + 1 - vmenos.
             vano = year(ptoday).
             if vmes = 13
