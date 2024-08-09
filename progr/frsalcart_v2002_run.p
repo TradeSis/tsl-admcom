@@ -218,7 +218,7 @@ then do:
     if vcre
     then do:
         vtime = time.
-        for each estab where if vetbcod = ? then true else estab.etbcod = vetbcod no-lock.
+        for each estab where if vetbcod = 0 then true else estab.etbcod = vetbcod no-lock.
         for each tt-modalidade-selec no-lock,
             each titulo where titnat = no and titdtpag = ? and titulo.modcod = tt-modalidade-selec.modcod 
                     and titulo.etbcod = estab.etbcod
@@ -290,7 +290,7 @@ then do:
             
         end.
         end.
-        for each estab where if vetbcod = ? then true else estab.etbcod = vetbcod no-lock.
+        for each estab where if vetbcod = 0 then true else estab.etbcod = vetbcod no-lock.
         do vdt = vdtref + 1 to today .
         for each tt-modalidade-selec no-lock,
             each titulo where titulo.titnat = no and titdtpag = vdt and titulo.modcod = tt-modalidade-selec.modcod and
@@ -382,7 +382,7 @@ then do:
                         titulo.titdtpag > vdtref))
                          no-lock:
 
-            if vetbcod <> ?
+            if vetbcod <> 0
             then if titulo.etbcod <> vetbcod
                  then next.
             

@@ -47,6 +47,6 @@ message "frsalcart_v2002_run.p FIM".
 
 run marcatsrelat (vdirweb + vpdf).
 
-message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/frsalcart_v2002.p -> frsalcart_v2002_run.p " vpdf.
+message today string(time,"HH:MM:SS") "Finalizou " pidrelat "tsrelat/frsalcart_v2002.p -> frsalcart_v2002_run.p " vpdf.
 
 
