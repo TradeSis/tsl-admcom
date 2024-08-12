@@ -59,7 +59,7 @@ then do:
         if not avail dbrfunc
         then do:
             message color red/with
-            "Usuario " userid("ger") "não cadastrado para acressar o DBR."
+            "Usuario " userid("ger") "nï¿½o cadastrado para acressar o DBR."
              view-as alert-box.
             
             quit.
@@ -70,7 +70,7 @@ then do:
         then run logmenp1.p( input "RELAT",input 0 ).
     end.
     else
-        message "Aplicativo de relatorios não disponível." view-as alert-box.
+        message "Aplicativo de relatorios nï¿½o disponï¿½vel." view-as alert-box.
     quit.        
 end.
 
@@ -155,16 +155,17 @@ def var v-down           as int.
     for each aplicativo where aplicativo.ativo = no NO-LOCK:
         v-down = v-down + 1.
     end.
-
+/*
 if not connected("suporte")
 then do.
     message "Nao conectado o banco Suporte. Informe o CPD".
         pause 4 no-message.
     quit.
 end.
+*/
             /*
 if sfuncod = 1101 or  /* CLAUDIR */
-   sfuncod = 65 or   /* JOÃO */
+   sfuncod = 65 or   /* JOï¿½O */
    sfuncod = 96 or   /* FERNANDO JACKS */
    sfuncod = 77 or   /* TIAGO */
    sfuncod = 189 or  /* CAMILA */
