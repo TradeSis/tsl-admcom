@@ -5,7 +5,7 @@ DEF VAR vdir     AS char.
 DEF VAR vpini     AS CHAR.
 
 vdir = entry(3,SESSION:PARAMETER,",") no-error.
-INPUT FROM VALUE(vdir + "tsrelat.ini").
+INPUT FROM VALUE(vdir + "../tsrelat.ini").
 repeat TRANSACTION:
     IMPORT UNFORMATTED vpini.
     if vpini = "" or vpini = ? then next.
