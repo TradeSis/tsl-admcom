@@ -4,7 +4,7 @@ def var vsobrenome as char.
 def var vcatcod as int.
 def var vnroparc as int.
 def var vbairro as char.
-
+def var vzip as char.
 def var vhostname as char.
 def var xetbcod as int.
 input through hostname.
@@ -22,6 +22,17 @@ then run /admcom/progr/forcacontexttrg.p.
 {/admcom/progr/neuro/achahash.i}
 {/admcom/progr/neuro/varcomportamento.i}
 
+function dataYMD returns char (
+    input pdata as date):
+    def var cdata as char.
+    if pdata = ?
+    then cdata = "".
+    else cdata =  string( year(pdata),"9999") + "-" +
+                  string(month(pdata),"99")   + "-" +
+                  string(  day(pdata),"99").
+    return cdata.         
+end function.
+         
 function comasp return character (
     input pcampo as char):
     def var vasp    as char init "\"".
@@ -258,7 +269,7 @@ for each contexttrg where contexttrg.movtdc = 5 and
         end.        
         put stream ven unformatted 
             comasp(string(clien.clicod))    vcp
-            comasp(string(plani.pladat,"99/99/9999"))    vcp
+            comasp(dataYMD(plani.pladat))    vcp
             "NULL" vcp
             comasp(string(plani.placod))    vcp
             comasp(string(plani.etbcod))    vcp 
@@ -272,7 +283,7 @@ for each contexttrg where contexttrg.movtdc = 5 and
             comasp(trim(string(vvalorvenda,"->>>>>>>>>>9.99")))     vcp
             vcatcod vcp            
             "NULL" vcp
-            comasp(string(plani.pladat,"99/99/9999"))    vcp
+            comasp(dataYMD(plani.pladat))    vcp
             comasp(replace(clien.zona,";"," "))      vcp            
             comasp(string(plani.numero))    vcp
             comasp(plani.serie) vcp /* #2 */ 
@@ -308,7 +319,7 @@ for each contexttrg where contexttrg.movtdc = 5 and
             put stream ite unformatted  
                 comasp(string(plani.placod))           vcp     /*ID da transação*/
                 comasp(string(plani.etbcod))           vcp     /*ID da loja*/
-                comasp(string(plani.pladat,"99/99/9999"))           vcp     /*Data do pedido*/
+                comasp(dataYMD(plani.pladat))           vcp     /*Data do pedido*/
                 comasp(string(movim.movseq))           vcp     /*Sequencial do item do pedido*/
                 comasp(string(movim.procod))           vcp     /*ID do produto*/
                 comasp(string(plani.vencod))           vcp     /*Id do vendedor do produto*/
@@ -680,7 +691,7 @@ for each tt-cli.
         comasp(vsobrenome)        vcp     /*   Nome completo*/
         comasp(string(clien.etbcad,"999"))       vcp 
         "NULL" vcp             
-        comasp(string(clien.dtcad,"99/99/9999"))         vcp     /* Data de criação na origem*/
+        comasp(dataYMD(clien.dtcad))         vcp     /* Data de criação na origem*/
         comasp("BRA")                       vcp
         comasp(substring(clien.ufecod[1],1,2))     vcp     /*Estado*/
         comasp(replace(clien.cidade[1],";"," "))     vcp     /*Cidade*/
@@ -689,7 +700,7 @@ for each tt-cli.
         comasp(string(clien.numero[1])) vcp
         comasp(replace(clien.compl[1],";"," "))      vcp     /*Complemento do número do logradouro*/
         comasp(clien.genero)   vcp     
-        comasp(string(clien.dtnasc,"99/99/9999"))        vcp     /*  Data de nascimento*/
+        comasp(dataYMD(clien.dtnasc))        vcp     /*  Data de nascimento*/
         "NULL" vcp             
         comasp(if clien.tippes then "F" else "J") vcp     /*   Tipo de documento (CPF / CI / Passaporte)*/
         "NULL" vcp
@@ -708,7 +719,7 @@ for each tt-cli.
         comasp(trim(string(vSaldoLimite,"->>>>>>>>>>9.99")))                vcp
         comasp(trim(string(vvlrlimite,"->>>>>>>>>>9.99")))                  vcp
         comasp(trim(string(vComprometido,"->>>>>>>>>>9.99")))               vcp
-comasp((if vdata_ultima_compra = ? then "" else string(vdata_ultima_compra,"99/99/9999"))) vcp
+        comasp(dataYMD(vdata_ultima_compra)) vcp
 /*ok*/  comasp(trim(string(vvlr_contratos,"->>>>>>>>>>9.99")))                  vcp
 /*ok*/  comasp(string(vqtd_pagas))                      vcp
 /*ok*/  comasp(string(vqtd_abertas))                    vcp
@@ -717,8 +728,8 @@ comasp((if vdata_ultima_compra = ? then "" else string(vdata_ultima_compra,"99/9
 /*ok*/  comasp(string(vqtd_atraso_acima_de_45))         vcp
 /*ok*/  comasp(string(vReparcelamento,"SIM/NAO"))             vcp
 /*ok*/  comasp(string(vqtd_dias_Atraso_Atual))               vcp
-/*ok*/  comasp((if vdata_ult_pgto = ? then "" else string(vdata_ult_pgto,"99/99/9999")))              vcp
-/*ok*/  comasp((if vdata_prox_vcto_aberto = ? then "" else string(vdata_prox_vcto_aberto,"99/99/9999")))      vcp
+/*ok*/  comasp(dataYMD(vdata_ult_pgto))              vcp
+/*ok*/  comasp(dataYMD(vdata_prox_vcto_aberto))      vcp
 /*ok*/  comasp(string(vSituacao_contrato,"ABERTO/FECHADO"))   vcp
         "NULL" vcp /* comasp(string(vCliente_Feirao_ativo,"SIM/NAO"))       vcp*/
         comasp(string(tt-cli.clicod))               vcp 
@@ -734,7 +745,7 @@ comasp((if vdata_ultima_compra = ? then "" else string(vdata_ultima_compra,"99/9
         
 /*      comasp(replace(substr(clien.conjuge,1,50),";"," "))  vcp     /* conjuge_nome*/ 
         comasp(replace(substr(clien.conjuge,51,20),";"," ")) vcp     /* conjuge_cpf*/
-        comasp(string(clien.nascon,"99/99/9999"))        vcp     /* conjuge_dt_nasc*/
+        comasp(dataYMD(clien.nascon))        vcp     /* conjuge_dt_nasc*/
 */
         "NULL" vcp
         "NULL" vcp
@@ -855,6 +866,7 @@ for each tt-vend.
                     func.funcod = tt-vend.vencod 
                no-lock no-error.
     
+    if not avail func then next.    
     put unformatted 
         comasp(string(tt-vend.vencod))  vcp /*   ID do vendedor*/
         comasp(if avail func then replace(func.funnom,";"," ") else "" )   vcp /*    Nome do vendedor*/
@@ -948,10 +960,21 @@ run marcarfv. /* helio 26032024 - RFV */
 hide message no-pause.
 message today string(time,"HH:MM:SS") "Fechando arquivos".
 
-vhora = "_" + string(vdate,"99999999") + "_" + replace(string(vtime,"HH:MM:SS"),":","").
+vhora = "_" + 
+         string( year(vdate),"9999") +
+         string(month(vdate),"99")   +
+         string(  day(vdate),"99")
+        + "_" + replace(string(vtime,"HH:MM:SS"),":","").
 do vloop = 1 to 6:
     vcoma = "mv " + vdir + vtmp[vloop] + " " + vdir + varq[vloop] + vhora + ".csv".
     unix silent value(vcoma).
+
+    unix silent value("chmod 777 " + vdir + varq[vloop] + vhora + ".csv").
+    vzip  = "cd " + vdir + " ; zip -q " +  varq[vloop] + vhora + ".zip " +  varq[vloop] + vhora + ".csv" .
+    unix silent value(vzip).
+    unix silent value("rm -f " + vdir + varq[vloop] + vhora + ".csv").
+    unix silent value("chmod 777 " + vdir + varq[vloop] + vhora + ".zip").
+        
 end.
 
 hide message no-pause.
