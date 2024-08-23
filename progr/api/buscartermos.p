@@ -15,10 +15,9 @@ if not avail contrato
 then do:
     return.
 end.
-else do:
-    /*find neuclien  where neuclien.clicod  = contrato.clicod    no-lock.*/
-    find    clien  where    clien.clicod  = contrato.clicod    no-lock.
-end.
+
+/*find neuclien  where neuclien.clicod  = contrato.clicod    no-lock.*/
+find    clien  where    clien.clicod  = contrato.clicod    no-lock.
 
 
 /* dados de entrada
@@ -41,7 +40,10 @@ def var hSaida   as handle.
 
 hEntrada = temp-table ttpedidoCartaoLebes:handle.
 
-hEntrada:WRITE-JSON("longchar",vLCEntrada, false).
+/*hEntrada:WRITE-JSON("longchar",vLCEntrada, false). */
+hEntrada:WRITE-JSON("FILE","c:\admcom\work\contrato.json", TRUE).
+
+/* SO EM LINUX
 
 def var vsaida as char.
 def var vresposta as char.
@@ -51,14 +53,14 @@ vsaida  = "/u/bsweb/works/buscarTermos" + string(contrato.contnum) + "_" +
 
 output to value(vsaida + ".sh").
 put unformatted
-    "curl -s \"http://localhost/tslebes/api/crediario/buscaTermos" + "\" " +
-    " -H \"Content-Type: application/json\" " +
+    "curl -s ~"http://localhost/tslebes/api/crediario/buscaTermos" + "~" " +
+    " -H ~"Content-Type: application/json~" " +
     " -d '" + string(vLCEntrada) + "' " + 
     " -o "  + vsaida.
 output close.
 
 unix silent value("sh " + vsaida + ".sh " + ">" + vsaida + ".erro").
-unix silent value("echo \"\n\">>"+ vsaida).
+unix silent value("echo ~"\n~">>"+ vsaida).
 
 input from value(vsaida) no-echo.
 import unformatted vresposta.
@@ -81,6 +83,10 @@ end. */
     then do:
         /* */
     end.   */     
+
+    
+**/
+
 
 
 
