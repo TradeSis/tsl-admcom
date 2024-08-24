@@ -19,7 +19,7 @@ for each contrassin where dtproc = ? no-lock.
     
     if contrassin.hash1 <> ? and contrassin.hash2 <> ?
     then do:
-        run api/crdassinatura.p (contrassin.contnum).
+     /*   run api/crdassinatura.p (contrassin.contnum). */
     end.
 
     run passin.
@@ -55,7 +55,7 @@ procedure passin.
       
 end procedure.      
 
-procedure pboleto.
+procedure pbolet.
       
     find current contrassin no-lock.
     message contrassin.contnum " Boletado = " string(contrassin.dtboletagem = ?,"Nao/Sim") .          

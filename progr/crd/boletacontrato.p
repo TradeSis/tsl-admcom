@@ -12,17 +12,20 @@ find contrassin where recid(contrassin) = prec no-lock.
 find contrato of contrassin no-lock.
 vparcelas = 0.
 for each titulo where titulo.contnum = contrato.contnum no-lock.
+    DISP titulo.contnum titulo.titpar titulo.bolcod.
     if titulo.titpar = 0 then next.
     if titulo.bolcod <> ? then next. /* ja boletado */
     vparcelas = vparcelas + 1.
 end.
+IF vparcelas = 0
+THEN RETURN.
 for each titulo where titulo.contnum = contrato.contnum no-lock.
     
     if titulo.titpar = 0 then next.
 
     if titulo.bolcod <> ? then next. /* ja boletado */
 
-    run bol/boletogera.p (041, /* Banrisul */
+    RUN api/boletoemitir.p (041, /* Banrisul */
                           contrato.clicod,
                           string(contrato.contnum) + "-" + string(titulo.titpar),  
                           titulo.titdtven,

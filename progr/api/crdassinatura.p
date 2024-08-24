@@ -46,8 +46,8 @@ output to value(vsaida + ".sh").
 
  
 put unformatted
-    "curl -X POST -s \"http://" + vip + "/tslebes/api/crediario/assinaContrato" + "\" " +
-    " -H \"Content-Type: application/json\" " +
+    "curl -X POST -s ~"http://" + vip + "/tslebes/api/crediario/assinaContrato" + "~" " +
+    " -H ~"Content-Type: application/json~" " +
     " -d '" + string(vLCEntrada) + "' " + 
     " -o "  + vsaida.
 output close.
@@ -76,3 +76,4 @@ hide message no-pause.
 
 
     
+

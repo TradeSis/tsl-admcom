@@ -8,8 +8,11 @@ def output parameter pmotivo    as char.
 if pidbiometria = "" then pidbiometria = ?.
 
 def var vidade as int format "999".
-    find pdvmov     where recid(pdvmov) = ppdvmov no-lock.
-    find cmon of pdvmov no-lock.
+    find pdvmov     where recid(pdvmov) = ppdvmov NO-LOCK NO-ERROR.
+    if AVAIL pdvmov then do:
+        find cmon of pdvmov no-lock.    
+    end.
+    
     find contrato   where contrato.contnum = pcontnum no-lock.
     
     pboletavel = no.
@@ -139,16 +142,18 @@ def var vidade as int format "999".
         
         contrassin.idBiometria = pidBiometria.
         
-        contrassin.dtinclu     = pdvmov.datamov.
-        contrassin.hrincl      = pdvmov.horamov.
+        contrassin.dtinclu     = contrato.dtinicial.
+        contrassin.hrincl      = IF AVAIL pdvmov THEN pdvmov.horamov ELSE TIME.
         contrassin.dtproc      = ?.             /* helio 24082024 - boletagem - dtproc é para assinatura */
         contrassin.hrproc      = ?.
-        contrassin.etbcod      = pdvmov.etbcod.
-        contrassin.cxacod      = cmon.cxacod.
-        contrassin.ctmcod      = pdvmov.ctmcod.
-        contrassin.nsu         = pdvmov.sequencia.
-        contrassin.hash1 = sha1-digest(string(contrassin.contnum),"CHARACTER") no-error.
-        contrassin.hash2 = sha1-digest(string(contrassin.contnum) + contrassin.idbiometria,"CHARACTER") no-error.
+        contrassin.etbcod      = contrato.etbcod.
+        contrassin.cxacod      = IF AVAIL cmon THEN cmon.cxacod ELSE ? NO-ERROR.
+        contrassin.ctmcod      = IF AVAIL pdvmov THEN pdvmov.ctmcod ELSE "".
+        contrassin.nsu         = IF AVAIL pdvmov THEN pdvmov.sequencia ELSE ?.
+        if AVAIL pdvmov then do:
+            contrassin.hash1 = sha1-digest(string(contrassin.contnum),"CHARACTER") no-error.
+            contrassin.hash2 = sha1-digest(string(contrassin.contnum) + contrassin.idbiometria,"CHARACTER") no-error.
+        end.
         /* dpge ip - 03072024 */
         contrassin.versaocomponente = pversaocomponente.
         contrassin.nomecomponente = pnomecomponente.
