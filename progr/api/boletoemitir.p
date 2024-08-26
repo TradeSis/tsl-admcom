@@ -110,7 +110,7 @@ vsaida  = "/ws/works/emitirboleto" + string(vbolcod) + "_" +
 
 output to value(vsaida + ".sh").
 put unformatted
-    "curl -s ~"http://localhost/bsweb/api/boleto/emitirboleto" + "~" " +
+    "curl -s ~"http://localhost/bsweb/api/boleto/boletoemitir" + "~" " +
     " -H ~"Content-Type: application/json~" " +
     " -d '" + string(vLCEntrada) + "' " + 
     " -o "  + vsaida.
