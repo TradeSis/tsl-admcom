@@ -112,7 +112,7 @@ def var vidade as int format "999".
                 then do:                        
                     if boletagparam.assinaturadigital = "SIM" 
                     then do:
-                        if pidbiometria = ?
+                        if pidbiometria <> ?
                         then.
                         else do:
                             pmotivo =  ("SEM ASSINATURA").
@@ -121,7 +121,7 @@ def var vidade as int format "999".
                     end.
                     if boletagparam.assinaturadigital = "NAO"
                     then do:
-                        if pidbiometria <> ?
+                        if pidbiometria = ?
                         then.
                         else do:
                             pmotivo =  ("COM ASSINATURA").
@@ -135,9 +135,13 @@ def var vidade as int format "999".
 
     /* */
     if pboletavel or pidBiometria <> ?
-    then do:
-        create contrassin.
-        contrassin.contnum     = contrato.contnum.
+    then do on error undo:
+        find contrassin where contrassin.contnum = contrato.contnum exclusive no-error.
+        if not avail contrassin
+        then do:
+            create contrassin.
+            contrassin.contnum     = contrato.contnum.
+        end.
         contrassin.clicod      = contrato.clicod.
         
         contrassin.idBiometria = pidBiometria.

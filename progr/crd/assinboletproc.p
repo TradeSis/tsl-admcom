@@ -2,6 +2,8 @@
 /* programa inicio do processo */
 propath = "/admcom/progr/,".
 
+pause 0 before-hide.
+
 message string(today,"99/99/9999") string(time,"HH:MM:SS") "Processos de assinatura eletronica".
 
 /* faz primeiro a assinatura */
@@ -19,7 +21,7 @@ for each contrassin where dtproc = ? no-lock.
     
     if contrassin.hash1 <> ? and contrassin.hash2 <> ?
     then do:
-     /*   run api/crdassinatura.p (contrassin.contnum). */
+        run api/crdassinatura.p (contrassin.contnum). 
     end.
 
     run passin.
@@ -27,8 +29,8 @@ for each contrassin where dtproc = ? no-lock.
     /* se for boletavel, já gera os boletos */
     if boletavel = yes and dtboletagem = ? 
     then do:
-
-        run crd/boletacontrato.p (recid(contrassin)).
+        message contrassin.contnum "BOLETAGEM".
+        run crd/boletacontrato.p (contrassin.contnum).
         run pbolet.
 
     end.
@@ -40,14 +42,16 @@ end.
 
 for each contrassin where boletavel = yes and dtboletagem = ? no-lock.
 
-    message contrassin.contnum contrassin.dtinclu contrassin.etbcod contrassin.idbiometria.
-    run crd/boletacontrato.p (recid(contrassin)).
+    message "BOLETAGEM " contrassin.contnum contrassin.dtinclu contrassin.etbcod contrassin.idbiometria.
+    run crd/boletacontrato.p (contrassin.contnum).     
     run pbolet.
 
 
 end.      
       
       
+pause before-hide.
+
 procedure passin.
       
     find current contrassin no-lock.

@@ -2,21 +2,22 @@
 /* segundo programa do processo */
 /* Gera boletos para todas as parcelas de um contrato */
 /* Criar boletagparcela */
-def input param prec as recid.
+def input param pcontnum as int.
 
 def var par-recid-boleto as rec.
 def var mensagem_erro as char.
 def var vparcelas as int.
 
-find contrassin where recid(contrassin) = prec no-lock.
+find contrassin where contrassin.contnum = pcontnum no-lock.
 find contrato of contrassin no-lock.
 vparcelas = 0.
+message "BOLETA CONTRATO" contrato.contnum.
 for each titulo where titulo.contnum = contrato.contnum no-lock.
-    DISP titulo.contnum titulo.titpar titulo.bolcod.
     if titulo.titpar = 0 then next.
     if titulo.bolcod <> ? then next. /* ja boletado */
     vparcelas = vparcelas + 1.
 end.
+message "BOLETA CONTRATO" contrato.contnum  "PARCELAS" vparcelas. 
 IF vparcelas = 0
 THEN RETURN.
 for each titulo where titulo.contnum = contrato.contnum no-lock.
@@ -33,9 +34,13 @@ for each titulo where titulo.contnum = contrato.contnum no-lock.
                           output par-recid-boleto,
                           output mensagem_erro).
 
+    message "BOLETA CONTRATO" contrato.contnum titulo.titpar avail boletagbol.
+
     find boletagbol where recid(boletagbol) =  par-recid-boleto no-lock no-error.
     if avail boletagbol
     then do:
+        message "BOLETA CONTRATO" contrato.contnum titulo.titpar boletagbol.bolcod boletagbol.dtemissao.
+    
         if boletagbol.dtemissao <> ?
         then do on error undo:
             create boletagparcela.

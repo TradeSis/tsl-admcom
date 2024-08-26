@@ -78,7 +78,7 @@ ttboleto.data_vencimento =   string(year(par-dtvencimento)) + "-" +
                             string(month(par-dtvencimento),"99") + "-" + 
                             string(day(par-dtvencimento),"99").
 ttboleto.nosso_numero    = ?.
-
+ttboleto.id_titulo_empresa  = par-numerodocumento.
 
 ttboleto.data_emissao =  string(year(today)) + "-" + 
                         string(month(today),"99") + "-" + 
@@ -89,7 +89,7 @@ ttpagador.tipo_pessoa = string(clien.tippes,"F/J").
 ttpagador.cpf_cnpj = clien.ciccgc.
 ttpagador.nome    = clien.clinom.
 ttpagador.cep = string(clien.cep[1]).
-ttpagador.nome = RemoveAcento(clien.endereco[1]) + ", " + string(clien.numero[1]).
+ttpagador.endereco = RemoveAcento(clien.endereco[1]) + ", " + string(clien.numero[1]).
 ttpagador.cidade = RemoveAcento(clien.cidade[1]).
 ttpagador.uf = RemoveAcento(clien.ufecod[1]).
 
@@ -102,32 +102,31 @@ hEntrada:WRITE-JSON("longchar",vLCEntrada, false).
 
 def var vsaida as char.
 def var vresposta as char.
-
+message "api/boletoemitir.p " OPSYS.
 if OPSYS = "UNIX" then do:
-    
-vsaida  = "/ws/works/emitirboleto" + string(vbolcod) + "_" +
+    vsaida  = "/ws/works/emitirboleto" + string(vbolcod) + "_" +
             string(today,"999999") + replace(string(time,"HH:MM:SS"),":","") + ".json". 
 
-output to value(vsaida + ".sh").
-put unformatted
-    "curl -s ~"http://localhost/bsweb/api/boleto/boletoemitir" + "~" " +
-    " -H ~"Content-Type: application/json~" " +
-    " -d '" + string(vLCEntrada) + "' " + 
-    " -o "  + vsaida.
-output close.
+    output to value(vsaida + ".sh").
+    put unformatted
+        "curl -s ~"http://localhost/bsweb/api/boleto/boletoemitir" + "~" " +
+        " -H ~"Content-Type: application/json~" " +
+        " -d '" + string(vLCEntrada) + "' " + 
+        " -o "  + vsaida.
+    output close.
+    message "Arquivo SH " vsaida . 
+    unix silent value("sh " + vsaida + ".sh " + ">" + vsaida + ".erro").
+    unix silent value("echo ~"\n~">>"+ vsaida).
 
-unix silent value("sh " + vsaida + ".sh " + ">" + vsaida + ".erro").
-unix silent value("echo ~"\n~">>"+ vsaida).
+    input from value(vsaida) no-echo.
+    import unformatted vresposta.
+    input close.
 
-input from value(vsaida) no-echo.
-import unformatted vresposta.
-input close.
+    vLCsaida = vresposta.
 
-vLCsaida = vresposta.
+    hSaida = temp-table ttreturn:handle.
 
-hSaida = temp-table ttreturn:handle.
-
-hSaida:READ-JSON("longchar",vLCSaida, "EMPTY").
+    hSaida:READ-JSON("longchar",vLCSaida, "EMPTY").
 end.
 ELSE DO:
     CREATE ttreturn.
@@ -156,11 +155,12 @@ END.
                 boletagbol.hremissao = TIME.
                 boletagbol.codigoBarras = ttreturn.codigo_barras.
                 boletagbol.linhaDigitavel = ttreturn.linha_digitavel.
-                boletagbol.nossonumero   = int64(ttreturn.nosso_numero).
-            
+                boletagbol.nossonumero   = vbolcod /*int64(ttreturn.nosso_numero)*/ .
+                /*
                 unix silent value("rm -f " + vsaida). 
                 unix silent value("rm -f " + vsaida + ".erro"). 
                 unix silent value("rm -f " + vsaida + ".sh"). 
+                */
             end.
 
     End. 

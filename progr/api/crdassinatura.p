@@ -34,19 +34,24 @@ def var vresposta as char.
 vsaida  = "/ws/works/crdassinatura" + string(today,"999999") + replace(string(time,"HH:MM:SS"),":","") + ".json". 
 
 output to value(vsaida + ".sh").
-
-    if vhostname = "SV-CA-DB-DEV" or 
-       vhostname = "SV-CA-DB-QA"
+    def var vurl as char.
+    vurl = "".
+    if vhostname = "SV-CA-DB-QA"
     then do: 
         vip = "10.145.0.60".
     end.    
     else do:
         vip = "10.2.0.221".
     end.    
+    if vhostname = "SV-CA-DB-DEV" 
+    then do: 
+        vip = "10.145.0.60".
+        vurl = "-dev".
+    end.    
 
  
 put unformatted
-    "curl -X POST -s ~"http://" + vip + "/tslebes/api/crediario/assinaContrato" + "~" " +
+    "curl -X POST -s ~"http://" + vip + "/tslebes" + vurl + "/api/crediario/assinaContrato" + "~" " +
     " -H ~"Content-Type: application/json~" " +
     " -d '" + string(vLCEntrada) + "' " + 
     " -o "  + vsaida.
