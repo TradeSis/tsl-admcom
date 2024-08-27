@@ -6,6 +6,10 @@ Claudir - 19/07/2022 - Opo gerar arquivo CSV
 */
 
 {admcab.i}
+/* helio 27082024 -  ajuste para não permitir numeros */
+def var vlatitude as int64 format ">>>>>>>>>>>>>>9" label "Latitude".
+def var vlongitude as int64 format ">>>>>>>>>>>>>>9" label "Longitude".
+
 
 def var vsenha like func.senha.
 def var vcep as int.
@@ -27,7 +31,7 @@ form estab.etbcod   colon 17
      estab.etbtofne colon 17
      estab.etbtoffe      
 ***/
-     estab.latitude colon 17 estab.longitude colon 45
+     vlatitude colon 17 vlongitude colon 45
      estab.etbserie colon 17 label "Fone" format "x(15)"
      estab.movndcfim colon 45
      estab.etbfluxo colon 17
@@ -255,7 +259,11 @@ repeat:
                     vbairro 
                     estab.munic 
                     vcep .
-                update estab.latitude estab.longitude.    
+                vlatitude  = int64(estab.latitude).
+                vlongitude = int64(estab.longitude).
+                update vlatitude vlongitude.
+                estab.latitude = string(vlatitude).
+                estab.longitude = string(vlongitude).
                 update    
                     estab.etbserie
                     estab.movndcfim
@@ -362,8 +370,13 @@ repeat:
                 estab.longitude = "".
                end.
                
-               update estab.latitude validate(estab.latitude <> "","Informe Latitude") 
-                      estab.longitude  validate(estab.longitude <> "","Informe Longitude").
+                vlatitude  = int64(estab.latitude).
+                vlongitude = int64(estab.longitude).
+                update  vlatitude  validate(vlatitude <> 0,"Informe Latitude")
+                        vlongitude validate(vlongitude <> 0,"Informe Longitude").
+                estab.latitude = string(vlatitude).
+                estab.longitude = string(vlongitude).
+               
                
                update        
                        estab.etbserie
@@ -641,6 +654,8 @@ procedure consulta.
         if avail tabaux and tabaux.valor_campo = "SIM"
         then vbloco-k = yes.
         else vbloco-k = no.
+                vlatitude  = int64(estab.latitude).
+                vlongitude = int64(estab.longitude).
         
         disp estab.etbcod
               estab.RegCod
@@ -656,7 +671,8 @@ procedure consulta.
                        vbairro
                        estab.munic
                        vcep
-                       estab.latitude estab.longitude
+                       vlatitude 
+                       vlongitude
                        estab.etbserie
                        estab.movndcfim
                        estab.etbfluxo
