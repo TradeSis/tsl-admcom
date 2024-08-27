@@ -60,7 +60,7 @@ pause 0 before-hide.
         for each sicred_contrato where
             sicred_contrato.sstatus  = "VALIDAR": /* helio #17102022 ID 153621  */
 
-            if sicred_contrato.dtinc = today and sicred_contrato.hrinc >= time - (60 * 60 - 1)  /* helio 09022024  */
+            if sicred_contrato.dtinc = today and sicred_contrato.hrinc >= time - (60 * 30 - 1)  /* helio 09022024  */ /* helio 27082024 - 30 min */
             then next.
 
 
