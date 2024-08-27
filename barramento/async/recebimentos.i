@@ -231,7 +231,9 @@ def var valteraprincipal as log.
               contrato.tpcontrato = if pdvmov.ctmcod = "P48"
                                     then "N"
                                     else "".
-
+              /* helio 24082024 - assinatura 2 */
+              if ttcontrato.idOperacaoMotor <> ? and ttcontrato.idOperacaoMotor <> ""
+              then  contrato.idOperacaoMotor = ttcontrato.idOperacaoMotor.
               /*
               contrato.situacao      = {2}.situacao
               contrato.indimp        = {2}.indimp
@@ -1064,23 +1066,25 @@ index x is unique primary idpai asc id asc.
         end.
         
         /* helio 19022024 - assinatura eletronica */
-        message "assinatura" int(pdvforma.contnum) . 
+        message "assinatura/boletagem" int(pdvforma.contnum)  ttcontrato.idBiometria. 
         find contrato where contrato.contnum = int(pdvforma.contnum) no-lock no-error.        
         if avail contrato
         then do:
-            message "availcontrato " contrato.clicod contrato.dtinicial. 
-            find last clibiometria where clibiometria.clicod = contrato.clicod and
-                                         clibiometria.data   = contrato.dtinicial
-                    no-lock no-error.            
-            if avail clibiometria 
-            then do:
-                message "avail clibiometria" clibiometria.idbiometria. 
-                run crd/passinctr.p (contrato.contnum,
-                                       clibiometria.idbiometria,
+            /* helio 24082024 - Assinatura 2 e Boletagem */
+            def var pboletavel as log.
+            def var pmotivo    as CHAR.
+            run crd/boletagelegivel.p (contrato.contnum,
+                                       ttcontrato.idBiometria,
                                        vversaoComponente,
                                        vnomeComponente,
-                                       recid(pdvmov)).
-            end.
+                                       recid(pdvmov), 
+                                       output pboletavel,
+                                       output pmotivo).
+            message "    assinatura/boletagem" int(pdvforma.contnum)  ttcontrato.idBiometria
+            string(pboletavel,"Boletavel/Nao Boletavel")  pmotivo .                                        
+
         end.            
 
    end. 
+
+
