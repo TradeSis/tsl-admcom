@@ -102,7 +102,9 @@ hEntrada:WRITE-JSON("longchar",vLCEntrada, false).
 
 def var vsaida as char.
 def var vresposta as char.
-message "api/boletoemitir.p " OPSYS.
+message "         api/boletoemitir Chamando bsweb/api/boleto/boletoemitir" .
+
+
 if OPSYS = "UNIX" then do:
     vsaida  = "/ws/works/emitirboleto" + string(vbolcod) + "_" +
             string(today,"999999") + replace(string(time,"HH:MM:SS"),":","") + ".json". 
@@ -114,7 +116,8 @@ if OPSYS = "UNIX" then do:
         " -d '" + string(vLCEntrada) + "' " + 
         " -o "  + vsaida.
     output close.
-    message "Arquivo SH " vsaida . 
+    message "         api/boletoemitir Chamando bsweb/api/boleto/boletoemitir " vsaida .
+
     unix silent value("sh " + vsaida + ".sh " + ">" + vsaida + ".erro").
     unix silent value("echo ~"\n~">>"+ vsaida).
 
@@ -139,7 +142,9 @@ END.
     find first ttreturn no-error.    
     if avail ttreturn
     then do:
-            if ttreturn.codigo_barras <> "" and ttreturn.codigo_barras <> ?
+        message "         api/boletoemitir Chamando bsweb/api/boleto/boletoemitir RETORNO=" ttreturn.retorno ttreturn.data_emissao.
+
+            if ttreturn.retorno = "REGISTRADO" /*ttreturn.codigo_barras <> "" and ttreturn.codigo_barras <> ?*/
             then do:
                 CREATE boletagbol.
                 par-recid-boleto = RECID( boletagbol).

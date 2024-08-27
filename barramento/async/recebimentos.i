@@ -321,7 +321,7 @@ def var valteraprincipal as log.
                 if pdvmoeda.titdtven < pdvmoeda.datamov
                 then pdvmoeda.titdtven = pdvmoeda.datamov.
 
-                message pdvmoeda.titnum pdvmoeda.titpar ttparcelas.datavencimento pdvmoeda.titdtven.
+                message "   ttparcelas" pdvmoeda.titnum pdvmoeda.titpar ttparcelas.datavencimento pdvmoeda.titdtven.
         
                 find first titulo where titulo.contnum = contrato.contnum and
                                   titulo.titpar  = pdvmoeda.titpar  
@@ -385,7 +385,7 @@ def var valteraprincipal as log.
                                 then sicred_contrato.cobcod
                                 else 1.
                                 
-
+                /**
                 run /admcom/progr/fin/gerahisposcart.p   
                     (recid(titulo),  
                      "emissao",  
@@ -394,7 +394,7 @@ def var valteraprincipal as log.
                      titulo.titvlcob,
                      titulo.cobcod,
                      titulo.cobcod). 
-                       
+                **/       
             end.
                                     
 /**                                    
@@ -405,6 +405,7 @@ DEFINE TEMP-TABLE ttseguro NO-UNDO SERIALIZE-NAME "seguro"
         field dataFimVigencia as char 
 index x is unique primary idpai asc id asc.
         */
+        message "SEGURO".
             for each ttseguro where ttseguro.idpai = ttcontrato.id.
                 vtpseguro =  if pdvmov.ctmcod = "P44" or
                                 pdvmov.ctmcod = "P47"
@@ -503,6 +504,7 @@ index x is unique primary idpai asc id asc.
             
         end.
         
+        message "ttcartaoDebito".
         for each ttcartaoDebito where ttcartaoDebito.id = ttrecebimentos.id: 
             /*
             field codigoAprovacao as char 
@@ -593,6 +595,7 @@ index x is unique primary idpai asc id asc.
             
         end.        
         /* helio 19112021 - Meio de pagamento PIX suporte ADMCOM */ 
+        message "ttpixDebito" .
         for each ttpixDebito where ttpixDebito.id = ttrecebimentos.id: 
             /*
             field codigoAprovacao as char 
@@ -657,7 +660,8 @@ index x is unique primary idpai asc id asc.
         end.        
         /* helio 19112021 - Meio de pagamento PIX suporte ADMCOM */
        
- 
+        message "ttcartaoCredito".
+         
         for each ttcartaoCredito where ttcartaoCredito.id = ttrecebimentos.id: 
             /*
             field codigoAprovacao as char 
@@ -747,7 +751,7 @@ index x is unique primary idpai asc id asc.
             
         end.        
         
-        
+        message "ttcartaoPresente".
         for each ttcartaoPresente where ttcartaoPresente.id = ttrecebimentos.id: 
 
             /*
@@ -825,6 +829,7 @@ index x is unique primary idpai asc id asc.
         index x is unique primary idpai asc id asc.
 
 **/
+    message "ttcheque".
         for each ttcheque where ttcheque.id = ttrecebimentos.id: 
 
             /*
@@ -1054,25 +1059,28 @@ index x is unique primary idpai asc id asc.
         end.
         
         /* helio 19022024 - assinatura eletronica */
-        message "assinatura/boletagem" int(pdvforma.contnum)  ttcontrato.idBiometria. 
-        find contrato where contrato.contnum = int(pdvforma.contnum) no-lock no-error.        
-        if avail contrato
+        find first ttcontrato where ttcontrato.numerocontrato = pdvforma.contnum no-lock no-error.
+        if avail ttcontrato
         then do:
-            /* helio 24082024 - Assinatura 2 e Boletagem */
-            def var pboletavel as log.
-            def var pmotivo    as CHAR.
-            run crd/boletagelegivel.p (contrato.contnum,
-                                       ttcontrato.idBiometria,
-                                       vversaoComponente,
-                                       vnomeComponente,
-                                       recid(pdvmov), 
-                                       output pboletavel,
-                                       output pmotivo).
-            message "    assinatura/boletagem" int(pdvforma.contnum)  ttcontrato.idBiometria
-            string(pboletavel,"Boletavel/Nao Boletavel")  pmotivo .                                        
+            message "assinatura/boletagem" int(pdvforma.contnum)  ttcontrato.idBiometria. 
+            find contrato where contrato.contnum = int(pdvforma.contnum) no-lock no-error.        
+            if avail contrato
+            then do:
+                /* helio 24082024 - Assinatura 2 e Boletagem */
+                def var pboletavel as log.
+                def var pmotivo    as CHAR.
+                run crd/boletagelegivel.p (contrato.contnum,
+                                           ttcontrato.idBiometria,
+                                           vversaoComponente,
+                                           vnomeComponente,
+                                           recid(pdvmov), 
+                                           output pboletavel,
+                                           output pmotivo).
+                message "    assinatura/boletagem" int(pdvforma.contnum)  ttcontrato.idBiometria
+                string(pboletavel,"Boletavel/Nao Boletavel")  pmotivo .                                        
 
-        end.            
-
+            end.            
+        end.
    end. 
 
 

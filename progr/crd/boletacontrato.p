@@ -11,13 +11,12 @@ def var vparcelas as int.
 find contrassin where contrassin.contnum = pcontnum no-lock.
 find contrato of contrassin no-lock.
 vparcelas = 0.
-message "BOLETA CONTRATO" contrato.contnum.
 for each titulo where titulo.contnum = contrato.contnum no-lock.
     if titulo.titpar = 0 then next.
     if titulo.bolcod <> ? then next. /* ja boletado */
     vparcelas = vparcelas + 1.
 end.
-message "BOLETA CONTRATO" contrato.contnum  "PARCELAS" vparcelas. 
+message "         crd/boletacontrato BOLETA CONTRATO" contrato.contnum  "PARCELAS" vparcelas. 
 IF vparcelas = 0
 THEN RETURN.
 for each titulo where titulo.contnum = contrato.contnum no-lock.
@@ -34,12 +33,14 @@ for each titulo where titulo.contnum = contrato.contnum no-lock.
                           output par-recid-boleto,
                           output mensagem_erro).
 
-    message "BOLETA CONTRATO" contrato.contnum titulo.titpar avail boletagbol.
-
     find boletagbol where recid(boletagbol) =  par-recid-boleto no-lock no-error.
+
+    message "         crd/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar avail boletagbol par-recid-boleto mensagem_erro.
+
     if avail boletagbol
     then do:
-        message "BOLETA CONTRATO" contrato.contnum titulo.titpar boletagbol.bolcod boletagbol.dtemissao.
+        message "         crd/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar avail boletagbol par-recid-boleto mensagem_erro
+                boletagbol.dtemissao boletagbol.bolcod.
     
         if boletagbol.dtemissao <> ?
         then do on error undo:
