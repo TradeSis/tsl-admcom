@@ -1,10 +1,9 @@
 /* helio 24082024 - processa assinatura e boletagem */
 /* programa inicio do processo */
-propath = "/admcom/progr/,".
 
 pause 0 before-hide.
 
-message string(today,"99/99/9999") string(time,"HH:MM:SS") "Processos de assinatura eletronica".
+message "      -> " string(today,"99/99/9999") string(time,"HH:MM:SS") "Processos de assinatura eletronica e Boletagem".
 
 /* faz primeiro a assinatura */
 
@@ -39,7 +38,7 @@ for each contrassin where dtproc = ? no-lock.
 end.      
 
 /* Pesquisa  contratos boletaveis, sem boleto */
-
+message "      -> " string(today,"99/99/9999") string(time,"HH:MM:SS") "Processos de Boletagem".
 for each contrassin where boletavel = yes and dtboletagem = ? no-lock.
 
     message "    BOLETAGEM " contrassin.contnum contrassin.dtinclu contrassin.etbcod contrassin.idbiometria.
