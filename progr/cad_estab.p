@@ -7,8 +7,8 @@ Claudir - 19/07/2022 - Opo gerar arquivo CSV
 
 {admcab.i}
 /* helio 27082024 -  ajuste para não permitir numeros */
-def var vlatitude as int64 format ">>>>>>>>>>>>>>9" label "Latitude".
-def var vlongitude as int64 format ">>>>>>>>>>>>>>9" label "Longitude".
+def var vlatitude as int64  format "->>>>>>>>>>>>>9" label "Latitude".
+def var vlongitude as int64 format "->>>>>>>>>>>>>9" label "Longitude".
 
 
 def var vsenha like func.senha.

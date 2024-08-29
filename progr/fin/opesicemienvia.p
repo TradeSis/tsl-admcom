@@ -409,7 +409,7 @@ put unformat skip
     /*#16092022 f-troca(string(clien.prodta[2]))  format "99999999" /* 96-103 DT DE ADM */ */
                 f-troca(string(vprodta))         format "99999999" /*#16092022*/
     
-    fill(" ",691)                       /* 104 - 794 */
+    fill(" ",692)                       /* 104 - 794 */
     vseq format    "999999".
 end procedure.
 
@@ -429,12 +429,12 @@ procedure p-registro-03.
       "00"      /* 69 - 70 NUMERICO    TIPO CARTAO1    */
       "000"     /* 71 - 73 NUMï¿½RICO    CARTAO CREDITO2   */
       "00"      /* 74 - 75 NUMï¿½RICO    TIPO CARTAO2      */
-      clien.entbairro[1] format "x(40)" /* 76 - 115 REF PESSOAL */
-      clien.entcompl[1]  format "x(10)" /* 116 - 125 RELACION */
-      clien.entcidade[1] format "x(20)" /* 126 - 145  TELEFONE */
-      clien.entbairro[2] format "x(40)" /* 146 - 185 REF PESSOAL */
-      clien.entcompl[2] format "x(10)" /* 186 - 195 RELACION */
-      clien.entcidade[2] format "x(20)" /* 196 - 215  TELEFONE */
+      removeacento(clien.entbairro[1]) format "x(40)" /* 76 - 115 REF PESSOAL */
+      removeacento(clien.entcompl[1])  format "x(10)" /* 116 - 125 RELACION */
+      removeacento(clien.entcidade[1]) format "x(20)" /* 126 - 145  TELEFONE */
+      removeacento(clien.entbairro[2]) format "x(40)" /* 146 - 185 REF PESSOAL */
+      removeacento(clien.entcompl[2]) format "x(10)" /* 186 - 195 RELACION */
+      removeacento(clien.entcidade[2]) format "x(20)" /* 196 - 215  TELEFONE */
       " " format "x(579)" /* 216 - 794   ALFANUMï¿½RICO    FILLER  */
       vseq format    "999999" /*795 - 800 */ .
 end procedure.        
@@ -760,7 +760,40 @@ procedure p-registro-10.
     then vvaloroperacao = 0.
   end.
   /**/
-    
+  /* helio 29082024 - dpge - regra campo produto */
+  if lcontratoeletronico
+  then do:
+        /*
+        Hoje temos 
+        1 - CDC Com acréscimo
+        18 - CDC sem acréscimo
+        4 - EP Saque em loja
+        3 - EP deposito 
+         
+         Precisamos acrescentar
+         23 - CDC Com acréscimo assinado digital
+         24 - CDC sem acréscimo assinado digital
+         25 - EP Saque em loja assinado digital
+         26 - EP deposito a assinado digital 
+         
+        */
+
+        if contrato.modcod = "CRE"
+        then do:
+            if vcod-produto = 1
+            then vcod-produto = 23.
+            if vcod-produto = 18
+            then  vcod-produto = 24.
+        end.
+        if contrato.modcod begins "CP"
+        then do:
+            if vcod-produto = 4
+            then vcod-produto = 25.
+            if vcod-produto = 3
+            then vcod-produto = 26.
+        end.    
+  end.  
+  /**/
   put unformat skip 
       "10"            /* 01  - 02  TIPO  FIXO ï¿½1  */
       contrato.contnum format "9999999999" /* 03 - 12 Nï¿½MERO OPERAï¿½ï¿½O  */
@@ -1115,7 +1148,7 @@ procedure p-registro-15.
       "05"
       "Sistema Operacional Linux Versao Storex " + contrassin.versaocomponente    format "x(60)"
       contrassin.nomecomponente    format "x(15)"
-      ""    format "x(15)"
+      "123456         "    format "x(15)"
       bestab.latitude     format "x(15)"        /* HELIO 17072024 - DPGE Latitude Longitude */
       bestab.longitude    format "x(15)"
         string(year(contrassin.dtinclu),"9999")  + "-" +
