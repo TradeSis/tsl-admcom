@@ -14,7 +14,7 @@ def input param poldctmcod     like sicred_contrato.ctmcod.
 def input param poldmodcod     like contrato.modcod.
 def input param poldtpcontrato like contrato.tpcontrato.
 def input param poldetbcod  as int.
-
+def input param pexporta    as char.
 def shared var vetbcod like estab.etbcod.
 def shared var vdtini as date format "99/99/9999" label "De".
 def shared var vdtfin as date format "99/99/9999" label "Ate".              
@@ -66,16 +66,6 @@ def buffer bttcontrato for ttcontrato.
 def var vfiltro as char.
 
     vfiltro = caps(poperacao).
-    
-disp
-    vfiltro no-label format "x(50)"
-
-    with frame fcab
-    row 4 no-box
-        side-labels
-        width 80
-        color underline.
-
     form  
         contrato.etbcod column-label "Fil"
         contrato.contnum format ">>>>>>>>>9"
@@ -114,6 +104,23 @@ vqtdarqint = int(round(vqtdarq,0)).
 vqtdarq = vqtdarq - vqtdarqint.
 if vqtdarq > 0
 then vqtdarqint = vqtdarqint + 1.
+
+
+if pexporta <> ""
+then do:
+    run geracsv.
+    return.
+end.
+
+    
+disp
+    vfiltro no-label format "x(50)"
+
+    with frame fcab
+    row 4 no-box
+        side-labels
+        width 80
+        color underline.
 
 
 
@@ -742,21 +749,27 @@ def var vbaru as log.
 def var vvalorpmt as dec.    
    def var varq as char format "x(76)".
    def var vcp  as char init ";".
-   varq = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
+    if pexporta = ""
+    then do:    
+       varq = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
                              "_emissao" + string(vdtini,"99999999") + "_" + string(vdtfin,"99999999") + "_" +
                              string(today,"999999")  +  replace(string(time,"HH:MM:SS"),":","") +
                              ".csv" .
    
-    pause 0.
-    update skip(2) varq skip(2)
-        with
-        centered 
-        overlay
-        color messages
-        no-labels
-        row 8
-        title string(vqtdarqint) + " arquivo de saida".
-
+        pause 0.
+        update skip(2) varq skip(2)
+            with
+            centered 
+            overlay
+            color messages
+            no-labels
+            row 8
+            title string(vqtdarqint) + " arquivo de saida".
+    end.
+    else do:
+        varq = pexporta.
+    end.
+    
    
             output to value(varq).    
                 put unformatted 

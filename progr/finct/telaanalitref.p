@@ -344,7 +344,8 @@ disp
                                 ttmovimdoc.modcod,
                                 ttmovimdoc.tpcontrato,
                                 ttmovimdoc.etbcod,
-                                ttmovimdoc.cobcod).
+                                ttmovimdoc.cobcod,
+                                "").
                     end.
                 end.
                 leave.

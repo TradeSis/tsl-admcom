@@ -12,9 +12,11 @@ def input param poldmodcod   as char.
 def input param poldtpcontrato as char.
 def input param poldetbcod as int. 
 def input param poldcobcod  as int.
+def input param pexporta    as char.
 def shared var vetbcod like estab.etbcod.
 def shared var vdtini as date format "99/99/9999" label "De".
 def shared var vdtfin as date format "99/99/9999" label "Ate".              
+
 def var vvliof as dec.
 def var vnro_parcela as int.
 
@@ -82,17 +84,6 @@ def var vfiltro as char.
                                        else ""
              else "").
 
-
-disp
-    vfiltro no-label format "x(50)"
-        poldetbcod when poldetbcod <> ?
-            label "Fil" format ">>>>"
-
-    with frame fcab
-    row 4 no-box
-        side-labels
-        width 80
-        color underline.
 def var par-dtini as date.
         
 def new shared frame f-cmon.
@@ -147,6 +138,25 @@ then do:
     run fin/fqanadocorinov.p ("Origem",yes).
     return.
 end. 
+
+
+if pexporta <> ""
+then do:
+    run geracsv.
+    return.
+end.
+
+disp
+    vfiltro no-label format "x(50)"
+        poldetbcod when poldetbcod <> ?
+            label "Fil" format ">>>>"
+
+    with frame fcab
+    row 4 no-box
+        side-labels
+        width 80
+        color underline.
+
 
 disp 
     space(32)
@@ -673,14 +683,15 @@ end procedure.
 procedure geracsv.
    def var varq as char format "x(76)".
    def var vcp  as char init ";".
-
-   varq = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
+   if pexporta = ""
+   then do:
+       varq = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
                              "_baixas" + string(vdtini,"99999999") + "_" + string(vdtfin,"99999999")  + "_" +
                              string(today,"999999")  +  replace(string(time,"HH:MM:SS"),":","") +
                              ".csv" .
                                
-    pause 0.
-    update skip(2) varq skip(2)
+        pause 0.
+        update skip(2) varq skip(2)
         with
         centered 
         overlay
@@ -688,6 +699,10 @@ procedure geracsv.
         no-labels
         row 8
         title "arquivo de saida".
+    end.
+    else do:
+        varq = pexporta.
+    end.
         
     output to value(varq).    
         put unformatted 
@@ -802,7 +817,8 @@ procedure geracsv.
     end.
     
     output close.
-    message varq "gerado com sucesso.".
+    if pexporta  = ""
+    then message varq "gerado com sucesso.".
     pause 2 no-message.
 
 end procedure.
