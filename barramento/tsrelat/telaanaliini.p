@@ -54,7 +54,7 @@ END.
             varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
                 "-ID" + STRING(tsrelat.idrelat) + "-" +  
                  STRING(TODAY,"99999999") +
-                 replace(STRING(TIME,"HH:MM:SS"),":","").
+                 replace(STRING(TIME,"HH:MM:SS"),":","") + ".csv" .
         end.
         ELSE DO:
             varquivo = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
@@ -80,7 +80,7 @@ END.
             varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
                 "-ID" + STRING(tsrelat.idrelat) + "-" +  
                  STRING(TODAY,"99999999") +
-                 replace(STRING(TIME,"HH:MM:SS"),":","").
+                 replace(STRING(TIME,"HH:MM:SS"),":","") + ".csv" .
         end.
         ELSE DO:
            varquivo = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
@@ -103,7 +103,7 @@ END.
             varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
                 "-ID" + STRING(tsrelat.idrelat) + "-" +  
                  STRING(TODAY,"99999999") +
-                 replace(STRING(TIME,"HH:MM:SS"),":","").
+                 replace(STRING(TIME,"HH:MM:SS"),":","") + ".csv" .
         end.
         ELSE DO:
            varquivo = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
