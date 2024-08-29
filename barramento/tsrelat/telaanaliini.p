@@ -47,21 +47,22 @@ ELSE DO:
     vdtini  = convertedata(ttparametros.dtini).
 END.
 
-    if AVAIL tsrelat then do:
-        varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
-            "-ID" + STRING(tsrelat.idrelat) + "-" +  
-             STRING(TODAY,"99999999") +
-             replace(STRING(TIME,"HH:MM:SS"),":","").
-    end.
-    ELSE DO:
-        varquivo = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
-                             "_baixas" + string(vdtini,"99999999") + "_" + string(vdtfin,"99999999")  + "_" +
-                             string(today,"999999")  +  replace(string(time,"HH:MM:SS"),":","") +
-                             ".csv" .
-    end.
     
     if ttparametros.tipoOperacao = "RECEBIMENTOS"
     then do: 
+        if AVAIL tsrelat then do:
+            varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
+                "-ID" + STRING(tsrelat.idrelat) + "-" +  
+                 STRING(TODAY,"99999999") +
+                 replace(STRING(TIME,"HH:MM:SS"),":","").
+        end.
+        ELSE DO:
+            varquivo = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
+                             "_baixas" + string(vdtini,"99999999") + "_" + string(vdtfin,"99999999")  + "_" +
+                             string(today,"999999")  +  replace(string(time,"HH:MM:SS"),":","") +
+                             ".csv" .
+        end.
+    
         run finct/telaanadocrec.p
                             (   "Geral" + "/" + "geral",
                                 ?, 
@@ -74,7 +75,20 @@ END.
                                 varquivo).
     end. 
     if ttparametros.tipoOperacao = "VENDAS" or ttparametros.tipoOperacao = "VENDAS SITE" or ttparametros.tipoOperacao = "VENDAS APP" 
-    then do: 
+    then do:
+        if AVAIL tsrelat then do:
+            varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
+                "-ID" + STRING(tsrelat.idrelat) + "-" +  
+                 STRING(TODAY,"99999999") +
+                 replace(STRING(TIME,"HH:MM:SS"),":","").
+        end.
+        ELSE DO:
+           varquivo = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
+                             "_emissao" + string(vdtini,"99999999") + "_" + string(vdtfin,"99999999") + "_" +
+                             string(today,"999999")  +  replace(string(time,"HH:MM:SS"),":","") +
+                             ".csv" .
+
+        end.
         run finct/telaanaemictr.p (input ttparametros.tipoOperacao, 
                                    ?,
                                    ?,
@@ -83,8 +97,22 @@ END.
                                    ?,
                                    varquivo).
     end.
-    if ttmovimdoc.pagamento = "NOVACOES" 
+    if ttparametros.tipoOperacao = "NOVACOES" 
     then do:
+        if AVAIL tsrelat then do:
+            varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
+                "-ID" + STRING(tsrelat.idrelat) + "-" +  
+                 STRING(TODAY,"99999999") +
+                 replace(STRING(TIME,"HH:MM:SS"),":","").
+        end.
+        ELSE DO:
+           varquivo = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
+                             "_emissao" + string(vdtini,"99999999") + "_" + string(vdtfin,"99999999") + "_" +
+                             string(today,"999999")  +  replace(string(time,"HH:MM:SS"),":","") +
+                             ".csv" .
+
+        end.
+    
         run finct/telaanadocnov.p
                  (   "Geral/geral",
                             ?, 

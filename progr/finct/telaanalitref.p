@@ -323,7 +323,8 @@ disp
                             ttmovimdoc.tpcontrato,
                             ttmovimdoc.etbcod,
                             ttmovimdoc.cobcod,
-                            ?).
+                            ?,
+                            "").
                 else do:
                     if ttmovimdoc.pagamento = "VENDAS" or ttmovimdoc.pagamento = "VENDAS SITE" or ttmovimdoc.pagamento = "VENDAS APP"
                     then do:
@@ -332,7 +333,8 @@ disp
                                                                  input ttmovimdoc.ctmcod,
                                                                  input ttmovimdoc.modcod,
                                                                  input ttmovimdoc.tpcontrato,
-                                                                 input ttmovimdoc.etbcod).
+                                                                 input ttmovimdoc.etbcod,
+                                                                 "").
                         
                     end.
                     else  do:
