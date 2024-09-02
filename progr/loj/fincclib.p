@@ -447,11 +447,12 @@ do on error undo.
                 fincotaetb.etbcod = fincotacllib.etbcod.
                 fincotaetb.fincod = fincotaclplan.fincod.
                 fincotaetb.dtivig = fincotacllib.dtivig. 
+                fincotaetb.CotasLib = 0 .
             end.                                  
-                fincotaetb.Ativo    = yes.
+            fincotaetb.Ativo    = yes.
             
             fincotaetb.DtFVig   = fincotacllib.DtFVig .
-            fincotaetb.CotasLib = ? . /*fincotacllib.CotasLib. // Controle por Cluster */
+            
         end.                            
 
     
@@ -459,6 +460,7 @@ end.
 
 
 end procedure.
+
 
 
 
