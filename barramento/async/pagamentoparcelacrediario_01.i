@@ -78,6 +78,8 @@ DEFINE TEMP-TABLE ttcontrato NO-UNDO SERIALIZE-NAME "contrato"
         field valorPrincipal as char 
         field modalidade as char 
         field codigoEmpresa as char 
+        field idOperacaoMotor   as char /* helio 24082024 - assinatura 2 */
+        field idBiometria       as char /* helio 24082024 - assinatura 2 */        
 index x is unique primary idpai asc id asc.
                         
 DEFINE TEMP-TABLE ttparcelas NO-UNDO SERIALIZE-NAME "parcelas"
