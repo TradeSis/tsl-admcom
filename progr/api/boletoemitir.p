@@ -160,12 +160,12 @@ END.
                 boletagbol.hremissao = TIME.
                 boletagbol.codigoBarras = ttreturn.codigo_barras.
                 boletagbol.linhaDigitavel = ttreturn.linha_digitavel.
-                boletagbol.nossonumero   = vbolcod /*int64(ttreturn.nosso_numero)*/ .
-                /*
+                boletagbol.nossonumero   = int64(ttreturn.nosso_numero) .
+                
                 unix silent value("rm -f " + vsaida). 
                 unix silent value("rm -f " + vsaida + ".erro"). 
                 unix silent value("rm -f " + vsaida + ".sh"). 
-                */
+                
             end.
 
     End. 
