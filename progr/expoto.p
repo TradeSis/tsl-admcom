@@ -149,7 +149,6 @@ vdtfim = if time <= 60000
          then today - 1 
          else today. 
 
-
 hide message no-pause.
 message today string(time,"HH:MM:SS") "Exportando" varq[1] "e" varq[2] "desde" par-dtultimoprocesso "ate" vdtfim.
 
@@ -268,12 +267,13 @@ for each contexttrg where contexttrg.movtdc = 5 and
             end.
         end.        
         put stream ven unformatted 
-            comasp(string(clien.clicod))    vcp
+            comasp(replace(clien.ciccgc,";"," "))        vcp     /*Número do documento (Cpf/Cnpj)*/
+
             comasp(dataYMD(plani.pladat))    vcp
             "NULL" vcp
             comasp(string(plani.placod))    vcp
             comasp(string(plani.etbcod))    vcp 
-            comasp(estab.tipoLoja)  vcp
+            comasp(if estab.etbcod = 200 then "E" else "L")  vcp
             "NULL" vcp
             comasp("FECHADO")       vcp
             comasp(string(vcod_plano) +  " - " + vdesc_plano) vcp
@@ -323,7 +323,7 @@ for each contexttrg where contexttrg.movtdc = 5 and
                 comasp(string(movim.movseq))           vcp     /*Sequencial do item do pedido*/
                 comasp(string(movim.procod))           vcp     /*ID do produto*/
                 comasp(string(plani.vencod))           vcp     /*Id do vendedor do produto*/
-                comasp(trim(string(movim.movqtm,"->>>>>>>>>>9.99")))           vcp     /*Quantidade adquirida*/
+                comasp(trim(string(movim.movqtm,"->>>>>>>>>>9")))           vcp     /*Quantidade adquirida*/
                 "NULL" vcp
                 comasp(trim(string(movim.movpc ,"->>>>>>>>>>9.99")))            vcp     /*Preço unitário*/
                 skip.
@@ -679,12 +679,12 @@ for each tt-cli.
     vsobrenome = trim(replace(clien.clinom,vnome,"")) no-error.
     if vsobrenome = ? then vsobrenome = "".
     put unformatted
-        comasp(string(tt-cli.clicod))               vcp 
+        comasp(replace(clien.ciccgc,";"," "))        vcp     /*Número do documento (Cpf/Cnpj)*/
         comasp(replace(clien.ciccgc,";"," "))        vcp     /*Número do documento (Cpf/Cnpj)*/
         "NULL" vcp
         comasp(replace(clien.zona,";"," "))                  vcp
         string(voptinEmail,"1/0")        vcp
-        comasp(replace(clien.fax,";"," "))                   vcp
+        comasp("55" + replace(clien.fax,";"," "))                   vcp
         string(clien.optinSMS,"1/0")   vcp
         string(clien.optinWhatsApp,"1/0")   vcp
         comasp(vnome)   vcp     /*   Nome completo*/
@@ -705,7 +705,7 @@ for each tt-cli.
         comasp(if clien.tippes then "F" else "J") vcp     /*   Tipo de documento (CPF / CI / Passaporte)*/
         "NULL" vcp
         "NULL" vcp
-        comasp(replace(clien.fone,";"," "))                  vcp
+        comasp("55" + replace(clien.fone,";"," "))                  vcp
         "NULL" vcp
         comasp(replace(clien.proprof[1],";"," "))   vcp     /*   profissao*/
         comasp(trim(string(clien.prorenda[1],"->>>>>>>>>>9.99")))   vcp     /*renda*/
@@ -866,7 +866,6 @@ for each tt-vend.
                     func.funcod = tt-vend.vencod 
                no-lock no-error.
     
-    if not avail func then next.    
     put unformatted 
         comasp(string(tt-vend.vencod))  vcp /*   ID do vendedor*/
         comasp(if avail func then replace(func.funnom,";"," ") else "" )   vcp /*    Nome do vendedor*/
@@ -913,9 +912,9 @@ put unformatted
 
 for each estab no-lock.
     release supervisor.
-    find filialsup  of estab no-lock no-error.
+    find first filialsup where filialsup.etbcod = estab.etbcod no-lock no-error.
     if avail filialsup
-    then  find supervisor of filialsup no-lock no-error.
+    then  find supervisor where supervisor.supcod = filialsup.supcod no-lock no-error.
                 find tabaux where 
                      tabaux.tabela = "ESTAB-" + string(estab.etbcod,"999") and
                      tabaux.nome_campo = "BAIRRO" no-error.
