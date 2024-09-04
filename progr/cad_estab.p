@@ -32,7 +32,7 @@ form estab.etbcod   colon 17
      estab.etbfluxo colon 17
      estab.estcota  colon 45 label "N.I.R.C" format "99999999999"
      estab.etbcon   colon 17 format ">,>>>,>>9.99"
-     filialsup.supcod format ">>>9" label "Supervisor"   colon 45  
+     estab.supcod format ">>>9" label "Supervisor"   colon 45  
      supervisor.supnom no-label
      estab.etbmov   format ">,>>>,>>9.99"   colon 17
      estab.vencota  format "9999" label "N.Dias" colon 45
@@ -262,16 +262,16 @@ repeat:
                     leave.
                 end.
                 
-                prompt-for filialsup.supcod.
-                find first filialsup where filialsup.etbcod = estab.etbcod
-                                            exclusive-lock no-error.
+                prompt-for estab.supcod.
+                find first supervisor where supervisor.supcod = input estab.supcod
+                                            no-lock no-error.
 
-                if not avail filialsup
+                if not avail supervisor
                 then do:
-                    create filialsup.
-                    FilialSup.etbcod = estab.etbcod.
+                    message "Supervisor nao Cadastrado".
+                    undo.
                 end.
-                filialsup.supcod = input filialsup.supcod.
+                estab.supcod = input estab.supcod.
                 
                 estab.etbnom = caps(estab.etbnom).
                 do on error undo.
@@ -388,17 +388,18 @@ repeat:
                         tabaux.datexp  = today
                         tabaux.exporta = yes.
                 end.
-                
-                find first filialsup where filialsup.etbcod = estab.etbcod
-                                            exclusive-lock no-error.
+                disp estab.supcod.
+                prompt-for estab.supcod.
+                find first supervisor where supervisor.supcod = input estab.supcod
+                                            no-lock no-error.
 
-                if not avail filialsup
+                if not avail supervisor
                 then do:
-                    create filialsup.
-                    filialsup.etbcod = estab.etbcod.
+                    message "Supervisor nao Cadastrado".
+                    undo.
                 end.
-                
-                update filialsup.supcod.
+                estab.supcod = input estab.supcod.
+
                 do on error undo.
                     update estab.tamanho
                            estab.tipoloja.
@@ -645,14 +646,11 @@ procedure consulta.
               estab.spc-senha
               vbloco-k.
                        
-                find first filialsup where filialsup.etbcod = estab.etbcod
-                                                    no-lock no-error.
-                                                    
                 find first supervisor
-                     where supervisor.supcod = filialsup.supcod
+                     where supervisor.supcod = estab.supcod
                                     no-lock no-error.
                                                     
-                display filialsup.supcod when avail filialsup
+                display estab.supcod
                         supervisor.supnom when avail supervisor.
 
         disp estab.tamanho
