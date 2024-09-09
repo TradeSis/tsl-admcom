@@ -761,39 +761,40 @@ procedure p-registro-10.
   end.
   /**/
   /* helio 29082024 - dpge - regra campo produto */
-  if lcontratoeletronico
-  then do:
-        /*
-        Hoje temos 
-        1 - CDC Com acréscimo
-        18 - CDC sem acréscimo
-        4 - EP Saque em loja
-        3 - EP deposito 
-         
-         Precisamos acrescentar
-         23 - CDC Com acréscimo assinado digital
-         24 - CDC sem acréscimo assinado digital
-         25 - EP Saque em loja assinado digital
-         26 - EP deposito a assinado digital 
-         
-        */
-
-        if contrato.modcod = "CRE"
-        then do:
-            if vcod-produto = 1
-            then vcod-produto = 23.
-            if vcod-produto = 18
-            then  vcod-produto = 24.
-        end.
-        if contrato.modcod begins "CP"
-        then do:
-            if vcod-produto = 4
-            then vcod-produto = 25.
-            if vcod-produto = 3
-            then vcod-produto = 26.
-        end.    
-  end.  
-  /**/
+  /* helio 09092024 - desfazer regra campo - deixar standby
+  *if lcontratoeletronico
+  *then do:
+  *      /*
+  *      Hoje temos 
+  *      1 - CDC Com acréscimo
+  *      18 - CDC sem acréscimo
+  *      4 - EP Saque em loja
+  *      3 - EP deposito 
+  *       
+  *       Precisamos acrescentar
+  *       23 - CDC Com acréscimo assinado digital
+  *       24 - CDC sem acréscimo assinado digital
+  *       25 - EP Saque em loja assinado digital
+  *       26 - EP deposito a assinado digital 
+  *       
+  *      */
+  *
+  *      if contrato.modcod = "CRE"
+  *      then do:
+  *          if vcod-produto = 1
+  *          then vcod-produto = 23.
+  *          if vcod-produto = 18
+  *          then  vcod-produto = 24.
+  *      end.
+  *      if contrato.modcod begins "CP"
+  *      then do:
+  *          if vcod-produto = 4
+  *          then vcod-produto = 25.
+  *          if vcod-produto = 3
+  *          then vcod-produto = 26.
+  *      end.    
+  *end.  
+  **/
   put unformat skip 
       "10"            /* 01  - 02  TIPO  FIXO ï¿½1  */
       contrato.contnum format "9999999999" /* 03 - 12 Nï¿½MERO OPERAï¿½ï¿½O  */
