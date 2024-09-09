@@ -14,20 +14,33 @@ if PTODAY > par-titdtven
 then do:
 
     ljuros = yes.
-    
-    /* Se ontem foi feriado ou domingo, e foi o dia do vencimento, não cobra juros */
-    find dtextra where dtextra.exdata = PTODAY - 1 no-lock no-error.
-    if avail dtextra or weekday(PTODAY - 1) = 1
+    /* HELIO 09092024 Modificacao para teste de nao cxobrar juros, quando:
+            Vencimento é feriado ou sabado ou domingo
+            Cliente vem pagar na segunda ou no dia seguinte do feriado
+    */  
+    if weekday(par-titdtven) = 1 /* Vencimento em Domingo */
     then do:
-        if par-titdtven = PTODAY - 1  
-        then ljuros = no.
-/*https://trello.com/c/EBbjANsa/12-cadastro-de-feriado-n%C3%A3o-dispensou-juros
-*/        
-        else if par-titdtven = PTODAY - 2 and
-                weekday(par-titdtven) = 1
-            then ljuros = no.        
-/**/    
-    end.    
+        if weekday(ptoday) = 2
+        then do:
+            ljuros = no.
+        end.
+    end.
+    else do:
+        find dtextra where dtextra.exdata = par-titdtven no-lock no-error.
+        if avail dtextra    /* Vencimento em Feriado */
+        then do:
+            if ptoday = par-titdtven + 1  /* Veio Pagar no dia seguinte */
+            then do:
+                ljuros = no.
+            end.
+            else do:
+                if weekday(ptoday) = 2 and weekday(par-titdtven) = 7 /* Vencimento Sabado Feriado, Pagamento Segunda */
+                then do:
+                    ljuros = no.
+                end. 
+            end.
+        end.
+    end.
 
     if ljuros /* se cobra juros */
     then do:
