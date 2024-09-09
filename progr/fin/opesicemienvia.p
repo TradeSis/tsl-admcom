@@ -884,6 +884,8 @@ procedure p-registro-11.
         then vparcela = btitulo.titpar.   
   end.
 
+  find boletagbol where boletagbol.bolcod = titulo.bolcod no-lock no-error.
+
   put unformat skip
      "11"                   /* 01-02 fixo "11" */
      dec(btitulo.titnum) format "9999999999" /* 03 - 12 OPERA��O */
@@ -893,10 +895,10 @@ procedure p-registro-11.
      ((vtitvltot /*- btitulo.titdesc*/) * 100) 
                 format "999999999999" /* 28-39 VLR PRESTAcaO */
      fill("0",30) format "x(30)"       /* 40-69 CMC7: nro do cheque pre */
-     " " format "x(25)" /*NOSSONUMEROBANCO    070-094     ALFANUM�RICO    025*/
-     " " format "x(03)" /*CODIGOBANCOCORR     095-097     NUMERICO        003    */
-     " " format "x(04)" /*AGENCIABANCOCORR    098-101     numerico        004 */
-     " " format "x(12)" /*CONTABANCOCORR      102-113     numerico        012 */
+     (if avail boletagbol then string(boletagbol.NossoNumero) else " ") format "x(25)" /*NOSSONUMEROBANCO    070-094     ALFANUM�RICO    025*/
+     "041" format "x(03)" /*CODIGOBANCOCORR     095-097     NUMERICO        003    */
+     "0878" format "x(04)" /*AGENCIABANCOCORR    098-101     numerico        004 */
+     "07.108448.0-6" format "x(12)" /*CONTABANCOCORR      102-113     numerico        012 */
      " " format "x(681)"               /* 114 - 794 FILLER */
      vseq format    "999999".
 
