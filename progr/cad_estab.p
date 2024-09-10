@@ -6,9 +6,6 @@ Claudir - 19/07/2022 - Opo gerar arquivo CSV
 */
 
 {admcab.i}
-/* helio 27082024 -  ajuste para não permitir numeros */
-def var vlatitude as int64  format "->>>>>>>>>>>>>9" label "Latitude".
-def var vlongitude as int64 format "->>>>>>>>>>>>>9" label "Longitude".
 
 
 def var vsenha like func.senha.
@@ -31,7 +28,7 @@ form estab.etbcod   colon 17
      estab.etbtofne colon 17
      estab.etbtoffe      
 ***/
-     vlatitude colon 17 vlongitude colon 45
+     estab.latitude colon 17 estab.longitude colon 45
      estab.etbserie colon 17 label "Fone" format "x(15)"
      estab.movndcfim colon 45
      estab.etbfluxo colon 17
@@ -39,7 +36,7 @@ form estab.etbcod   colon 17
      /* helio 170724 
      *   estab.etbcon   colon 17 format ">,>>>,>>9.99"
      */   
-     filialsup.supcod format ">>>9" label "Supervisor"   colon 45  
+     estab.supcod format ">>>9" label "Supervisor"   colon 45
      supervisor.supnom no-label
      /* helio 170724
      *    estab.etbmov   format ">,>>>,>>9.99"   colon 17
@@ -259,11 +256,7 @@ repeat:
                     vbairro 
                     estab.munic 
                     vcep .
-                vlatitude  = int64(estab.latitude).
-                vlongitude = int64(estab.longitude).
-                update vlatitude vlongitude.
-                estab.latitude = string(vlatitude).
-                estab.longitude = string(vlongitude).
+                update estab.latitude estab.longitude.
                 update    
                     estab.etbserie
                     estab.movndcfim
@@ -279,16 +272,16 @@ repeat:
                     leave.
                 end.
                 
-                prompt-for filialsup.supcod.
-                find first filialsup where filialsup.etbcod = estab.etbcod
-                                            exclusive-lock no-error.
+                prompt-for estab.supcod.
+                find first supervisor where supervisor.supcod = input estab.supcod
+                                            no-lock no-error.
 
-                if not avail filialsup
+                if not avail supervisor
                 then do:
-                    create filialsup.
-                    FilialSup.etbcod = estab.etbcod.
+                    message "Supervisor nao Cadastrado".
+                    undo.
                 end.
-                filialsup.supcod = input filialsup.supcod.
+                estab.supcod = input estab.supcod.
                 
                 estab.etbnom = caps(estab.etbnom).
                 do on error undo.
@@ -370,12 +363,8 @@ repeat:
                 estab.longitude = "".
                end.
                
-                vlatitude  = int64(estab.latitude).
-                vlongitude = int64(estab.longitude).
-                update  vlatitude  validate(vlatitude <> 0,"Informe Latitude")
-                        vlongitude validate(vlongitude <> 0,"Informe Longitude").
-                estab.latitude = string(vlatitude).
-                estab.longitude = string(vlongitude).
+                update  estab.latitude  
+                        estab.longitude .
                
                
                update        
@@ -425,17 +414,18 @@ repeat:
                         tabaux.datexp  = today
                         tabaux.exporta = yes.
                 end.
-                
-                find first filialsup where filialsup.etbcod = estab.etbcod
-                                            exclusive-lock no-error.
+                disp estab.supcod.
+                prompt-for estab.supcod.
+                find first supervisor where supervisor.supcod = input estab.supcod
+                                            no-lock no-error.
 
-                if not avail filialsup
+                if not avail supervisor
                 then do:
-                    create filialsup.
-                    filialsup.etbcod = estab.etbcod.
+                    message "Supervisor nao Cadastrado".
+                    undo.
                 end.
-                
-                update filialsup.supcod.
+                estab.supcod = input estab.supcod.
+
                 do on error undo.
                     update estab.tamanho
                            estab.tipoloja.
@@ -654,8 +644,6 @@ procedure consulta.
         if avail tabaux and tabaux.valor_campo = "SIM"
         then vbloco-k = yes.
         else vbloco-k = no.
-                vlatitude  = int64(estab.latitude).
-                vlongitude = int64(estab.longitude).
         
         disp estab.etbcod
               estab.RegCod
@@ -671,8 +659,8 @@ procedure consulta.
                        vbairro
                        estab.munic
                        vcep
-                       vlatitude 
-                       vlongitude
+                       estab.latitude 
+                       estab.longitude
                        estab.etbserie
                        estab.movndcfim
                        estab.etbfluxo
@@ -687,14 +675,11 @@ procedure consulta.
               estab.spc-senha
               vbloco-k.
                        
-                find first filialsup where filialsup.etbcod = estab.etbcod
-                                                    no-lock no-error.
-                                                    
                 find first supervisor
-                     where supervisor.supcod = filialsup.supcod
+                     where supervisor.supcod = estab.supcod
                                     no-lock no-error.
                                                     
-                display filialsup.supcod when avail filialsup
+                display estab.supcod
                         supervisor.supnom when avail supervisor.
 
         disp estab.tamanho
