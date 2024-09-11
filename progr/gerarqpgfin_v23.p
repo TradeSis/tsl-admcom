@@ -346,6 +346,30 @@ procedure p-registro-10.
 def var vtitpar as int.
     vseq = vseq + 1.
     vtitpar = if tt-env.titpar >= 51 then tt-env.titpar - 50 else if tt-env.titpar >= 31 then tt-env.titpar - 30 else tt-env.titpar.
+    if tt-env.titpar < 31
+    then do: 
+    /* helio 10092024 - 1307 Exportador financeira - Pagamentos com sequencial 2
+        tratamento para contratos que nasceram sem a parcela 1 */
+        
+    if tt-env.titpar >= 2
+    then do: 
+        find titulo where recid(titulo) = tt-env.rectit no-lock.
+        find first ctitulo where
+                   ctitulo.empcod = titulo.empcod and
+                   ctitulo.titnat = titulo.titnat and
+                   ctitulo.modcod = titulo.modcod and
+                   ctitulo.etbcod = titulo.etbcod and
+                   ctitulo.clifor = titulo.clifor and
+                   ctitulo.titnum = titulo.titnum and
+                   ctitulo.titpar = 1
+                   no-lock no-error.
+        if not avail ctitulo
+        then do:
+            vtitpar = titulo.titpar - 1.   
+        end.
+    end.
+    end.        
+  /*** ***/
     
     put unformat skip
       "10"                          /* 001-002  TIPO  FIXO <96>1 */

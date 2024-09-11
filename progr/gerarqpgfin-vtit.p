@@ -435,13 +435,39 @@ end procedure.
 /* OPERACAO */
 procedure p-registro-10.
 
-    vseq = vseq + 1.
+def var vtitpar as int.
+    vtitpar = tt-env.titpar.
+    
+    if tt-env.titpar < 31
+    then do: 
+    /* helio 10092024 - 1307 Exportador financeira - Pagamentos com sequencial 2
+        tratamento para contratos que nasceram sem a parcela 1 */
+        
+    if tt-env.titpar >= 2
+    then do: 
+        find titulo where recid(titulo) = tt-env.rectit no-lock.
+        find first ctitulo where
+                   ctitulo.empcod = titulo.empcod and
+                   ctitulo.titnat = titulo.titnat and
+                   ctitulo.modcod = titulo.modcod and
+                   ctitulo.etbcod = titulo.etbcod and
+                   ctitulo.clifor = titulo.clifor and
+                   ctitulo.titnum = titulo.titnum and
+                   ctitulo.titpar = 1
+                   no-lock no-error.
+        if not avail ctitulo
+        then do:
+            vtitpar = titulo.titpar - 1.   
+        end.
+    end.
+    end.        
+  /*** ***/
 
     put unformat skip
       "10"                          /* 001-002  TIPO  FIXO <96>1 */
       "0001"                        /* 003-006 AGÃCIA        */
       dec(tt-env.titnum) format "9999999999"       /* 007-016 Contrato */
-      tt-env.titpar format "999"                 /* 017-019 Parcela  */
+      vtitpar format "999"                 /* 017-019 Parcela  */
       tt-env.titvlcob * 100 format "99999999999999999" /* 020-036 Vlr Par*/
       tt-env.encargo * 100 format "99999999999999999" /* 037-053 Encargos */
       tt-env.titvldes * 100 format "99999999999999999" /* 054-070 Desc */

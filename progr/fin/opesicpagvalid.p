@@ -41,6 +41,17 @@ pause 0 before-hide.
                 sicred_pagam.sstatus  = "ERRO".
                 next.
             end.
+            
+            /* helio 27082024 validar se contrato já foi enviado */
+            find last sicred_contrato where 
+                    sicred_contrato.contnum = sicred_pagam.contnum and
+                    sicred_contrato.sstatus = "ENVIADO"
+                    no-lock no-error.
+            if not avail sicred_contrato
+            then do: 
+                next.            
+            end.
+                                                        
   
               find titulo where titulo.contnum = contrato.contnum and
                       titulo.titpar  = sicred_pagam.titpar
