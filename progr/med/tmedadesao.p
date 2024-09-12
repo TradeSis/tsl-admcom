@@ -788,15 +788,18 @@ def var         vuf as char.
     find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.endereco.uf" no-lock no-error.
     vuf   = if avail medadedados then medadedados.conteudo else "".
     
-                
+    if vemail = ? or vemail = "" then vemail = "naotem@naotem".
+    if num-entries(vemail,"@") <> 2 then vemail = "naotem@naotem".
+    if length(trim(vcelular)) < 10
+    then vcelular = "99999999999".
     put unformatted 
         "100578037;" /* ID_CONTRATO_PLANO */
         "1;"        /* ID_BENEFICIARIO_TIPO */
         vnomepaciente    vcp    /* NOME*/
         ";"
         "10159;"
-        string(medadesao.cpf,"99999999999")       vcp
         ";"
+        string(medadesao.cpf,"99999999999")       vcp
         ";"
         vdtnasc vcp
         vgenero vcp
