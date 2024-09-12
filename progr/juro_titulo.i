@@ -14,20 +14,33 @@ if PTODAY > par-titdtven
 then do:
 
     ljuros = yes.
-    
-    /* Se ontem foi feriado ou domingo, e foi o dia do vencimento, não cobra juros */
-    find dtextra where dtextra.exdata = PTODAY - 1 no-lock no-error.
-    if avail dtextra or weekday(PTODAY - 1) = 1
+    /* HELIO 09092024 Modificacao para teste de nao cxobrar juros, quando:
+            Vencimento é feriado ou sabado ou domingo
+            Cliente vem pagar na segunda ou no dia seguinte do feriado
+    */  
+    if weekday(par-titdtven) = 1 /* Vencimento em Domingo */
     then do:
-        if par-titdtven = PTODAY - 1  
-        then ljuros = no.
-/*https://trello.com/c/EBbjANsa/12-cadastro-de-feriado-n%C3%A3o-dispensou-juros
-*/        
-        else if par-titdtven = PTODAY - 2 and
-                weekday(par-titdtven) = 1
-            then ljuros = no.        
-/**/    
-    end.    
+        if weekday(ptoday) = 2
+        then do:
+            ljuros = no.
+        end.
+    end.
+    else do:
+        find dtextra where dtextra.exdata = par-titdtven no-lock no-error.
+        if avail dtextra    /* Vencimento em Feriado */
+        then do:
+            if ptoday = par-titdtven + 1  /* Veio Pagar no dia seguinte */
+            then do:
+                ljuros = no.
+            end.
+            else do:
+                if weekday(ptoday) = 2 and weekday(par-titdtven) = 7 /* Vencimento Sabado Feriado, Pagamento Segunda */
+                then do:
+                    ljuros = no.
+                end. 
+            end.
+        end.
+    end.
 
     if ljuros /* se cobra juros */
     then do:
@@ -50,15 +63,15 @@ then do:
             if vnumdia > 1766
             then vnumdia = 1766.
             
-            find fin.tabjur where fin.tabjur.etbcod = par-etbcod
-                              and fin.tabjur.nrdias = vnumdia
+            find tabjur where tabjur.etbcod = par-etbcod
+                              and tabjur.nrdias = vnumdia
                             no-lock no-error.
-            if not avail fin.tabjur and par-etbcod > 0
-            then find fin.tabjur where fin.tabjur.etbcod = 0
-                               and fin.tabjur.nrdias = vnumdia no-lock no-error.
+            if not avail tabjur and par-etbcod > 0
+            then find tabjur where tabjur.etbcod = 0
+                               and tabjur.nrdias = vnumdia no-lock no-error.
 
             
-            varred = par-titvlcob * fin.tabjur.fator.
+            varred = par-titvlcob * tabjur.fator.
             
             vv = (int(varred) - varred) - round(int(varred) - varred, 1).
             if vv < 0 
