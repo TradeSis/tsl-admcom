@@ -6,7 +6,7 @@ def input parameter par-clicod as int.
 def input parameter par-numerodocumento as char.
 def input parameter par-dtvencimento    as date.
 def input parameter par-vlcobrado     as dec.
-
+def input parameter par-origem        as char.
 def output parameter par-recid-boleto as rec.
 def output parameter mensagem_erro as char.
 
@@ -147,6 +147,7 @@ END.
             if ttreturn.retorno = "REGISTRADO" /*ttreturn.codigo_barras <> "" and ttreturn.codigo_barras <> ?*/
             then do:
                 CREATE boletagbol.
+                boletagbol.origem         = par-origem.   
                 par-recid-boleto = RECID( boletagbol).
                 boletagbol.bolcod         = vbolcod.
                 boletagbol.bancod         = par-banco.
