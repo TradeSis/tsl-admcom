@@ -30,6 +30,7 @@ for each titulo where titulo.contnum = contrato.contnum no-lock.
                           string(contrato.contnum) + "-" + string(titulo.titpar),  
                           titulo.titdtven,
                           titulo.titvlcob,
+                          "BOLETAGEM", /* Origem */ 
                           output par-recid-boleto,
                           output mensagem_erro).
 
