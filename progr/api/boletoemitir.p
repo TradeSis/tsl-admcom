@@ -31,7 +31,7 @@ find banco where banco.bancod = par-banco no-lock.
 def var vlcentrada as longchar.
 def var vlcsaida as longchar.
 
-{/admcom/progr/api/acentos.i} /* helio 14/09/2021 */
+{api/acentos.i} /* helio 14/09/2021 */
 
 def temp-table ttboleto no-undo serialize-name "titulo"
     field nosso_numero  as char initial ?
