@@ -4,7 +4,6 @@
 vnumdia = 0.
 par-juros = 0.
 vtottit-jur = 0.
-
 if PTODAY <= par-titdtven
 then do:
     return.
@@ -12,18 +11,15 @@ end.
 
 if PTODAY > par-titdtven
 then do:
-
     ljuros = yes.
     /* HELIO 09092024 Modificacao para teste de nao cxobrar juros, quando:
             Vencimento é feriado ou sabado ou domingo
             Cliente vem pagar na segunda ou no dia seguinte do feriado
     */  
-    if weekday(par-titdtven) = 1 /* Vencimento em Domingo */
+    if weekday(par-titdtven) = 1 /* Vencimento em Domingo */ and
+       ptoday = par-titdtven + 1 
     then do:
-        if weekday(ptoday) = 2
-        then do:
-            ljuros = no.
-        end.
+        ljuros = no.
     end.
     else do:
         find dtextra where dtextra.exdata = par-titdtven no-lock no-error.
@@ -34,7 +30,7 @@ then do:
                 ljuros = no.
             end.
             else do:
-                if weekday(ptoday) = 2 and weekday(par-titdtven) = 7 /* Vencimento Sabado Feriado, Pagamento Segunda */
+                if ptoday = par-titdtven + 2 and weekday(par-titdtven) = 7 /* Vencimento Sabado Feriado, Pagamento Segunda */
                 then do:
                     ljuros = no.
                 end. 
