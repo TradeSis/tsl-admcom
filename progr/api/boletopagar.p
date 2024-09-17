@@ -146,7 +146,7 @@ END.
     find first ttboletopagar no-error.    
     if avail ttboletopagar
     then do:
-        if  ttboletopagar.numero_banrisul <> ?  then DO ON ERROR UNDO:
+        if  ttboletopagar.numero_banrisul <> ""  then DO ON ERROR UNDO:
             FIND CURRENT boletagbol EXCLUSIVE NO-WAIT NO-ERROR.
             if AVAIL boletagbol 
             THEN DO:
@@ -160,6 +160,9 @@ END.
                 
             END.
         END.
+        else do:
+             mensagem_erro = ttboletopagar.retorno.
+        end.
     End. 
     ELSE do:
             mensagem_erro = "SEM RETORNO".
