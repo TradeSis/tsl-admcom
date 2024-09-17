@@ -71,7 +71,7 @@ for each boletagparcela of boletagbol no-lock.
                 end.
         
                 if titulo.titsit = "LIB" /* #H1 */
-                then run /admcom/progr/fin/baixatitulo.p (recid(pdvdoc),
+                then run fin/baixatitulo.p (recid(pdvdoc),
                                                           recid(titulo)).
 
                 else pdvdoc.pstatus = YES.     
@@ -88,6 +88,9 @@ do on error undo:
     if avail boletagbol
     then do:
         boletagbol.dtpagamento = par-titdtpag.
-        boletagbol.situacao    = "P". /* PAGO */
+        boletagbol.situacao    = "P". /* PAGO */  
+        boletagbol.etbpag       = pdvmov.etbcod.  
+        boletagbol.ctmcod       = pdvmov.ctmcod. 
+        boletagbol.sequencia    = pdvmov.sequencia.
     end.
 end.

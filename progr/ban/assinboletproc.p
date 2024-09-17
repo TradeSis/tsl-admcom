@@ -29,7 +29,7 @@ for each contrassin where dtproc = ? no-lock.
     if boletavel = yes and dtboletagem = ? 
     then do:
         message "        " contrassin.contnum "BOLETAGEM".
-        run crd/boletacontrato.p (contrassin.contnum).
+        run ban/boletacontrato.p (contrassin.contnum).
         run pbolet.
 
     end.
@@ -42,7 +42,7 @@ message "      -> " string(today,"99/99/9999") string(time,"HH:MM:SS") "Processo
 for each contrassin where boletavel = yes and dtboletagem = ? no-lock.
 
     message "    BOLETAGEM " contrassin.contnum contrassin.dtinclu contrassin.etbcod contrassin.idbiometria.
-    run crd/boletacontrato.p (contrassin.contnum).     
+    run ban/boletacontrato.p (contrassin.contnum).     
     run pbolet.
 
 

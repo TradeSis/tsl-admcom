@@ -16,7 +16,7 @@ for each titulo where titulo.contnum = contrato.contnum no-lock.
     if titulo.bolcod <> ? then next. /* ja boletado */
     vparcelas = vparcelas + 1.
 end.
-message "         crd/boletacontrato BOLETA CONTRATO" contrato.contnum  "PARCELAS" vparcelas. 
+message "         ban/boletacontrato BOLETA CONTRATO" contrato.contnum  "PARCELAS" vparcelas. 
 IF vparcelas = 0
 THEN RETURN.
 for each titulo where titulo.contnum = contrato.contnum no-lock.
@@ -36,11 +36,11 @@ for each titulo where titulo.contnum = contrato.contnum no-lock.
 
     find boletagbol where recid(boletagbol) =  par-recid-boleto no-lock no-error.
 
-    message "         crd/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar avail boletagbol par-recid-boleto mensagem_erro.
+    message "         ban/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar avail boletagbol par-recid-boleto mensagem_erro.
 
     if avail boletagbol
     then do:
-        message "         crd/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar avail boletagbol par-recid-boleto mensagem_erro
+        message "         ban/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar avail boletagbol par-recid-boleto mensagem_erro
                 boletagbol.dtemissao boletagbol.bolcod.
     
         if boletagbol.dtemissao <> ?

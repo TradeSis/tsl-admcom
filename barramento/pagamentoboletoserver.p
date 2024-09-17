@@ -19,18 +19,18 @@ def var verro as char.
 def var vmensagem as log.
 def var vini as log init yes.
 
-{/admcom/barramento/pidboletagem.i}
+{/admcom/barramento/pidpagamentoboleto.i}
 
 procedure verifica-fim.
 
-    INPUT FROM /admcom/barramento/ASYNCboletagem.LK.
+    INPUT FROM /admcom/barramento/ASYNCpagamentoboleto.LK.
     import unformatted VLK.
     input close.
 
     if vLK = "FIM" or
        (time >= 16200 and time <= 18000) /* entre 04:30 e 05:00 */
     then do:
-        message "  /admcom/barramento/ASYNCboletagem.LK =" vlk string(time,"HH:MM:SS").
+        message "  /admcom/barramento/ASYNCpagamentoboleto.LK =" vlk string(time,"HH:MM:SS").
         message "  BYE!".
         quit.
     end.        
@@ -75,9 +75,9 @@ repeat:
     end.
     vini = no.
         run log("").
-        run log("Processando Assinatura e Boletagem").
-        run ban/assinboletproc.p.
-        run log("Finalizado Assinatura e Boletagem").
+        run log("Processando pagamentos boleto").
+        run ban/pagamentoboletproc.p.
+        run log("Finalizado  pagamentos boleto").
 
     
     
