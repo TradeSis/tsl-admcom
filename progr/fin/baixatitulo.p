@@ -122,6 +122,7 @@
                             boletagbol.situacao     = "P". /* Marca como "P", sem dtpagamento, isto vai para fila de pagamento de boletagbol */
                             boletagbol.dtpagamento  = ?.
                             boletagbol.ctmcod       = pdvmov.ctmcod.
+                            boletagbol.cmocod       = pdvmov.cmocod.
                             boletagbol.sequencia    = pdvmov.sequencia.
                         end.
                     end.
