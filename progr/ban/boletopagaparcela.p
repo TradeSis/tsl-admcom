@@ -71,7 +71,7 @@ for each boletagparcela of boletagbol no-lock.
                 end.
         
                 if titulo.titsit = "LIB" /* #H1 */
-                then run /admcom/progr/fin/baixatitulo.p (recid(pdvdoc),
+                then run fin/baixatitulo.p (recid(pdvdoc),
                                                           recid(titulo)).
 
                 else pdvdoc.pstatus = YES.     
