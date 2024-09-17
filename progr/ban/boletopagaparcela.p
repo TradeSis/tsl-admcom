@@ -88,6 +88,9 @@ do on error undo:
     if avail boletagbol
     then do:
         boletagbol.dtpagamento = par-titdtpag.
-        boletagbol.situacao    = "P". /* PAGO */
+        boletagbol.situacao    = "P". /* PAGO */  
+        boletagbol.etbpag       = pdvmov.etbcod.  
+        boletagbol.ctmcod       = pdvmov.ctmcod. 
+        boletagbol.sequencia    = pdvmov.sequencia.
     end.
 end.

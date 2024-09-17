@@ -11,6 +11,7 @@
  
             find pdvdoc where recid(pdvdoc) = precpdvdoc.
             find pdvmov of pdvdoc no-lock.
+            find pdvtmov of pdvmov no-lock.
             find titulo where recid(titulo) = prectitulo
                 exclusive no-wait no-error.
             if not avail titulo
@@ -110,6 +111,22 @@
                         /*titulo.dtultpgparcial = today. */
                         pdvdoc.pago_parcial   = "N".
                     end.
+                    
+                    /* Boletagem */
+                    if titulo.bolcod <> ? and pdvtmov.pagaboleto = yes
+                    then do:
+                        find boletagbol where boletagbol.bolcod = titulo.bolcod exclusive no-wait no-error.
+                        if avail boletagbol
+                        then do:
+                            boletagbol.etbpag       = pdvmov.etbcod.
+                            boletagbol.situacao     = "P". /* Marca como "P", sem dtpagamento, isto vai para fila de pagamento de boletagbol */
+                            boletagbol.dtpagamento  = ?.
+                            boletagbol.ctmcod       = pdvmov.ctmcod.
+                            boletagbol.sequencia    = pdvmov.sequencia.
+                        end.
+                    end.
+                    
+                    
                     
                 end.    
                 else do:

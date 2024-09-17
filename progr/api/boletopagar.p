@@ -6,17 +6,24 @@ def output parameter mensagem_erro as char.
 
 def var vvalor_movimento as dec.
 def var vhostname as char.
+def var vhost as char.
 input through hostname.
 import vhostname.
 input close. 
 def var vhml as log.
 
 vhml = no.
+vhost = "10.2.0.83".
 
-if vhostname = "SV-CA-DB-DEV" or 
-   vhostname = "SV-CA-DB-QA"
+if vhostname = "SV-CA-DB-DEV" 
+then do:
+    vhml = yes.
+    vhost = "10.145.0.233".
+end.
+if vhostname = "SV-CA-DB-QA"
 then do: 
     vhml = yes.
+    vhost = "10.145.0.44".  
 end.
 
 def var vlcentrada as longchar.
@@ -55,15 +62,25 @@ def new shared temp-table ttboletoconsulta no-undo serialize-name "boletoconsult
     field vlr_orig_boleto       as dec
     field valor_calculado_total as dec.
 
+def var vnsu as int64.
 
+    find first boletagbol where boletagbol.situacao = "P" and boletagbol.dtpagamento = today no-lock no-error.
+    if not avail boletagbol
+    then do:
+        vnsu = 1.       /* primeiro pagamento do dia */
+        current-value(banrisulnsu) = vnsu.    
+    end.    
+    else do:
+        vnsu = next-value(banrisulnsu).
+    end.
 
 find    boletagbol  where   recid(boletagbol) = par-rec no-lock.
 find clien where clien.clicod = boletagbol.clifor no-lock.
 create ttentrada. 
 ttentrada.codigo_barras = boletagbol.codigobarras.
-ttentrada.etbcod       = STRING(boletagbol.etbcod).
+ttentrada.etbcod       = STRING(boletagbol.etbpag).
 ttentrada.dtPagamento = string(TODAY,"99/99/9999").
-ttentrada.nsu           = boletagbol.bolcod.
+ttentrada.nsu           = vnsu.
 ttentrada.cod_forma_pagamento = 19.
 ttentrada.data_vencimento = string(boletagbol.dtvencimento,"99/99/9999").
 vvalor_movimento = boletagbol.vlcobrado.
@@ -96,7 +113,7 @@ if OPSYS = "UNIX" then do:
 
     output to value(vsaida + ".sh").
     put unformatted
-        "curl -X POST -s ~"http://localhost/bsweb/api/boleto/boletopagar" + "~" " +
+        "curl -X POST -s ~"http://" + vhost + "/bsweb/api/boleto/boletopagar" + "~" " +
         " -H ~"Content-Type: application/json~" " +
         " -d '" + string(vLCEntrada) + "' " + 
         " -o "  + vsaida.
@@ -133,13 +150,14 @@ END.
             FIND CURRENT boletagbol EXCLUSIVE NO-WAIT NO-ERROR.
             if AVAIL boletagbol 
             THEN DO:
+                boletagbol.nsu               = vnsu.
                 boletagbol.numero_pgto_banco =    ttboletopagar.numero_banrisul .
                 boletagbol.obs_pgto_banco    =    ttboletopagar.id_rastreabilidade.
                 boletagbol.dtpagamento       =    TODAY.
-                
                 unix silent value("rm -f " + vsaida). 
                 unix silent value("rm -f " + vsaida + ".erro"). 
                 unix silent value("rm -f " + vsaida + ".sh"). 
+                
             END.
         END.
     End. 
