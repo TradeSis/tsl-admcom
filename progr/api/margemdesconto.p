@@ -1,3 +1,16 @@
+def var vhostname as char.
+input through hostname.
+import vhostname.
+input close. 
+def var vhml as log.
+
+vhml = no.
+
+if vhostname = "SV-CA-DB-DEV" or 
+   vhostname = "SV-CA-DB-QA"
+then do: 
+    vhml = yes.
+end.
 
 def var vlcentrada as longchar.
 def var vlcsaida as longchar.
@@ -20,14 +33,26 @@ def var vresposta as char.
 
 vsaida  = "/ws/works/margemdesconto" + string(today,"999999") + replace(string(time,"HH:MM:SS"),":","") + ".json". 
 
-output to value(vsaida + ".sh").
-put unformatted
-    "curl -X POST -s \"http://172.19.130.175:5555/gateway/pdvRestAPI/1.0/consultaMargemDescontoRestResource" + "\" " +
-    " -H \"Content-Type: application/json\" " +
-    " -d '" + string(vLCEntrada) + "' " + 
-    " -o "  + vsaida.
-output close.
+if vhml
+then do:
+    output to value(vsaida + ".sh").
+    put unformatted
+        "curl -X POST -s \"http://172.19.130.11:5555/gateway/pdvRestAPI/1.0/consultaMargemDescontoRestResource" + "\" " +
+        " -H \"Content-Type: application/json\" " +
+        " -d '" + string(vLCEntrada) + "' " + 
+        " -o "  + vsaida.
+    output close.
 
+end.
+else do:
+    output to value(vsaida + ".sh").
+    put unformatted
+        "curl -X POST -s \"http://172.19.130.175:5555/gateway/pdvRestAPI/1.0/consultaMargemDescontoRestResource" + "\" " +
+        " -H \"Content-Type: application/json\" " +
+        " -d '" + string(vLCEntrada) + "' " + 
+        " -o "  + vsaida.
+    output close.
+end.
 
 hide message no-pause.
 message "Aguarde... Buscando Margens desconto no Barramento...".

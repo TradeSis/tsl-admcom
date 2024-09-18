@@ -3,13 +3,29 @@
 /* helio 15/06/2021 Aciona Motor Neurotech via REST */
 def input parameter par_props  as char.
 def input parameter par_arqlog as char.
+def var vhostname as char.
+def var vhost as char.
+input through hostname.
+import vhostname.
+input close. 
+def var vhml as log.
+
+vhml = no.
+vhost = "10.2.0.83".
+
+if vhostname = "SV-CA-DB-DEV" 
+then do:
+    vhml = yes.
+    vhost = "10.145.0.233".
+end.
+if vhostname = "SV-CA-DB-QA"
+then do: 
+    vhml = yes.
+    vhost = "10.145.0.44".  
+end.
 
 {/admcom/progr/api/acentos.i} /* helio 04/11/2021 */
 
-def var vhostname as char.
-input through hostname.
-import vhostname.
-input close.
 
 def var hEntrada as handle.
 def var hSaida   as handle.
@@ -101,7 +117,7 @@ put unformatted skip "ENTRADA" skip
 output close.
 */
 
-vcurl = "curl -s \"http://localhost/bsweb/api/limites/acionaNeurotech" + "\" " + 
+vcurl = "curl -s \"http://" + vhost + "/bsweb/api/limites/acionaNeurotech" + "\" " + 
         " -H \"Content-Type: application/json\" " +
         " -m 240 ".
                  
