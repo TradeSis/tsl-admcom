@@ -2,6 +2,27 @@ def input param pcpf            as char init "07068093868".
 def input param pnomePessoa     as char.
 def output param plistares       as char.
 
+def var vhostname as char.
+def var vhost as char.
+input through hostname.
+import vhostname.
+input close. 
+def var vhml as log.
+
+vhml = no.
+vhost = "10.2.0.83".
+
+if vhostname = "SV-CA-DB-DEV" 
+then do:
+    vhml = yes.
+    vhost = "10.145.0.233".
+end.
+if vhostname = "SV-CA-DB-QA"
+then do: 
+    vhml = yes.
+    vhost = "10.145.0.44".  
+end.
+
 def var vlcentrada as longchar.
 def var vlcsaida as longchar.
 
@@ -37,7 +58,7 @@ vsaida  = "/ws/works/consultar-listas-restritivas_" + string(pcpf) + "_" +
 
 output to value(vsaida + ".sh").
 put unformatted
-    "curl -s \"http://localhost/bsweb/api/cliente/consultar-listas-restritivas" + "\" " +
+    "curl -s \"http://" + vhost + "/bsweb/api/cliente/consultar-listas-restritivas" + "\" " +
     " -H \"Content-Type: application/json\" " +
     " -d '" + string(vLCEntrada) + "' " + 
     " -o "  + vsaida.

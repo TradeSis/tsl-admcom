@@ -13,17 +13,24 @@ def output parameter mensagem_erro as char.
 DEF VAR vbolcod AS INT64.
 
 def var vhostname as char.
+def var vhost as char.
 input through hostname.
 import vhostname.
 input close. 
 def var vhml as log.
 
 vhml = no.
+vhost = "10.2.0.83".
 
-if vhostname = "SV-CA-DB-DEV" or 
-   vhostname = "SV-CA-DB-QA"
+if vhostname = "SV-CA-DB-DEV" 
+then do:
+    vhml = yes.
+    vhost = "10.145.0.233".
+end.
+if vhostname = "SV-CA-DB-QA"
 then do: 
     vhml = yes.
+    vhost = "10.145.0.44".  
 end.
 
 find banco where banco.bancod = par-banco no-lock.
@@ -111,7 +118,7 @@ if OPSYS = "UNIX" then do:
 
     output to value(vsaida + ".sh").
     put unformatted
-        "curl -s ~"http://localhost/bsweb/api/boleto/boletoemitir" + "~" " +
+        "curl -s ~"http://" + vhost + "/bsweb/api/boleto/boletoemitir" + "~" " +
         " -H ~"Content-Type: application/json~" " +
         " -d '" + string(vLCEntrada) + "' " + 
         " -o "  + vsaida.

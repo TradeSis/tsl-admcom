@@ -6,17 +6,24 @@ def input param par-rec as recid.
 def output parameter mensagem_erro as char.
 
 def var vhostname as char.
+def var vhost as char.
 input through hostname.
 import vhostname.
 input close. 
 def var vhml as log.
 
 vhml = no.
+vhost = "10.2.0.83".
 
-if vhostname = "SV-CA-DB-DEV" or 
-   vhostname = "SV-CA-DB-QA"
+if vhostname = "SV-CA-DB-DEV" 
+then do:
+    vhml = yes.
+    vhost = "10.145.0.233".
+end.
+if vhostname = "SV-CA-DB-QA"
 then do: 
     vhml = yes.
+    vhost = "10.145.0.44".  
 end.
 
 def var vlcentrada as longchar.
@@ -62,7 +69,7 @@ if OPSYS = "UNIX" then do:
 
     output to value(vsaida + ".sh").
     put unformatted
-        "curl -s ~"http://localhost/bsweb/api/boleto/boletoconsultar" + "~" " +
+        "curl -s ~"http://" + vhost + "/bsweb/api/boleto/boletoconsultar" + "~" " +
         " -H ~"Content-Type: application/json~" " +
         " -d '" + string(vLCEntrada) + "' " + 
         " -o "  + vsaida.
