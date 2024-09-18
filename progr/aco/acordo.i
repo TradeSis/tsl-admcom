@@ -15,7 +15,7 @@ def var  vperc_pagas    as dec.
 def var vqtd_parcvencida as int.
 def var vqtd_parcvencer  as int.
 
-def {1} shared temp-table ttcontrato no-undo
+def {1} shared temp-table ttcontrato no-undo serialize-name "acoofertacont"
     field marca     as log format "*/ "
     field negcod       like aconegoc.negcod
     field contnum       like contrato.contnum
@@ -33,8 +33,9 @@ def {1} shared temp-table ttcontrato no-undo
     field trectitprotesto as recid
     index idx is unique primary  negcod asc contnum asc.
 
-def {1} shared temp-table ttnegociacao no-undo
+def {1} shared temp-table ttnegociacao no-undo serialize-name "acooferta"
     field negcod    like aconegoc.negcod
+    field negnom    like aconegoc.negnom
     field qtd       as int 
     field vlr_aberto like ttcontrato.vlr_aberto
     field vlr_divida like ttcontrato.vlr_divida
@@ -47,9 +48,7 @@ def {1} shared temp-table ttnegociacao no-undo
     field dias_atraso   like ttcontrato.dias_atraso 
     index idx is unique primary  negcod asc.
 
-
-
-def {1} shared temp-table ttcondicoes no-undo
+def {1} shared temp-table ttcondicoes no-undo serialize-name "acoofertacond"
     field negcod        like aconegoc.negcod
     field planom        like acoplanos.planom
     field placod        like acoplanos.placod
@@ -62,7 +61,7 @@ def {1} shared temp-table ttcondicoes no-undo
     field especial as log
     index idx is unique primary negcod asc placod asc planom asc.
 
-def {1} shared temp-table ttparcelas no-undo
+def {1} shared temp-table ttparcelas no-undo serialize-name "parcelas"
     field negcod        like aconegoc.negcod
     field planom        like acoplanos.planom
     field placod        like acoplanos.placod
