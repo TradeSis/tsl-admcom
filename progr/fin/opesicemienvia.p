@@ -526,7 +526,7 @@ def var vprodta as date.
         " "  format "x(29)"    /* 270 - 299 DESCRI��O OUTROS RENDIMENTOS*/
         "N"                 /* 300 - 300 PROPRIET�RIO*/
         " "  format "x(14)"  /* 301 - 314 */
-        fill(" ",399)       /* 315 - 794 FILLER  */
+        fill(" ",481) format "x(481)"       /* 315 - 794 FILLER  */
         vseq format    "999999" /* 795 - 800 */ 
         .
 end procedure.
@@ -703,7 +703,7 @@ procedure p-registro-10.
     vdtinicial = contrato.dtinicial.
     vtitdtven = titulo.titdtven.
 
-    /* 14042021 card ID 67095 - Exporta��o Nova��o 
+    /* 14042021 card ID 67095 - Exgporta��o Nova��o 
         voltando atras 
     if poperacao = "NOVACAO" /* 19/02/2021 */
     then do:
@@ -884,7 +884,7 @@ procedure p-registro-11.
         then vparcela = btitulo.titpar.   
   end.
 
-  find boletagbol where boletagbol.bolcod = titulo.bolcod no-lock no-error.
+  find boletagbol where boletagbol.bolcod = btitulo.bolcod no-lock no-error.
 
   put unformat skip
      "11"                   /* 01-02 fixo "11" */
@@ -896,9 +896,9 @@ procedure p-registro-11.
                 format "999999999999" /* 28-39 VLR PRESTAcaO */
      fill("0",30) format "x(30)"       /* 40-69 CMC7: nro do cheque pre */
      (if avail boletagbol then string(boletagbol.NossoNumero) else " ") format "x(25)" /*NOSSONUMEROBANCO    070-094     ALFANUM�RICO    025*/
-     "041" format "x(03)" /*CODIGOBANCOCORR     095-097     NUMERICO        003    */
-     "0878" format "x(04)" /*AGENCIABANCOCORR    098-101     numerico        004 */
-     "07.108448.0-6" format "x(12)" /*CONTABANCOCORR      102-113     numerico        012 */
+     (if avail boletagbol then "041"                          else " ") format "x(03)" /*CODIGOBANCOCORR     095-097     NUMERICO        003    */
+     (if avail boletagbol then "0878"                         else " ") format "x(04)" /*AGENCIABANCOCORR    098-101     numerico        004 */
+     (if avail boletagbol then "0710844806"                   else " ") format "x(12)" /*CONTABANCOCORR      102-113     numerico        012 */
      " " format "x(681)"               /* 114 - 794 FILLER */
      vseq format    "999999".
 
@@ -1151,7 +1151,7 @@ procedure p-registro-15.
       "05"
       "Sistema Operacional Linux Versao Storex " + contrassin.versaocomponente    format "x(60)"
       contrassin.nomecomponente    format "x(15)"
-      "123456         "    format "x(15)"
+      "443            "    format "x(15)"
       bestab.latitude     format "x(15)"        /* HELIO 17072024 - DPGE Latitude Longitude */
       bestab.longitude    format "x(15)"
         string(year(contrassin.dtinclu),"9999")  + "-" +
