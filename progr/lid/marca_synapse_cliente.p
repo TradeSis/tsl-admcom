@@ -1,9 +1,10 @@
-{admcab.i new}
+{admcab.i}
     def var vtot as int.
     def var vok as int.
     def var vt as int.
     def var vn as int.
-    
+    def var vd as int.
+    def var vclicod as int.    
     def temp-table ttclien no-undo
         field clicod    as int format ">>>>>>>>>9"
         field prec      as recid
@@ -75,11 +76,22 @@ then return.
 
    
     pause 0 before-hide.
-    vn = 0.    
+    vn = 0. 
+       vd = 0.
+       vt = 0.
     input from value(varqcsv).
     repeat transaction:
+        import vclicod.
+        vt = vt + 1.
+        find ttclien where ttclien.clicod = vclicod no-error.
+        if avail ttclien then do:
+            vd = vd + 1.
+            next.
+        end.    
+        if vclicod = 0 then next.
+        
         create ttclien.
-        import ttclien.
+        ttclien.clicod = vclicod.
         
         if ttclien.clicod = ? or ttclien.clicod = 0 then do:
             delete ttclien.
@@ -92,9 +104,7 @@ then return.
     end.
     pause before-hide.        
     
-    vt = 0.
     for each ttclien.
-        vt = vt + 1.
         if ttclien.clicod = ? or ttclien.clicod = 0 or ttclien.clicod = 1
         then do:
             vn = vn + 1.
@@ -139,10 +149,11 @@ then return.
         UNDO.
     end.    
         
-    message (if lmarcar[3] then "Contratos: " + string(vc) else "") " Limites:" vl.
+    if lmarcar[3]
+    then message (if lmarcar[3] then "Contratos: " + string(vc) else "") " Limites:" vl.
 
             
-    message "Clientes Importados:" vt ", Erro:" vn ", Ok:" vok  
+    message "Clientes Importados:" vt ", Erro:" vn ", Ok:" vok  ", Duplos:" vd 
             "TOTAL=" vtot "    | Prosseguir?" update sresp. 
             
     if not sresp
