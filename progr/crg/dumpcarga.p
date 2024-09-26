@@ -6,16 +6,12 @@ ptoday = today.
 vmenosd = 2. 
 pfull = no.
 
-def var vdir as char init "/admcom/helio/carga/".
-
+def var vdir as char init "/work/carga-admcom/".
+vdir = "/admcom/helio/carga/".
 def buffer bctpromoc for ctpromoc.
 def var varquivo as char.
 def var vi as int.
-/*
-germatriz.clien
-germatriz.func
-germatriz.estab
-*/
+
 message ptoday string(time,"HH:MM:SS") "INICIO".
 
 varquivo = vdir + "operadoras" + "." + string(ptoday,"99999999") + ".d".
@@ -141,12 +137,12 @@ output to value(varquivo).
 if pfull
 then do:
     for each estoq no-lock.
-        export estoq.
+        export {crg/estoq.i estoq}.
     end.    
 end.
 else do:
     for each estoq where estoq.datexp >= ptoday - vmenosd and estoq.datexp <= ptoday no-lock.
-        export estoq.
+        export {crg/estoq.i estoq}.
     end.
 end.
 output close.
@@ -209,12 +205,12 @@ output to value(varquivo).
 if pfull
 then do:
     for each func no-lock.
-        export func.
+        export {crg/func.i func}.
     end.    
 end.
 else do:
     for each func where func.fundtcad >= ptoday - vmenosd and func.fundtcad <= ptoday no-lock.
-        export func.
+        export {crg/func.i func}.
     end.
 end.
 output close.
@@ -222,7 +218,7 @@ output close.
 varquivo = vdir + "estab" + "." + string(ptoday,"99999999") + ".d".
 output to value(varquivo).
 for each estab no-lock.
-    export estab.
+    export {crg/estab.i estab}.
 end.    
 output close.
 unix silent 
