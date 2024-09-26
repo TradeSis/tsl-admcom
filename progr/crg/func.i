@@ -1,0 +1,12 @@
+    {1}.FunCod
+    {1}.FunNom 
+    {1}.FunApe  
+    {1}.EtbCod   
+    {1}.FunFunc 
+    {1}.FunMec
+    {1}.FunSit  
+    {1}.FunDtCad
+    {1}.UserCod 
+    {1}.Senha  
+    {1}.opatual
+    {1}.aplicod
