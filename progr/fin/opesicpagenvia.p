@@ -146,7 +146,19 @@ end FUNCTION.
                 pdvdoc.seqreg = sicred_pagam.seqreg
                 no-lock no-error.
             if not avail pdvdoc then next.
-                
+            
+            /* helio 26092024 - boletagem */
+            if titulo.bolcod <> ?
+            then do:
+                find pdvtmov of pdvmov no-lock.
+                if pdvtmov.baixaboleto = yes
+                then.
+                else do:
+                    run pmarca.
+                    next.
+                end.
+            end.
+                                        
                 create ttenviado.
                 ttenviado.psicred = recid(sicred_pagam).
         
@@ -220,7 +232,26 @@ procedure p-registro-10.
         if vparcela = ? or vparcela <= 0
         then vparcela = titulo.titpar.   
   end.
-  
+  else do:
+    /* helio 10092024 - 1307 Exportador financeira - Pagamentos com sequencial 2
+        tratamento para contratos que nasceram sem a parcela 1 */
+    if titulo.titpar >= 2
+    then do: 
+        find first ctitulo where
+                   ctitulo.empcod = titulo.empcod and
+                   ctitulo.titnat = titulo.titnat and
+                   ctitulo.modcod = titulo.modcod and
+                   ctitulo.etbcod = titulo.etbcod and
+                   ctitulo.clifor = titulo.clifor and
+                   ctitulo.titnum = titulo.titnum and
+                   ctitulo.titpar = 1
+                   no-lock no-error.
+        if not avail ctitulo
+        then do:
+            vparcela = titulo.titpar - 1.   
+        end.
+    end.
+  end.        
   /*** ***/
 
   vseq = vseq + 1.
@@ -231,7 +262,7 @@ procedure p-registro-10.
   
   vjuros = vjuros +  if pdvdoc.valor_encargo > 0 then pdvdoc.valor_encargo else 0.
   vdescontos = vdescontos +  if pdvdoc.valor_encargo < 0 then pdvdoc.valor_encargo * -1 else 0.
-  
+
   put unformat skip 
       "10"                          /* 001-002  TIPO  FIXO –1 */
       "0001"                        /* 003-006 AGÊNCIA        */
@@ -311,3 +342,9 @@ procedure p-registro-99.
 end procedure.
 
  
+procedure pmarca.
+    do on error undo:  
+        find current sicred_pagam exclusive.
+        sicred_pagam.sstatus = "BOLETAGEM".
+    end.
+end.

@@ -167,7 +167,24 @@
                 
                 find cobra of titulo no-lock.
                 if cobra.sicred and pdvdoc.ctmcod <> "RFN" /* "REFIN" */
-                then run /admcom/progr/fin/sicrepagam_create.p (recid(pdvdoc),int(pdvdoc.contnum), pdvdoc.titpar,output prec).
+                then do:
+                    def var venvia as log.
+                    venvia = yes.
+                    /* helio 26092024 - boletagem */
+                    if titulo.bolcod <> ?
+                    then do:
+                        find pdvtmov of pdvmov no-lock.
+                        if pdvtmov.baixaboleto = yes
+                        then.
+                        else venvia = no.
+                    end.
+
+                    /* Boletagem */
+                    if venvia
+                    then do:
+                        run /admcom/progr/fin/sicrepagam_create.p (recid(pdvdoc),int(pdvdoc.contnum), pdvdoc.titpar,output prec).
+                    end.
+                end.                    
 
                 /**  DESCONTINUADO HELIO 15022022 
                 run /admcom/progr/fin/gerahisposcart.p   

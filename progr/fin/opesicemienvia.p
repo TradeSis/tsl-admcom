@@ -898,8 +898,8 @@ procedure p-registro-11.
      (if avail boletagbol then string(boletagbol.NossoNumero) else " ") format "x(25)" /*NOSSONUMEROBANCO    070-094     ALFANUM�RICO    025*/
      (if avail boletagbol then "041"                          else " ") format "x(03)" /*CODIGOBANCOCORR     095-097     NUMERICO        003    */
      (if avail boletagbol then "0878"                         else " ") format "x(04)" /*AGENCIABANCOCORR    098-101     numerico        004 */
-     (if avail boletagbol then "0710844806"                   else " ") format "x(12)" /*CONTABANCOCORR      102-113     numerico        012 */
-     " " format "x(681)"               /* 114 - 794 FILLER */
+     (if avail boletagbol then "000000710844806"                   else " ") format "x(15)" /*CONTABANCOCORR      102-113     numerico        012 */
+     " " format "x(678)"               /* 114 - 794 FILLER */
      vseq format    "999999".
 
     /* arquivo de controle */
