@@ -26,7 +26,7 @@ for each contrassin where dtproc = ? no-lock.
     run passin.
 
     /* se for boletavel, já gera os boletos */
-    if boletavel = yes and dtboletagem = ? 
+    if boletavel = yes and dtboletagem = ? and contrassin.dtproc <> ? /* helio 27092024 - para boletar precisa assinar */
     then do:
         message "        " contrassin.contnum "BOLETAGEM".
         run ban/boletacontrato.p (contrassin.contnum).
