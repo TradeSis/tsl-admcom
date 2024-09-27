@@ -7,7 +7,7 @@ vmenosd = 2.
 pfull = no.
 
 def var vdir as char init "/work/carga-admcom/".
-vdir = "/admcom/helio/carga/".
+
 def buffer bctpromoc for ctpromoc.
 def var varquivo as char.
 def var vi as int.
@@ -107,12 +107,12 @@ output to value(varquivo).
 if pfull
 then do:
     for each produ no-lock.
-        export {crg/produ.i produ}.
+        export {/admcom/progr/crg/produ.i produ}.
     end.    
 end.
 else do:
     for each produ where produ.datexp >= ptoday - vmenosd and produ.datexp <= ptoday no-lock.
-        export {crg/produ.i produ} .
+        export {/admcom/progr/crg/produ.i produ} .
     end.
 end.    
 output close.
@@ -137,12 +137,12 @@ output to value(varquivo).
 if pfull
 then do:
     for each estoq no-lock.
-        export {crg/estoq.i estoq}.
+        export {/admcom/progr/crg/estoq.i estoq}.
     end.    
 end.
 else do:
     for each estoq where estoq.datexp >= ptoday - vmenosd and estoq.datexp <= ptoday no-lock.
-        export {crg/estoq.i estoq}.
+        export {/admcom/progr/crg/estoq.i estoq}.
     end.
 end.
 output close.
@@ -205,12 +205,12 @@ output to value(varquivo).
 if pfull
 then do:
     for each func no-lock.
-        export {crg/func.i func}.
+        export {/admcom/progr/crg/func.i func}.
     end.    
 end.
 else do:
     for each func where func.fundtcad >= ptoday - vmenosd and func.fundtcad <= ptoday no-lock.
-        export {crg/func.i func}.
+        export {/admcom/progr/crg/func.i func}.
     end.
 end.
 output close.
@@ -218,7 +218,7 @@ output close.
 varquivo = vdir + "estab" + "." + string(ptoday,"99999999") + ".d".
 output to value(varquivo).
 for each estab no-lock.
-    export {crg/estab.i estab}.
+    export {/admcom/progr/crg/estab.i estab}.
 end.    
 output close.
 unix silent 
