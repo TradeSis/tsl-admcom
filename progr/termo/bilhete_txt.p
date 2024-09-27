@@ -97,8 +97,8 @@ repeat.
     vlinha = replace(vlinha,"#TIPO_GARANTIA#",      segtipo.Descricao).
 
     vlinha = replace(vlinha,"#VALOR_PRODUTO_CUPOM#",trim(string(vndseguro.PrSeguro,"->>>>>>>>9.99"))  ).
-    vlinha = replace(vlinha,"#VALOR_COMISSAO_REPRESENTANTE#",   trim(string(vndseguro.PrSeguro * 0.58,"->>>>>>>>9.99"))    ).
-    vlinha = replace(vlinha,"#PERCENTUAL_COMISSAO_REPRESENTANTE#",  trim(string(58,"->>>>>>>>9.99")) ).
+    vlinha = replace(vlinha,"#VALOR_COMISSAO_REPRESENTANTE#",   trim(string(vndseguro.PrSeguro * vvalorSeguroPrestamista29 / 100,"->>>>>>>>9.99"))    ).
+    vlinha = replace(vlinha,"#PERCENTUAL_COMISSAO_REPRESENTANTE#",  trim(string(vvalorSeguroPrestamista29,"->>>>>>>>9.99")) ).
     vlinha = replace(vlinha,"#QT_MESES_GE#",  trim(string(vndseguro.tempo,"->>>>>>>>9")) ).
 
     /*
