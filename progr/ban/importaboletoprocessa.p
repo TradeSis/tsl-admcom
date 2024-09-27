@@ -22,7 +22,7 @@ def temp-table tt-csv no-undo
     field carteira as char
     field cpf_cnpj as char
     field nossonumero as int64
-    field dvnossonumero as char
+/*    field dvnossonumero as char */
     field numerodocumento as char
     field vencimento as char
     field valor as char
@@ -175,7 +175,7 @@ for each tt-arq.
             vok = no.
             verro = "Boleto "  + string(boletagbol.nossonumero) +  " sem Data de Pagamento e/ou sem Valor pago " .
         end.
-        
+        message today string(time,"HH:MM:SS") "Erro" verro vok string(boletagbol.nossonumero) boletagbol.origem par-titdtpag par-titvlpag. 
         if vok
         then do:
 
@@ -184,7 +184,6 @@ for each tt-arq.
                 verro = "".
                 
                 vcashback = no.
-                message vok string(boletagbol.nossonumero) boletagbol.origem . 
                 if boletagbol.origem = "BOLETAGEM"
                 then do:
                     find first pdvtmov where pdvtmov.ctmcod = "BAN" no-lock.
