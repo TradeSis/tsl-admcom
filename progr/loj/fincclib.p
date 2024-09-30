@@ -1,7 +1,8 @@
 
 {admcab.i}
 def input param prec as recid.
-
+def var vetbcod     as int format ">>>".
+def var vativos     as log format "Ativos/Todos" init yes.
 def buffer bfincotacllib for fincotacllib.
 
 def var xtime as int.
@@ -12,7 +13,7 @@ def var recatu2     as reci.
 def var reccont         as int.
 def var esqpos1         as int.
 def var esqcom1         as char format "x(11)" extent 6
-    initial [" utilizacao"," alteracao"," inclusao "," exclusao",""].
+    initial [" Filtro"," utilizacao"," alteracao"," inclusao "," exclusao",""].
 
 
 form
@@ -32,6 +33,12 @@ find fincotacluster where recid(fincotacluster) = prec no-lock.
             centered
             no-box
             color messages.
+    disp vetbcod label "Filtro Filial" vativos no-label
+    with frame fetbcod side-labels
+                row 5 col 5
+                                        no-box.
+                                        
+                                        
     form  
         fincotacllib.etbcod
         estab.munic format "x(10)"
@@ -189,6 +196,16 @@ repeat:
                 run loj/finccuso.p (input recid(fincotacllib)).
                 
             end. 
+            if esqcom1[esqpos1] = " Filtro"
+            then do:
+                update vetbcod with frame fetbcod.
+                hide message no-pause.
+                message "Ativos ou Todos".
+                update vativos with frame fetbcod.
+                hide message no-pause.                
+                recatu1 = ?.
+                leave.
+            end.
 
             
             
@@ -279,20 +296,26 @@ def input parameter par-tipo as char.
         
 if par-tipo = "pri" 
 then do:
-        find last fincotacllib  of fincotacluster
+        find last fincotacllib  of fincotacluster where
+            (if vetbcod = 0 then true else fincotacllib.etbcod = vetbcod) and
+            (if vativos = no then true else fincotacllib.dtivig <= today and (fincotacllib.dtfvig = ? or fincotacllib.dtfvig >= today))
                 no-lock no-error.
 end.    
                                              
 if par-tipo = "seg" or par-tipo = "down" 
 then do:
-        find prev fincotacllib  of fincotacluster
+        find prev fincotacllib  of fincotacluster where
+            (if vetbcod = 0 then true else fincotacllib.etbcod = vetbcod) and
+            (if vativos = no then true else fincotacllib.dtivig <= today and (fincotacllib.dtfvig = ? or fincotacllib.dtfvig >= today))
                 no-lock no-error.
 
 end.    
              
 if par-tipo = "up" 
 then do:
-        find next fincotacllib  of fincotacluster
+        find next fincotacllib  of fincotacluster where
+            (if vetbcod = 0 then true else fincotacllib.etbcod = vetbcod) and
+            (if vativos = no then true else fincotacllib.dtivig <= today and (fincotacllib.dtfvig = ? or fincotacllib.dtfvig >= today))
                 no-lock no-error.
 
 end.    
