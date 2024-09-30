@@ -7,6 +7,7 @@ Claudir - 19/07/2022 - Opo gerar arquivo CSV
 
 {admcab.i}
 
+
 def var vsenha like func.senha.
 def var vcep as int.
 def var vbairro as char.
@@ -27,14 +28,19 @@ form estab.etbcod   colon 17
      estab.etbtofne colon 17
      estab.etbtoffe      
 ***/
+     estab.latitude colon 17 estab.longitude colon 45
      estab.etbserie colon 17 label "Fone" format "x(15)"
      estab.movndcfim colon 45
      estab.etbfluxo colon 17
      estab.estcota  colon 45 label "N.I.R.C" format "99999999999"
-     estab.etbcon   colon 17 format ">,>>>,>>9.99"
-     filialsup.supcod format ">>>9" label "Supervisor"   colon 45  
+     /* helio 170724 
+     *   estab.etbcon   colon 17 format ">,>>>,>>9.99"
+     */   
+     estab.supcod format ">>>9" label "Supervisor"   colon 45
      supervisor.supnom no-label
-     estab.etbmov   format ">,>>>,>>9.99"   colon 17
+     /* helio 170724
+     *    estab.etbmov   format ">,>>>,>>9.99"   colon 17
+     */    
      estab.vencota  format "9999" label "N.Dias" colon 45
      estab.tamanho  colon 17
      estab.tipoloja colon 45
@@ -45,7 +51,7 @@ form estab.etbcod   colon 17
      estab.spc-senha  validate(estab.spc-senha <> "","Informe a senha")
      vbloco-k       colon 17 label "Bloco K"
      
-     with frame f-altera1 side-label overlay row 5 centered color white/cyan.
+     with frame f-altera1 side-label overlay row 4 centered color white/cyan.
 
 def var recatu1         as recid.
 def var recatu2         as recid.
@@ -60,7 +66,7 @@ def var esqcom1         as char format "x(12)" extent 5
 def var esqcom2         as char format "x(12)" extent 5
     initial ["Operacao"," Arquivo CSV","","",""]. 
 
-form esqcom1 with frame f-com1 row 4 no-box no-labels column 1 centered.
+form esqcom1 with frame f-com1 row 3 no-box no-labels column 1 centered.
 form esqcom2 with frame f-com2 row screen-lines no-box no-labels column 1 centered.
 
 assign
@@ -83,7 +89,9 @@ repeat:
     then run frame-a.
 
     recatu1 = recid(estab).
-    color display message esqcom1[esqpos1] with frame f-com1.
+    if esqregua
+    then color display message esqcom1[esqpos1] with frame f-com1.
+    else color display message esqcom2[esqpos2] with frame f-com2.
     if not esqvazio
     then repeat:
         run leitura (input "seg").
@@ -247,13 +255,15 @@ repeat:
                     estab.endereco
                     vbairro 
                     estab.munic 
-                    vcep 
+                    vcep .
+                update estab.latitude estab.longitude.
+                update    
                     estab.etbserie
                     estab.movndcfim
                     estab.etbfluxo   
                     estab.estcota 
-                    estab.etbcon
-                    estab.etbmov 
+                    /*estab.etbcon*/
+                    /*estab.etbmov */
                     estab.vencota.
 
                 if estab.etbcod = 0
@@ -262,16 +272,16 @@ repeat:
                     leave.
                 end.
                 
-                prompt-for filialsup.supcod.
-                find first filialsup where filialsup.etbcod = estab.etbcod
-                                            exclusive-lock no-error.
+                prompt-for estab.supcod.
+                find first supervisor where supervisor.supcod = input estab.supcod
+                                            no-lock no-error.
 
-                if not avail filialsup
+                if not avail supervisor
                 then do:
-                    create filialsup.
-                    FilialSup.etbcod = estab.etbcod.
+                    message "Supervisor nao Cadastrado".
+                    undo.
                 end.
-                filialsup.supcod = input filialsup.supcod.
+                estab.supcod = input estab.supcod.
                 
                 estab.etbnom = caps(estab.etbnom).
                 do on error undo.
@@ -322,6 +332,7 @@ repeat:
                 if avail tabaux
                 then vcep = int(tabaux.valor_campo).
                 else vcep = 0.
+                
                 find tabaux where 
                      tabaux.tabela = "ESTAB-" + string(estab.etbcod,"999") and
                      tabaux.nome_campo = "BAIRRO" no-error.
@@ -341,13 +352,28 @@ repeat:
 ***/
                        vbairro
                        estab.munic
-                       vcep
+                       vcep.
+               if  estab.ufecod entered or
+                   estab.endereco  entered or
+                   vbairro  entered or
+                   estab.munic  entered or
+                   vcep entered
+               then do:
+                estab.latitude  = "".
+                estab.longitude = "".
+               end.
+               
+                update  estab.latitude  
+                        estab.longitude .
+               
+               
+               update        
                        estab.etbserie
                        estab.movndcfim
                        estab.etbfluxo
                        estab.estcota
-                       estab.etbcon
-                       estab.etbmov
+                       /*estab.etbcon*/
+                       /*estab.etbmov*/
                        estab.vencota
                        estab.prazo
                        estab.vista with no-validate.
@@ -388,17 +414,18 @@ repeat:
                         tabaux.datexp  = today
                         tabaux.exporta = yes.
                 end.
-                
-                find first filialsup where filialsup.etbcod = estab.etbcod
-                                            exclusive-lock no-error.
+                disp estab.supcod.
+                prompt-for estab.supcod.
+                find first supervisor where supervisor.supcod = input estab.supcod
+                                            no-lock no-error.
 
-                if not avail filialsup
+                if not avail supervisor
                 then do:
-                    create filialsup.
-                    filialsup.etbcod = estab.etbcod.
+                    message "Supervisor nao Cadastrado".
+                    undo.
                 end.
-                
-                update filialsup.supcod.
+                estab.supcod = input estab.supcod.
+
                 do on error undo.
                     update estab.tamanho
                            estab.tipoloja.
@@ -492,7 +519,7 @@ procedure frame-a.
         estab.usap2k column-label "P2k"
         estab.emoperacao column-label "oper"
         
-        with frame frame-a 11 down centered color white/red row 5.
+        with frame frame-a  11 down centered color white/red row 4 .
 end procedure.
 
 procedure color-message.
@@ -567,6 +594,7 @@ procedure manutencao.
             if vbloco-k then tabaux.valor_campo = "SIM".
                         else tabaux.valor_campo = "NAO".
         end.
+        
     end.
 end procedure.
 
@@ -631,12 +659,14 @@ procedure consulta.
                        vbairro
                        estab.munic
                        vcep
+                       estab.latitude 
+                       estab.longitude
                        estab.etbserie
                        estab.movndcfim
                        estab.etbfluxo
                        estab.estcota
-                       estab.etbcon
-                       estab.etbmov
+                       /*estab.etbcon*/
+                       /*estab.etbmov*/
                        estab.vencota
                        estab.prazo
                        estab.vista
@@ -645,14 +675,11 @@ procedure consulta.
               estab.spc-senha
               vbloco-k.
                        
-                find first filialsup where filialsup.etbcod = estab.etbcod
-                                                    no-lock no-error.
-                                                    
                 find first supervisor
-                     where supervisor.supcod = filialsup.supcod
+                     where supervisor.supcod = estab.supcod
                                     no-lock no-error.
                                                     
-                display filialsup.supcod when avail filialsup
+                display estab.supcod
                         supervisor.supnom when avail supervisor.
 
         disp estab.tamanho

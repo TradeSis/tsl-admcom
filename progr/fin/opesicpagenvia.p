@@ -146,7 +146,19 @@ end FUNCTION.
                 pdvdoc.seqreg = sicred_pagam.seqreg
                 no-lock no-error.
             if not avail pdvdoc then next.
-                
+            
+            /* helio 26092024 - boletagem */
+            if titulo.bolcod <> ?
+            then do:
+                find pdvtmov of pdvmov no-lock.
+                if pdvtmov.baixaboleto = yes
+                then.
+                else do:
+                    run pmarca.
+                    next.
+                end.
+            end.
+                                        
                 create ttenviado.
                 ttenviado.psicred = recid(sicred_pagam).
         
@@ -330,3 +342,9 @@ procedure p-registro-99.
 end procedure.
 
  
+procedure pmarca.
+    do on error undo:  
+        find current sicred_pagam exclusive.
+        sicred_pagam.sstatus = "BOLETAGEM".
+    end.
+end.

@@ -11,6 +11,7 @@
  
             find pdvdoc where recid(pdvdoc) = precpdvdoc.
             find pdvmov of pdvdoc no-lock.
+            find pdvtmov of pdvmov no-lock.
             find titulo where recid(titulo) = prectitulo
                 exclusive no-wait no-error.
             if not avail titulo
@@ -111,6 +112,23 @@
                         pdvdoc.pago_parcial   = "N".
                     end.
                     
+                    /* Boletagem */
+                    if titulo.bolcod <> ? and pdvtmov.pagaboleto = yes
+                    then do:
+                        find boletagbol where boletagbol.bolcod = titulo.bolcod exclusive no-wait no-error.
+                        if avail boletagbol
+                        then do:
+                            boletagbol.etbpag       = pdvmov.etbcod.
+                            boletagbol.situacao     = "P". /* Marca como "P", sem dtpagamento, isto vai para fila de pagamento de boletagbol */
+                            boletagbol.dtpagamento  = ?.
+                            boletagbol.ctmcod       = pdvmov.ctmcod.
+                            boletagbol.cmocod       = pdvmov.cmocod.
+                            boletagbol.sequencia    = pdvmov.sequencia.
+                        end.
+                    end.
+                    
+                    
+                    
                 end.    
                 else do:
                     /* parcial roda poscart, 
@@ -149,7 +167,24 @@
                 
                 find cobra of titulo no-lock.
                 if cobra.sicred and pdvdoc.ctmcod <> "RFN" /* "REFIN" */
-                then run /admcom/progr/fin/sicrepagam_create.p (recid(pdvdoc),int(pdvdoc.contnum), pdvdoc.titpar,output prec).
+                then do:
+                    def var venvia as log.
+                    venvia = yes.
+                    /* helio 26092024 - boletagem */
+                    if titulo.bolcod <> ?
+                    then do:
+                        find pdvtmov of pdvmov no-lock.
+                        if pdvtmov.baixaboleto = yes
+                        then.
+                        else venvia = no.
+                    end.
+
+                    /* Boletagem */
+                    if venvia
+                    then do:
+                        run /admcom/progr/fin/sicrepagam_create.p (recid(pdvdoc),int(pdvdoc.contnum), pdvdoc.titpar,output prec).
+                    end.
+                end.                    
 
                 /**  DESCONTINUADO HELIO 15022022 
                 run /admcom/progr/fin/gerahisposcart.p   
