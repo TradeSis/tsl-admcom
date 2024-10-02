@@ -9,6 +9,8 @@ DEF OUTPUT PARAM    vpdf          AS CHAR.
 
 {admcab-batch.i}
 {tsr/tsrelat.i}
+{api/acentos.i}
+
 DEF VAR hentrada AS HANDLE.
 
 def temp-table ttparametros serialize-name "parametros"
@@ -187,7 +189,7 @@ end.
 
 
     if AVAIL tsrelat then do:
-        varquivo = replace(tsrelat.nomerel," ","") +
+        varquivo = replace(RemoveAcento(tsrelat.nomerel)," ","") +
         "-ID" + STRING(tsrelat.idrelat) + "-" +  
          STRING(TODAY,"99999999") +
          replace(STRING(TIME,"HH:MM:SS"),":","").

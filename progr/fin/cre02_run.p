@@ -10,6 +10,7 @@ DEF OUTPUT PARAM    varqpagamentos          AS CHAR.
 DEF OUTPUT PARAM    varqjuro          AS CHAR.
 
 {tsr/tsrelat.i}
+{api/acentos.i}
 
 DEF VAR hentrada AS HANDLE.
 
@@ -619,7 +620,7 @@ v-relatorio-geral = ttparametros.relatorio-geral.
         
 
     if AVAIL tsrelat then do:
-        varquivo = replace(tsrelat.nomerel," ","") +
+        varquivo = replace(RemoveAcento(tsrelat.nomerel)," ","") +
                        "-ID" + STRING(tsrelat.idrelat) + "-" +  
                         STRING(TODAY,"99999999") +
                         replace(STRING(TIME,"HH:MM:SS"),":","").

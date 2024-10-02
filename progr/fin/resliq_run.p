@@ -8,6 +8,7 @@ def output param    varquivo1     as char.
 DEF OUTPUT PARAM    vpdf          AS CHAR.
 
 {tsr/tsrelat.i}
+{api/acentos.i}
 
 DEF VAR hentrada AS HANDLE.
 
@@ -147,7 +148,7 @@ end.
 
 
 if AVAIL tsrelat then do:
-    varquivo = replace(tsrelat.nomerel," ","") +
+    varquivo = replace(RemoveAcento(tsrelat.nomerel)," ","") +
     "-ID" + STRING(tsrelat.idrelat) + "-" +  
      STRING(TODAY,"99999999") +
      replace(STRING(TIME,"HH:MM:SS"),":","").
