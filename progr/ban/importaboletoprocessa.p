@@ -139,17 +139,23 @@ for each tt-arq.
             verro = "Boleto " + string(banco.bancod) + "/" + string(tt-csv.nossonumero) + " Nao encontrado!".
         end.     
         else do:
-            if boletagbol.dtbaixa <> ?   
-            then do: 
-                verro = "Boleto " + string(string(tt-csv.nossonumero)) + " Baixado em "
+            if boletagbol.situacao <> "A"
+            then do:
+                verro = "Boleto " + string(string(tt-csv.nossonumero)) + " Com situacao " + boletagbol.situacao.
+                                        
+            end.
+            else do:
+                if boletagbol.dtbaixa <> ?   
+                then do: 
+                    verro = "Boleto " + string(string(tt-csv.nossonumero)) + " Baixado em "
                         + string(boletagbol.dtbaixa).
-            end.
-            if boletagbol.dtpagamento <> ?   
-            then do: 
-                verro = "Boleto " + string(tt-csv.nossonumero) + " Pago em "
+                end.
+                if boletagbol.dtpagamento <> ?   
+                then do: 
+                    verro = "Boleto " + string(tt-csv.nossonumero) + " Pago em "
                         + string(boletagbol.dtpagamento).
-            end.
-            
+                end.
+            end.        
         end.
         
         if verro <> ""

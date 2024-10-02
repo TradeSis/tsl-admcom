@@ -26,9 +26,19 @@ def var vidade as int format "999".
         find clien of contrato  no-error.
         if not avail clien
         then next.
-        
+    
         pboletavel = yes.
 
+        if titulo.etbcod = 188 or 
+           titulo.etbcod = 13
+        then.
+        else do:
+            pmotivo = "NAO EH LOJA PILOTO".
+            pboletavel = no.
+        end.
+                 
+        if pboletavel
+        then do:
         vidade = (today - clien.dtnasc) / 365.
         if vidade = ? then vidade = 0.
 
@@ -131,6 +141,7 @@ def var vidade as int format "999".
                 end.
             end.
         end.
+        end. /* Piloto */
     end.
 
     /* */
