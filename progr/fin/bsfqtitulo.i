@@ -347,7 +347,7 @@ procedure clifor.
     else do.
         find clien where clien.clicod = titulo.clifor no-lock.
         assign
-            vcgccpf = clien.ciinsc
+            vcgccpf = clien.ciccgc
             vclfnom = clien.clinom.
 
         if clien.tippes
