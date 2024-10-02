@@ -4,6 +4,7 @@
 def input param par-rec as recid.
 def output parameter mensagem_erro as char.
 
+def var phttp_code as int.
 def var vvalor_movimento as dec.
 def var vhostname as char.
 def var vhost as char.
@@ -87,7 +88,7 @@ vvalor_movimento = boletagbol.vlcobrado.
 
 if boletagbol.dtvencimento < today
 then do:
-    run api/boletagconsultar.p (input recid(boletagbol), output mensagem_erro).
+    run api/boletoconsultar.p (input recid(boletagbol), output mensagem_erro).
     find first ttboletoconsulta no-error.
     if  avail ttboletoconsulta
     then do:
@@ -116,22 +117,45 @@ if OPSYS = "UNIX" then do:
         "curl -X POST -s ~"http://" + vhost + "/bsweb/api/boleto/boletopagar" + "~" " +
         " -H ~"Content-Type: application/json~" " +
         " -d '" + string(vLCEntrada) + "' " + 
+        " -w \"%\{response_code\}\" " +
         " -o "  + vsaida.
     output close.
     message "         api/boletopagar Chamando bsweb/api/boleto/boletopagar " vsaida .
 
     unix silent value("sh " + vsaida + ".sh " + ">" + vsaida + ".erro").
     unix silent value("echo ~"\n~">>"+ vsaida).
-
+    unix silent value("echo ~"\n~">>"+ vsaida + ".erro").
+    
+    
     input from value(vsaida) no-echo.
     import unformatted vresposta.
     input close.
+    input from value(vsaida + ".erro") no-echo.
+    import unformatted phttp_code.
+    input close.
+
 
     vLCsaida = vresposta.
 
-    hSaida = temp-table ttboletopagar:handle.
+    if phttp_code = 200
+    then do:
+        hSaida = temp-table ttboletopagar:handle.
 
-    hSaida:READ-JSON("longchar",vLCSaida, "EMPTY").
+        hSaida:READ-JSON("longchar",vLCSaida, "EMPTY").
+        run ppagar.
+
+    end.
+    else do:
+        
+        run api/boletoconsultar.p (input recid(boletagbol), output mensagem_erro).
+        find first ttboletoconsulta no-error.
+        if  avail ttboletoconsulta
+        then do:
+            run pstandby.
+        end.
+             
+    end.
+            
 end.
 ELSE DO:
     CREATE ttboletopagar.
@@ -141,8 +165,12 @@ ELSE DO:
     ttboletopagar.numero_banrisul       = "sdfdsdfsdf".
     ttboletopagar.cod_forma_pagamento   = "19".
     ttboletopagar.id_rastreabilidade    = "xzcdsfdfdfdfdf" .
-
+    run ppagar.
+    
 END.
+
+procedure ppagar.
+
     find first ttboletopagar no-error.    
     if avail ttboletopagar
     then do:
@@ -168,6 +196,26 @@ END.
             mensagem_erro = "SEM RETORNO".
     end.
     
+end.
+
+procedure pstandby.
+
+            FIND CURRENT boletagbol EXCLUSIVE NO-WAIT NO-ERROR.
+            if AVAIL boletagbol 
+            then do:
+                
+                boletagbol.dtpagamento       =    TODAY.
+                boletagbol.obs_pgto_banco    = "situacao=" + ttboletoconsulta.situacao_boleto.
+                
+                unix silent value("rm -f " + vsaida). 
+                unix silent value("rm -f " + vsaida + ".erro"). 
+                unix silent value("rm -f " + vsaida + ".sh"). 
+                
+            END.
+
+
+end procedure.
+
 
 
 
