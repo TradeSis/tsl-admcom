@@ -322,10 +322,7 @@ repeat:
                     update sresp.
                 if sresp
                 then do:
-                    /* HELIO 21032024 cancela adesao por api, desativado
-                    *run api/medcancelaadesao.p (recid(medadesao)).
-                    */
-                    run med/cancelaadesao.p (recid(medadesao)). /* cancela direto */
+                    run api/medcancelaadesao.p (recid(medadesao)).
                     leave.
                 end.
             end.
