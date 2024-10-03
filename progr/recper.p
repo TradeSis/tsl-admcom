@@ -48,6 +48,9 @@ form
 create tt-modalidade-padrao.
 assign tt-modalidade-padrao.modcod = "CRE".
 
+create tt-modalidade-padrao.
+assign tt-modalidade-padrao.modcod = "CPN".
+
 for each profin no-lock.
     create tt-modalidade-padrao.
     assign tt-modalidade-padrao.modcod = profin.modcod.        
@@ -148,7 +151,7 @@ repeat:
 /***
             if acha("RENOVACAO",fin.titulo.titobs[1]) = "SIM"
 ***/
-            if fin.titulo.tpcontrato = "L"
+            if titulo.tpcontrato = "L"
             then assign v-parcela-lp = yes.
             else assign v-parcela-lp = no.
                                                 
