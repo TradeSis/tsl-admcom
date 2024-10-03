@@ -31,6 +31,7 @@ for each titulo where titulo.contnum = contrato.contnum no-lock.
                           titulo.titdtven,
                           titulo.titvlcob,
                           "BOLETAGEM", /* Origem */ 
+                          contrato.etbcod,
                           output par-recid-boleto,
                           output mensagem_erro).
 
