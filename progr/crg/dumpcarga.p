@@ -23,14 +23,14 @@ output close.
 
 varquivo = vdir + "promoviv" + "." + string(ptoday,"99999999") + ".d".
 output to value(varquivo).
-for each promoviv no-lock.
+for each promoviv where promoviv.exportado = yes no-lock.
     export promoviv.
 end.    
 output close.
 
 varquivo = vdir + "planoviv" + "." + string(ptoday,"99999999") + ".d".
 output to value(varquivo).
-for each planoviv no-lock.
+for each planoviv where planoviv.exportado = yes no-lock.
     export planoviv.
 end.
 output close.
@@ -38,30 +38,35 @@ output close.
 
 varquivo = vdir + "proplaviv" + "." + string(ptoday,"99999999") + ".d".
 output to value(varquivo).
-for each proplaviv no-lock.
+for each proplaviv where proplaviv.exportado = yes no-lock.
     export proplaviv.
 end.    
 output close.
 
 varquivo = vdir + "bonusviv" + "." + string(ptoday,"99999999") + ".d".
 output to value(varquivo).
-for each bonusviv no-lock.
+for each bonusviv where bonusviv.exportado = yes no-lock.
     export bonusviv.
 end.    
 output close.
 
 varquivo = vdir + "plaviv" + "." + string(ptoday,"99999999") + ".d".
 output to value(varquivo).
-for each plaviv no-lock.
+for each plaviv where plaviv.exportado = yes and plaviv.dtfin >= today no-lock.
     export plaviv.
 end.    
 output close.
 
 varquivo = vdir + "plaviv_filial" + "." + string(ptoday,"99999999") + ".d".
 output to value(varquivo).
-for each plaviv_filial no-lock.
+for each plaviv where plaviv.exportado = yes and plaviv.dtfin >= today no-lock.
+for each plaviv_filial where plaviv_filial.tipviv = plaviv.tipviv 
+                         and plaviv_filial.codviv = plaviv.codviv 
+                         and plaviv_filial.procod = plaviv.procod no-lock.
+
     export plaviv_filial.
 end.    
+end.
 output close.
 
 varquivo = vdir + "fincla" + "." + string(ptoday,"99999999") + ".d".
