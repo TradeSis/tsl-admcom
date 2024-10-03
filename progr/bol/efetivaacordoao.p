@@ -408,7 +408,7 @@ then do:
                         /*par-titvlpag*/ 
                     titulo.titjuro  = par-titjuro
                     titulo.titsit   = "PAG"
-                    titulo.moecod   = pdvmov.ctmcod /* #H1 */
+                    titulo.moecod   = if vmodcod = "RFN" then vmodcod else pdvmov.ctmcod /* #H1 */
                     titulo.etbcobra = pdvmov.etbcod.
                 find current titulo no-lock. /* #2 */
 
