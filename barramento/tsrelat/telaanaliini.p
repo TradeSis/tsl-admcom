@@ -6,6 +6,8 @@
 DEF VAR lcjsonentrada AS LONGCHAR.
 DEF VAR vpdf   AS CHAR. 
 {tsr/tsrelat.i}
+{api/acentos.i}
+
 def temp-table ttparametros serialize-name "parametros"
     field dtini            as char     format "x(20)"
     field dtfin            AS char  format "x(20)"
@@ -51,7 +53,7 @@ END.
     if ttparametros.tipoOperacao = "RECEBIMENTOS"
     then do: 
         if AVAIL tsrelat then do:
-            varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
+            varquivo = "/admcom/tmp/ctb/" + replace(RemoveAcento(tsrelat.nomerel)," ","") +
                 "-ID" + STRING(tsrelat.idrelat) + "-" +  
                  STRING(TODAY,"99999999") +
                  replace(STRING(TIME,"HH:MM:SS"),":","") + ".csv" .
@@ -77,7 +79,7 @@ END.
     if ttparametros.tipoOperacao = "VENDAS" or ttparametros.tipoOperacao = "VENDAS SITE" or ttparametros.tipoOperacao = "VENDAS APP" 
     then do:
         if AVAIL tsrelat then do:
-            varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
+            varquivo = "/admcom/tmp/ctb/" + replace(RemoveAcento(tsrelat.nomerel)," ","") +
                 "-ID" + STRING(tsrelat.idrelat) + "-" +  
                  STRING(TODAY,"99999999") +
                  replace(STRING(TIME,"HH:MM:SS"),":","") + ".csv" .
@@ -100,7 +102,7 @@ END.
     if ttparametros.tipoOperacao = "NOVACOES" 
     then do:
         if AVAIL tsrelat then do:
-            varquivo = "/admcom/tmp/ctb/" + replace(tsrelat.nomerel," ","") +
+            varquivo = "/admcom/tmp/ctb/" + replace(RemoveAcento(tsrelat.nomerel)," ","") +
                 "-ID" + STRING(tsrelat.idrelat) + "-" +  
                  STRING(TODAY,"99999999") +
                  replace(STRING(TIME,"HH:MM:SS"),":","") + ".csv" .
