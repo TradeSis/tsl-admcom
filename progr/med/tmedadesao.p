@@ -315,8 +315,8 @@ repeat:
              then do: 
                 hide message no-pause.
                 sresp = no.
-                    message "este procedimento nao esta fazendo chamada a api de cancelamento, apenas cancela no admcom"
-                        view-as alert-box. 
+                    /* message "este procedimento nao esta fazendo chamada a api de cancelamento, apenas cancela no admcom"
+                        view-as alert-box. */
                 
                 message "Confirma cancelamento adesao numero " medadesao.idadesao "?"
                     update sresp.
