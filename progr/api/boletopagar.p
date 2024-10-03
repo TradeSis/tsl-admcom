@@ -135,27 +135,27 @@ if OPSYS = "UNIX" then do:
     input close.
 
 
-    vLCsaida = vresposta.
+    vLCsaida = vresposta. 
+    hSaida = temp-table ttboletopagar:handle.  
+    hSaida:READ-JSON("longchar",vLCSaida, "EMPTY").
 
-    if phttp_code = 200
+    find first ttboletopagar no-error.    
+    if avail ttboletopagar
     then do:
-        hSaida = temp-table ttboletopagar:handle.
-
-        hSaida:READ-JSON("longchar",vLCSaida, "EMPTY").
-        run ppagar.
-
-    end.
-    else do:
-        
-        run api/boletoconsultar.p (input recid(boletagbol), output mensagem_erro).
-        find first ttboletoconsulta no-error.
-        if  avail ttboletoconsulta
+        if ttboletopagar.retorno = ""
         then do:
-            run pstandby.
+            run ppagar.
+        end.    
+        else do:
+            run api/boletoconsultar.p (input recid(boletagbol), output mensagem_erro).
+            find first ttboletoconsulta no-error.
+            if  avail ttboletoconsulta
+            then do:
+                if ttboletoconsulta.situacao <> "A"
+                then run pstandby.
+            end.
         end.
-             
-    end.
-            
+    end.        
 end.
 ELSE DO:
     CREATE ttboletopagar.
@@ -205,7 +205,7 @@ procedure pstandby.
             then do:
                 
                 boletagbol.dtpagamento       =    TODAY.
-                boletagbol.obs_pgto_banco    = "situacao=" + ttboletoconsulta.situacao_boleto.
+                boletagbol.obs_pgto_banco    = "sit=" + ttboletoconsulta.situacao_boleto.
                 
                 unix silent value("rm -f " + vsaida). 
                 unix silent value("rm -f " + vsaida + ".erro"). 

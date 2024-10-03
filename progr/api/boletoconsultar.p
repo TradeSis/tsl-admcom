@@ -52,7 +52,8 @@ def shared temp-table ttboletoconsulta no-undo serialize-name "boletoconsulta"
 find    boletagbol  where   recid(boletagbol) = par-rec no-lock.
 create ttentrada. 
 ttentrada.codigo_barras = boletagbol.codigobarras.
-ttentrada.etbcod       = STRING(boletagbol.etbcod).
+ttentrada.etbcod       = STRING(if boletagbol.etbcod = 0 or boletagbol.etbcod = ? then 999 else boletagbol.etbcod).
+if ttentrada.etbcod = ? then ttentrada.etbcod = "999".
 
 hEntrada = TEMP-TABLE ttentrada:handle.
 
@@ -69,7 +70,7 @@ if OPSYS = "UNIX" then do:
 
     output to value(vsaida + ".sh").
     put unformatted
-        "curl -s ~"http://" + vhost + "/bsweb/api/boleto/boletoconsultar" + "~" " +
+        "curl -X GET  -s ~"http://" + vhost + "/bsweb/api/boleto/boletoconsultar" + "~" " +
         " -H ~"Content-Type: application/json~" " +
         " -d '" + string(vLCEntrada) + "' " + 
         " -o "  + vsaida.
