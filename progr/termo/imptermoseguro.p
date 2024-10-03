@@ -64,8 +64,7 @@ def var vcatnom  as char.
             find termos where termos.idtermo = "ADESAO-SEGURO-PRESTAMISTA-MODA" no-lock.
             vvalorSeguroPrestamista29 = 65.82.
        end. 
-       if vcatnom = "MOVEIS"
-       then do:
+       else do:
             find termos where termos.idtermo = "ADESAO-SEGURO-PRESTAMISTA-MOVEIS" no-lock.
             vvalorSeguroPrestamista29 = 65.34.
        end.     
