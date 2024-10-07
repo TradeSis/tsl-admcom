@@ -12,6 +12,7 @@ def input param poldtpcontrato as char.
 def input param poldetbcod as int. 
 def input param poldcobcod  as int.
 def input param ppdvmovrec  as recid.
+def input param pexporta    as char.
 
 def shared var vetbcod like estab.etbcod.
 def shared var vdtini as date format "99/99/9999" label "De".
@@ -75,16 +76,6 @@ def var vfiltro as char.
              else "").
 
 
-disp
-    vfiltro no-label format "x(50)"
-        poldetbcod when poldetbcod <> ?
-            label "Fil" format ">>>>"
-
-    with frame fcab
-    row 4 no-box
-        side-labels
-        width 80
-        color underline.
 def var par-dtini as date.
         
 def new shared frame f-cmon.
@@ -137,6 +128,24 @@ def temp-table ttpdvmov no-undo
 
 
 run gravatt.
+
+if pexporta <> ""
+then do:
+    run geracsv.
+    return.
+end.
+
+disp
+    vfiltro no-label format "x(50)"
+        poldetbcod when poldetbcod <> ?
+            label "Fil" format ">>>>"
+
+    with frame fcab
+    row 4 no-box
+        side-labels
+        width 80
+        color underline.
+
 
 disp 
     space(32)
@@ -549,14 +558,15 @@ def var vvlf_acrescimo as dec.
 def var vvalorpmt as dec.
    def var varq as char format "x(76)".
    def var vcp  as char init ";".
-   
-   varq = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
+    if pexporta = ""
+    then do:    
+       varq = "/admcom/tmp/ctb/conciliacao" + ( if vetbcod = 0 then "ger" else string(vetbcod)) + 
                              "_novacoes" + string(vdtini,"99999999") + "_" + string(vdtfin,"99999999")  + "_" +
                              string(today,"999999")  +  replace(string(time,"HH:MM:SS"),":","") +
                              ".csv" .
                                
-    pause 0.
-    update skip(2) varq skip(2)
+        pause 0.
+        update skip(2) varq skip(2)
         with
         centered 
         overlay
@@ -565,6 +575,12 @@ def var vvalorpmt as dec.
         row 8
         title "arquivo de saida".
         
+
+    end.
+    else do:
+        varq = pexporta.
+    end.
+   
     output to value(varq).    
         put unformatted
         "Filial"   vcp
