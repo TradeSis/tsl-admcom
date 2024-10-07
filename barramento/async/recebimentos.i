@@ -270,6 +270,10 @@ def var valteraprincipal as log.
             
             
             for each ttparcelas where ttparcelas.idpai = ttcontrato.id.
+                /* helio 23072024 */
+                if dec(ttparcelas.valorparcela) = 0 or dec(ttparcelas.valorparcela) = ? then next.
+                /**/
+                
                 /*
                 field dataEmissao as char 
                 field codigoCobranca as char 
@@ -510,7 +514,11 @@ index x is unique primary idpai asc id asc.
             field codigoAprovacao as char 
             field nsuTransCtf as char 
             */
-            pdvforma.qtd_parcelas = int(ttcartaoDebito.qtdParcelas).
+            /* helio 23072024 */
+            pdvforma.qtd_parcelas = int(ttcartaoDebito.qtdParcelas) no-error.
+            if pdvforma.qtd_parcelas = 0 or pdvforma.qtd_parcelas = ? then pdvforma.qtd_parcelas = 0.
+            /**/
+            
             pdvforma.valor        = dec(ttcartaoDebito.valorTotal).
             pdvforma.valor_acf    = dec(ttcartaoDebito.valorAcrescimo).
             pdvforma.observacao = ttcartaoDebito.codigoVan + "|" + ttcartaoDebito.nomeVan + "|" + 
@@ -667,7 +675,11 @@ index x is unique primary idpai asc id asc.
             field codigoAprovacao as char 
             field nsuTransCtf as char 
             */
-            pdvforma.qtd_parcelas = int(ttcartaoCredito.qtdParcelas).
+            /* helio 23072024 */
+            pdvforma.qtd_parcelas = int(ttcartaoDebito.qtdParcelas) no-error.
+            if pdvforma.qtd_parcelas = 0 or pdvforma.qtd_parcelas = ? then pdvforma.qtd_parcelas = 0.
+            /**/
+            
             pdvforma.valor        = dec(ttcartaoCredito.valorTotal).
             pdvforma.valor_acf    = dec(ttcartaoCredito.valorAcrescimo).
             pdvforma.observacao = ttcartaoCredito.codigoVan + "|" + ttcartaoCredito.nomeVan + "|" + 
