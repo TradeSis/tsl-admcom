@@ -40,14 +40,7 @@ def temp-table tt-modalidade-selec
 
 def var vval-carteira as dec.                                
 
-/*                                
-form
-   a-seelst format "x" column-label "*"
-   tt-modalidade-padrao.modcod no-label
-        with frame f-nome
-             centered down title "Modalidades"
-             color withe/red overlay.    
-                                                        
+                                                           
 create tt-modalidade-padrao.
 assign tt-modalidade-padrao.modcod = "CRE".
 
@@ -57,35 +50,21 @@ for each profin no-lock.
 end.
 find first tt-modalidade-padrao where
                    tt-modalidade-padrao.modcod = "CPN" no-error.
-        if not avail tt-modalidade-padrao
-        then do:
-            create tt-modalidade-padrao.
-            tt-modalidade-padrao.modcod = "CPN".
-        end. 
+if not avail tt-modalidade-padrao
+then do:
+    create tt-modalidade-padrao.
+    tt-modalidade-padrao.modcod = "CPN".
+end. 
         
-sresp = no.
-if sresp
-    then do:
-        bl_sel_filiais:
-        repeat:
-            run p-seleciona-modal.
-                                                      
-            if keyfunction(lastkey) = "end-error"
-            then leave bl_sel_filiais.
-        end.
-    end.
-    else do:
-        create tt-modalidade-selec.
-        assign tt-modalidade-selec.modcod = "CPN".
-    end.
-    
-    assign vmod-sel = "  ".
-    for each tt-modalidade-selec.
-        assign vmod-sel = vmod-sel + tt-modalidade-selec.modcod + "  ".
-    end.
-        
-    display vmod-sel format "x(40)" no-label with frame f1.
-*/
+create tt-modalidade-selec.
+assign tt-modalidade-selec.modcod = "CPN".
+ 
+//assign vmod-sel = "  ".
+for each tt-modalidade-selec.
+    assign vmod-sel = vmod-sel + tt-modalidade-selec.modcod + "  ".
+end.
+display vmod-sel format "x(40)" no-label with frame f1.    
+ 
 def var vdata as date.
 def var val-orig as dec.
 def var vtotal as dec.
@@ -150,10 +129,6 @@ do vdata = vdti to vdtf:
     end.        
 end.
 
-/* def var varquivo as char.
-    
-varquivo = "/admcom/relat/relcpn" + "."
-                    + string(time). */
 if AVAIL tsrelat then do:
     varquivo = replace(RemoveAcento(tsrelat.nomerel)," ","") +
     "-ID" + STRING(tsrelat.idrelat) + "-" +  
@@ -176,7 +151,6 @@ END.
                 &Width     = "120"
                 &Form      = "frame f-cabcab"}
 
-/* disp with frame f-1. */
  
 for each tt-contrato:
     disp tt-contrato.etbcod        column-label "Filial"
@@ -204,7 +178,7 @@ end.
          
 output close.
 
-run visurel.p(varquivo,"").
+/* run visurel.p(varquivo,""). */
 
 
 procedure p-seleciona-modal:
