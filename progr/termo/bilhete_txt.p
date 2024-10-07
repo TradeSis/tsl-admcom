@@ -28,18 +28,21 @@ def var vnome as char.
 vnome = trim(clien.ciccgc) + "_" + string(vndseguro.etbcod,"999") + "_" +
         string(vndseguro.pladat,"99999999") + "_" + trim(vndseguro.certifi) .
         
+def var vvalorSeguroPrestamista29 as dec.
 if segtipo.TpSeguro = 6 /* RFQ */
 then do:
 
     varquivo-entrada = "../progr/termo/Bilhete_RFQ.txt".
     varquivo-saida   = "bilhete_rfq_" + vnome + ".txt".
     vpdf-saida       = "bilhete_rfq_" + vnome + ".pdf".
+    vvalorSeguroPrestamista29 = 60.82.
 end.    
 if segtipo.TpSeguro = 5 /* GE */
 then do:
     varquivo-entrada = "../progr/termo/Bilhete_GE.txt".
     varquivo-saida   = "bilhete_ge_" + vnome + ".txt".
     vpdf-saida       = "bilhete_ge_" + vnome + ".pdf".
+    vvalorSeguroPrestamista29 = 69.20.
 end.    
 
 /* 555859 - Duas Garantias em produtos iguais PRÉ VENDA - Pedido Erica if setbcod = 999
@@ -86,14 +89,16 @@ repeat.
     vlinha = replace(vlinha,"#VALOR_GE#",           trim(string(vndseguro.PrSeguro,"->>>>>>>>9.99"))).
     vlinha = replace(vlinha,"#INICIO_GARANTIA#",    string(vndseguro.DtIVig,"99/99/9999")).
     vlinha = replace(vlinha,"#FIM_GARANTIA#",       string(vndseguro.DtfVig,"99/99/9999")).
-    vlinha = replace(vlinha,"#VALOR_COMISSAO_REPRESENTANTE_RF#",   trim(string(vndseguro.PrSeguro * 0.58,"->>>>>>>>9.99"))    ).
-    vlinha = replace(vlinha,"#PERCENTUAL_COMISSAO_REPRESENTANTE_RF#",  trim(string(58,"->>>>>>>>9.99")) ).
+
+   
+    vlinha = replace(vlinha,"#VALOR_COMISSAO_REPRESENTANTE_RF#",   trim(string(vndseguro.PrSeguro * vvalorSeguroPrestamista29 / 100,"->>>>>>>>9.99"))    ).
+    vlinha = replace(vlinha,"#PERCENTUAL_COMISSAO_REPRESENTANTE_RF#",  trim(string(vvalorSeguroPrestamista29,"->>>>>>>>9.99")) ).
     vlinha = replace(vlinha,"#LOJA_CIDADE#",        estab.munic).
     vlinha = replace(vlinha,"#TIPO_GARANTIA#",      segtipo.Descricao).
 
     vlinha = replace(vlinha,"#VALOR_PRODUTO_CUPOM#",trim(string(vndseguro.PrSeguro,"->>>>>>>>9.99"))  ).
-    vlinha = replace(vlinha,"#VALOR_COMISSAO_REPRESENTANTE#",   trim(string(vndseguro.PrSeguro * 0.58,"->>>>>>>>9.99"))    ).
-    vlinha = replace(vlinha,"#PERCENTUAL_COMISSAO_REPRESENTANTE#",  trim(string(58,"->>>>>>>>9.99")) ).
+    vlinha = replace(vlinha,"#VALOR_COMISSAO_REPRESENTANTE#",   trim(string(vndseguro.PrSeguro * vvalorSeguroPrestamista29 / 100,"->>>>>>>>9.99"))    ).
+    vlinha = replace(vlinha,"#PERCENTUAL_COMISSAO_REPRESENTANTE#",  trim(string(vvalorSeguroPrestamista29,"->>>>>>>>9.99")) ).
     vlinha = replace(vlinha,"#QT_MESES_GE#",  trim(string(vndseguro.tempo,"->>>>>>>>9")) ).
 
     /*

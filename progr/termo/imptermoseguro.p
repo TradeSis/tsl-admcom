@@ -29,8 +29,6 @@ def var vcatnom  as char.
     vvalorSeguroPrestamista     = vndseguro.PrSeguro.
     vvalorSeguroPrestamistaIof  = round(vndseguro.PrSeguro * 0.38 / 100,2).
     vvalorSeguroPrestamistaLiquido = vvalorSeguroPrestamista - vvalorSeguroPrestamistaIof.
-    vvalorSeguroPrestamista29 = 0.
-    vvalorSeguroPrestamista30 = 0.
     
 
 
@@ -59,10 +57,29 @@ def var vcatnom  as char.
     vcatnom = "".    
     run pprodutos.
 
+       vvalorSeguroPrestamista29 = 0.
+ 
        if vcatnom = "MODA"
-       then find termos where termos.idtermo = "ADESAO-SEGURO-PRESTAMISTA-MODA" no-lock.
-       else find termos where termos.idtermo = "ADESAO-SEGURO-PRESTAMISTA-MOVEIS" no-lock.
+       then do:
+            find termos where termos.idtermo = "ADESAO-SEGURO-PRESTAMISTA-MODA" no-lock.
+            vvalorSeguroPrestamista29 = 65.82.
+       end. 
+       else
+       if vcatnom = "MOVEIS"
+       then do:
+            find termos where termos.idtermo = "ADESAO-SEGURO-PRESTAMISTA-MOVEIS" no-lock.
+            vvalorSeguroPrestamista29 = 65.34.
+       end.
+       else do:
+            find contrato where contrato.contnum = vndseguro.contnum no-lock no-error.
+            if contrato.modcod begins "CP"
+            then do:
+                vvalorSeguroPrestamista29 = 63.38.
+            end.    
+       end.  
+          
 
+       vvalorSeguroPrestamista30 = vvalorSeguroPrestamistaLiquido * vvalorSeguroPrestamista29 / 100.
 
         COPY-LOB termos.termo TO textFile.
 
