@@ -57,17 +57,27 @@ def var vcatnom  as char.
     vcatnom = "".    
     run pprodutos.
 
-       vvalorSeguroPrestamista29 = 63.38.
+       vvalorSeguroPrestamista29 = 0.
  
        if vcatnom = "MODA"
        then do:
             find termos where termos.idtermo = "ADESAO-SEGURO-PRESTAMISTA-MODA" no-lock.
             vvalorSeguroPrestamista29 = 65.82.
        end. 
-       else do:
+       else
+       if vcatnom = "MOVEIS"
+       then do:
             find termos where termos.idtermo = "ADESAO-SEGURO-PRESTAMISTA-MOVEIS" no-lock.
             vvalorSeguroPrestamista29 = 65.34.
-       end.     
+       end.
+       else do:
+            find contrato where contrato.contnum = vndseguro.contnum no-lock no-error.
+            if contrato.modcod begins "CP"
+            then do:
+                vvalorSeguroPrestamista29 = 63.38.
+            end.    
+       end.  
+          
 
        vvalorSeguroPrestamista30 = vvalorSeguroPrestamistaLiquido * vvalorSeguroPrestamista29 / 100.
 
