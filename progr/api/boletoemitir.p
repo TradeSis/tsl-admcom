@@ -22,17 +22,26 @@ def var vhml as log.
 
 vhml = no.
 vhost = "10.2.0.83".
-
+if vhostname = "sv-ca-boletagem" 
+then do:
+    vhost = "boletagem.lebes.com.br".
+end.
 if vhostname = "SV-CA-DB-DEV" 
 then do:
     vhml = yes.
     vhost = "10.145.0.233".
 end.
-if vhostname = "SV-CA-DB-QA"
-then do: 
+if vhostname = "SV-CA-DB-QA" 
+then do:
     vhml = yes.
-    vhost = "10.145.0.44".  
+    vhost = "10.145.0.44".
 end.
+if vhostname = "sv-ca-boletagemqa"
+then do:
+    vhml = yes.
+    vhost = "boletagemqa.lebes.com.br".
+end.
+
 
 find banco where banco.bancod = par-banco no-lock.
 
@@ -150,7 +159,8 @@ END.
     find first ttreturn no-error.    
     if avail ttreturn
     then do:
-        message "         api/boletoemitir Chamando bsweb/api/boleto/boletoemitir RETORNO=" ttreturn.retorno ttreturn.data_emissao.
+        message "         api/boletoemitir Chamando bsweb/api/boleto/boletoemitir RETORNO=" + ttreturn.retorno ttreturn.data_emissao
+                " vresposta=" vresposta.
 
             if ttreturn.retorno = "REGISTRADO" /*ttreturn.codigo_barras <> "" and ttreturn.codigo_barras <> ?*/
             then do:
@@ -176,6 +186,12 @@ END.
                 unix silent value("rm -f " + vsaida + ".erro"). 
                 unix silent value("rm -f " + vsaida + ".sh"). 
                 
+            end.
+            else do: 
+                mensagem_erro =  trim(ttreturn.retorno).
+                unix silent value("rm -f " + vsaida). 
+                unix silent value("rm -f " + vsaida + ".erro"). 
+                unix silent value("rm -f " + vsaida + ".sh"). 
             end.
 
     End. 
