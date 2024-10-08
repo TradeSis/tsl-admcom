@@ -9,7 +9,7 @@ def var vresposta as char.
 
 def var varq as char.
 
-varq = "./ASYNCboletagem".
+varq = "./ASYNCboletagem{1}".
 
      case par-variavel:
      when "pid" 
