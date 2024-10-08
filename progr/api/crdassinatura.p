@@ -36,7 +36,7 @@ vsaida  = "/ws/works/crdassinatura" + string(today,"999999") + replace(string(ti
 output to value(vsaida + ".sh").
     def var vurl as char.
     vurl = "".
-    if vhostname = "SV-CA-DB-QA"
+    if vhostname = "SV-CA-DB-QA" or vhostname = "sv-ca-boletagemqa"
     then do: 
         vip = "10.145.0.60".
     end.    
@@ -73,9 +73,11 @@ input close.
 vLCsaida = vresposta.
 
 hSaida:READ-JSON("longchar",vLCSaida, "EMPTY").
+
             unix silent value("rm -f " + vsaida). 
             unix silent value("rm -f " + vsaida + ".erro"). 
             unix silent value("rm -f " + vsaida + ".sh"). 
+            
 hide message no-pause.
 
 
