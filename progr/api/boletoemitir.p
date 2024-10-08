@@ -24,7 +24,7 @@ vhml = no.
 vhost = "10.2.0.83".
 if vhostname = "sv-ca-boletagem" 
 then do:
-    vhost = "10.2.0.129".
+    vhost = "boletagem.lebes.com.br".
 end.
 if vhostname = "SV-CA-DB-DEV" 
 then do:
@@ -39,7 +39,7 @@ end.
 if vhostname = "sv-ca-boletagemqa"
 then do:
     vhml = yes.
-    vhost = "10.145.0.22".
+    vhost = "boletagemqa.lebes.com.br".
 end.
 
 
@@ -159,7 +159,8 @@ END.
     find first ttreturn no-error.    
     if avail ttreturn
     then do:
-        message "         api/boletoemitir Chamando bsweb/api/boleto/boletoemitir RETORNO=" ttreturn.retorno ttreturn.data_emissao.
+        message "         api/boletoemitir Chamando bsweb/api/boleto/boletoemitir RETORNO=" + ttreturn.retorno ttreturn.data_emissao
+                " vresposta=" vresposta.
 
             if ttreturn.retorno = "REGISTRADO" /*ttreturn.codigo_barras <> "" and ttreturn.codigo_barras <> ?*/
             then do:
@@ -185,6 +186,12 @@ END.
                 unix silent value("rm -f " + vsaida + ".erro"). 
                 unix silent value("rm -f " + vsaida + ".sh"). 
                 
+            end.
+            else do: 
+                mensagem_erro =  trim(ttreturn.retorno).
+                unix silent value("rm -f " + vsaida). 
+                unix silent value("rm -f " + vsaida + ".erro"). 
+                unix silent value("rm -f " + vsaida + ".sh"). 
             end.
 
     End. 
