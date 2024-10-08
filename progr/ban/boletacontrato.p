@@ -35,27 +35,33 @@ for each titulo where titulo.contnum = contrato.contnum no-lock.
                           output par-recid-boleto,
                           output mensagem_erro).
 
-    find boletagbol where recid(boletagbol) =  par-recid-boleto no-lock no-error.
+    message "         ban/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar 
+        avail boletagbol par-recid-boleto mensagem_erro.
 
-    message "         ban/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar avail boletagbol par-recid-boleto mensagem_erro.
-
-    if avail boletagbol
+    if mensagem_erro = "ERRO=400"
     then do:
-        message "         ban/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar avail boletagbol par-recid-boleto mensagem_erro
-                boletagbol.dtemissao boletagbol.bolcod.
+        run perro.
+        leave.
+    end.
+    else do:
+        find boletagbol where recid(boletagbol) =  par-recid-boleto no-lock no-error.
+        if avail boletagbol
+        then do:
+            message "         ban/boletacontrato BOLETA CONTRATO  Volta api/boletoemitir.p" contrato.contnum titulo.titpar avail boletagbol 
+                par-recid-boleto mensagem_erro boletagbol.dtemissao boletagbol.bolcod.
     
-        if boletagbol.dtemissao <> ?
-        then do on error undo:
-            create boletagparcela.
-            boletagparcela.bolcod    = boletagbol.bolcod.
-            boletagparcela.contnum   = contrato.contnum.
-            boletagparcela.titpar    = titulo.titpar.
-            boletagparcela.VlCobrado = titulo.titvlcob.
+            if boletagbol.dtemissao <> ?
+            then do on error undo:
+                create boletagparcela.
+                boletagparcela.bolcod    = boletagbol.bolcod.
+                boletagparcela.contnum   = contrato.contnum.
+                boletagparcela.titpar    = titulo.titpar.
+                boletagparcela.VlCobrado = titulo.titvlcob.
 
-            run ptitulo.
+                run ptitulo.
+            end.
         end.
     end.
-
 
 
 end.
@@ -84,3 +90,15 @@ do on error undo:
     end.
 end.
 end procedure.
+
+
+procedure perro.
+do on error undo:
+    find current contrassin exclusive no-wait no-error.
+    if avail contrassin
+    then do:
+        contrassin.boletavel = ?.
+    end.
+end.
+end procedure.
+
