@@ -104,10 +104,10 @@ ttboleto.data_emissao =  string(year(today)) + "-" +
 create ttpagador.                                                
 ttpagador.tipo_pessoa = string(clien.tippes,"F/J").
 ttpagador.cpf_cnpj = clien.ciccgc.
-ttpagador.nome    = clien.clinom.
-ttpagador.cep = string(clien.cep[1]).
-ttpagador.endereco = RemoveAcento(clien.endereco[1]) + ", " + string(clien.numero[1]).
-ttpagador.cidade = RemoveAcento(clien.cidade[1]).
+ttpagador.nome    = substring(removeacento(clien.clinom),1,40).
+ttpagador.cep = string(int64(clien.cep[1]),"99999999").
+ttpagador.endereco = substring(removeacento(clien.endereco[1]),1,34) + ", " + string(clien.numero[1]).
+ttpagador.cidade = substring(RemoveAcento(clien.cidade[1]),1,15).
 ttpagador.uf = RemoveAcento(clien.ufecod[1]).
 
 def var hEntrada as handle.
