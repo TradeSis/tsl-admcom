@@ -14,7 +14,7 @@ def temp-table ttparametros serialize-name "parametros"
     field etbcod           as int
     field tipooperacao     as char.
 
-message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/frrescart_v1801.p -> frrescart_v1801_run.p".
+message today string(time,"HH:MM:SS") "Disparando " pidrelat "tsrelat/telaanaliini.p " .
 
 run marcatsrelat ("INICIO").
 DEF VAR hentrada AS HANDLE.
@@ -119,6 +119,7 @@ END.
                  (   "Geral/geral",
                             ?, 
                             "geral",
+                            ?,
                             ?,
                             ?,
                             ?,
