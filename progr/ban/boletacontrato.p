@@ -13,6 +13,7 @@ find contrato of contrassin no-lock.
 vparcelas = 0.
 for each titulo where titulo.contnum = contrato.contnum no-lock.
     if titulo.titpar = 0 then next.
+    if titulo.titsit <> "LIB" then next.
     if titulo.bolcod <> ? then next. /* ja boletado */
     vparcelas = vparcelas + 1.
 end.
@@ -22,6 +23,7 @@ THEN RETURN.
 for each titulo where titulo.contnum = contrato.contnum no-lock.
     
     if titulo.titpar = 0 then next.
+    if titulo.titsit <> "LIB" then next.
 
     if titulo.bolcod <> ? then next. /* ja boletado */
 
