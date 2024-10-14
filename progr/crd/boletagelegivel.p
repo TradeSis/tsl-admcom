@@ -29,16 +29,8 @@ def var vidade as int format "999".
     
         pboletavel = yes.
 
-        if titulo.etbcod = 188 or 
-           titulo.etbcod = 13
-        then.
-        else do:
-            pmotivo = "NAO EH LOJA PILOTO".
-            pboletavel = no.
-        end.
-                 
-        if pboletavel
-        then do:
+        /* 10/10/2024 lojas full  */
+        
         vidade = (today - clien.dtnasc) / 365.
         if vidade = ? then vidade = 0.
 
@@ -141,7 +133,6 @@ def var vidade as int format "999".
                 end.
             end.
         end.
-        end. /* Piloto */
     end.
 
     /* */

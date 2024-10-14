@@ -14,17 +14,26 @@ def var vhml as log.
 
 vhml = no.
 vhost = "10.2.0.83".
-
+if vhostname = "sv-ca-boletagem" 
+then do:
+    vhost = "boletagem.lebes.com.br".
+end.
 if vhostname = "SV-CA-DB-DEV" 
 then do:
     vhml = yes.
     vhost = "10.145.0.233".
 end.
-if vhostname = "SV-CA-DB-QA"
-then do: 
+if vhostname = "SV-CA-DB-QA" 
+then do:
     vhml = yes.
-    vhost = "10.145.0.44".  
+    vhost = "10.145.0.44".
 end.
+if vhostname = "sv-ca-boletagemqa"
+then do:
+    vhml = yes.
+    vhost = "boletagemqa.lebes.com.br".
+end.
+
 
 def var vlcentrada as longchar.
 def var vlcsaida as longchar.
