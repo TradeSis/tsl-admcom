@@ -25,6 +25,7 @@ def {1} shared temp-table ttcontrato no-undo serialize-name "acoofertacont"
     field vlr_parcela   as dec
     field dt_venc       as date
     field dias_atraso   as int
+    field dias_atrasofim   as int
     field qtd_pagas     as int
     field qtd_parcelas  as int
     field perc_pagas    as dec
@@ -47,7 +48,8 @@ def {1} shared temp-table ttnegociacao no-undo serialize-name "acooferta"
     field vlr_selecionado like ttcontrato.vlr_divida
     
     field dt_venc        like ttcontrato.dt_venc
-    field dias_atraso   like ttcontrato.dias_atraso 
+    field dias_atraso   like ttcontrato.dias_atraso
+    field dias_atrasofim   like ttcontrato.dias_atrasofim 
     index idx is unique primary  negcod asc.
 
 def {1} shared temp-table ttcondicoes no-undo serialize-name "acoofertacond"
@@ -233,7 +235,10 @@ for each contrato where
                contrato.vltotal  >= aconegoc.vlr_total and
                vperc_pagas >= aconegoc.perc_pagas and
                vqtd_pagas  >= aconegoc.qtd_pagas and
-               vdias_atraso >= aconegoc.dias_atraso and                     
+               vdias_atraso >= aconegoc.dias_atraso and 
+               vdias_atraso <= (if aconegoc.dias_atrasofim = 0
+                                then vdias_atraso
+                                else aconegoc.dias_atrasofim)   and                    
                contrato.dtinicial >= (if aconegoc.dtemissao_de = ?
                                       then contrato.dtinicial
                                       else aconegoc.dtemissao_de) and
