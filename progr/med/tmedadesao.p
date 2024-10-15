@@ -315,17 +315,14 @@ repeat:
              then do: 
                 hide message no-pause.
                 sresp = no.
-                    message "este procedimento nao esta fazendo chamada a api de cancelamento, apenas cancela no admcom"
-                        view-as alert-box. 
+                    /* message "este procedimento nao esta fazendo chamada a api de cancelamento, apenas cancela no admcom"
+                        view-as alert-box. */
                 
                 message "Confirma cancelamento adesao numero " medadesao.idadesao "?"
                     update sresp.
                 if sresp
                 then do:
-                    /* HELIO 21032024 cancela adesao por api, desativado
-                    *run api/medcancelaadesao.p (recid(medadesao)).
-                    */
-                    run med/cancelaadesao.p (recid(medadesao)). /* cancela direto */
+                    run api/medcancelaadesao.p (recid(medadesao)).
                     leave.
                 end.
             end.
@@ -705,6 +702,9 @@ def var vcxacod         as int.
 def var vdtinivig       as date.
 def var vdtfimvig       as date.
 def var vtipoplano as char.
+def var vid_contrato_plano as char.
+def var vid_cliente as char.
+def var vidBeneficiarioTipo as char.
 def var vcelular as char.
 def var vdtnasc as char.
 def var vgenero as char.
@@ -725,6 +725,9 @@ def var         vuf as char.
     vdtfimvig   = if avail medadedados 
         then date(int(entry(2,medadedados.conteudo,"-")), int(entry(3,medadedados.conteudo,"-")),int(entry(1,medadedados.conteudo,"-")))
         else ?.
+    /* helio 24092024 */
+    if medadesao.dtcanc <> ?
+    then vdtfimvig = medadesao.dtcanc.
 
     find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.nome" no-lock no-error.
     vnomepaciente   = if avail medadedados then medadedados.conteudo else "".
@@ -760,9 +763,29 @@ def var         vuf as char.
     end.
     ***/
 
-    vtipoplano = "101530".
+    vtipoplano = "101738". /* helio 24092024 */
     if medadesao.idmedico = "DOC24_57" then vtipoplano = "101299".
     if medadesao.idmedico = "DOC24_58" then vtipoplano = "101300".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.rms.tipoPlano" no-lock no-error.
+    vtipoplano  = if avail medadedados then medadedados.conteudo else vtipoplano.
+
+    /* Versao Fixa */
+    vid_contrato_plano = "100578104". /* helio 24092024 */
+    if medadesao.idmedico = "DOC24_57" then vid_contrato_plano = "100578037".
+    if medadesao.idmedico = "DOC24_58" then vid_contrato_plano = "100578037".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.rms.idClienteContrato" no-lock no-error.
+    vid_contrato_plano  = if avail medadedados then medadedados.conteudo else vid_contrato_plano.
+
+    find medadedados of medadesao where medadedados.idcampo = "proposta.rms.idBeneficiarioTipo" no-lock no-error.
+    vidBeneficiarioTipo  = if avail medadedados then medadedados.conteudo else "1".
+        
+    vid_cliente = "10188". /* helio 24092024 */
+    if medadesao.idmedico = "DOC24_57" then vid_cliente = "10159".
+    if medadesao.idmedico = "DOC24_58" then vid_cliente = "10159".
+    find medadedados of medadesao where medadedados.idcampo = "proposta.rms.idCliente" no-lock no-error.
+    vid_cliente  = if avail medadedados then medadedados.conteudo else vid_cliente.
+    
+    
 
     find medadedados of medadesao where medadedados.idcampo = "proposta.cliente.dataNascimento" no-lock no-error.
     vdtnasc  = if avail medadedados then medadedados.conteudo else "".
@@ -793,8 +816,8 @@ def var         vuf as char.
     if length(trim(vcelular)) < 10
     then vcelular = "99999999999".
     put unformatted 
-        "100578037;" /* ID_CONTRATO_PLANO */
-        "1;"        /* ID_BENEFICIARIO_TIPO */
+        vid_contrato_plano vcp /* ID_CONTRATO_PLANO */
+        vidBeneficiarioTipo vcp       /* ID_BENEFICIARIO_TIPO */
         vnomepaciente    vcp    /* NOME*/
         ";"
         "10159;"
@@ -817,7 +840,7 @@ def var         vuf as char.
         vcidade vcp
         vuf vcp
         vtipoplano vcp
-        if medadesao.dtcanc = ? then "ADESAO" else "CANCELAMENTO" vcp
+        if medadesao.dtcanc = ? then "A" else "C" vcp   /* helio 24092024 - 1350 AJUSTES CHAMA DOUTOR */
         string(medadesao.dataTransacao,"99/99/9999") vcp
         ";"
         ";"
