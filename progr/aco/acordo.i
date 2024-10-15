@@ -99,10 +99,26 @@ end.
 for each ttcontrato.
     delete ttcontrato.
 end.
+def var vestaemacordo as log.
 
 for each contrato where
     contrato.clicod = pclicod
         no-lock.
+
+
+    vestaemacordo = no.
+    for each aoacorigem where aoacorigem.contnum = contrato.contnum no-lock.
+        find aoacordo of aoacorigem no-lock.
+        if aoacordo.tipo <> ptpnegociacao 
+        then next.
+        if aoacordo.dtcanc <> ? 
+        then next.
+        if aoacordo.situacao = "C" or aoacordo.situacao = "Q" or aoacordo.situacao = "F"
+        then next.
+        vestaemacordo = yes.
+        leave.
+    end.
+    if vestaemacordo then next.
 
     vvlr_aberto     = 0.
     vvlr_vencido = 0.
