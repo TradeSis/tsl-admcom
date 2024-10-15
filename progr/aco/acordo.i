@@ -821,7 +821,7 @@ for each acoplanos where acoplanos.negcod = par-negcod
         else vdiasentrada = int(entry(1,acoplanos.listadiasparaentrada)).
         vdata = today + vdiasentrada.
         
-        ttcondicoes.dtvenc1     = vdata + acoplanos.dias_max_primeira.
+        ttcondicoes.dtvenc1     = vdata + if acoplanos.dias_max_primeira = 0 then 30 else acoplanos.dias_max_primeira.
         ttcondicoes.dtvenc1     = date(month(ttcondicoes.dtvenc1),day(vdata),year(ttcondicoes.dtvenc1)).
         ttparcelas.dtven  = vdata.
         if weekday(ttparcelas.dtven) = 7 /* sabado */ 
