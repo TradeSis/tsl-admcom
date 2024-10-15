@@ -26,7 +26,8 @@ def var vhml as log.
 vhml = no.
 
 if vhostname = "SV-CA-DB-DEV" or 
-   vhostname = "SV-CA-DB-QA"
+   vhostname = "SV-CA-DB-QA" or
+   opsys <> "UNIX"
 then do: 
     vhml = yes.
 end.

@@ -294,6 +294,9 @@ procedure pparametros.
                overlay
                title acoplanos.planom.
     end.
+
+    if acoplanos.com_entrada and acoplanos.perc_min_entrada = 100
+    then acoplanos.qtd_vezes = 0.
     
     run pparcelas.
     

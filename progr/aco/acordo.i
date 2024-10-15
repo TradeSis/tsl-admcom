@@ -775,7 +775,7 @@ for each acoplanos where acoplanos.negcod = par-negcod
     end.
     
     ttcondicoes.dtvenc1     = today + acoplanos.dias_max_primeira.
-    
+    ttcondicoes.dtvenc1     = date(month(ttcondicoes.dtvenc1),day(today),year(ttcondicoes.dtvenc1)).
     
     ttcondicoes.vlr_acordo  = ttcondicoes.vlr_acordo - ttcondicoes.vlr_entrada.
     
@@ -799,18 +799,31 @@ for each acoplanos where acoplanos.negcod = par-negcod
     ttcondicoes.vlr_acordo  = ttcondicoes.vlr_acordo + ttcondicoes.vlr_entrada.
     if ttcondicoes.vlr_entrada > 0
     then do:
+        /*
+        message "ttcondicoes.vlr_entrada" ttcondicoes.vlr_entrada "acoplanparcel.titpar" acoplanparcel.titpar. 
         find first ttparcelas where
              ttparcelas.placod = ttcondicoes.placod and 
              ttparcelas.titpar = acoplanparcel.titpar
              no-error.
         if avail ttparcelas then next.                     
+        */
         create ttparcelas.
         ttparcelas.negcod = ttcondicoes.negcod.
         ttparcelas.planom = acoplanos.planom.
         ttparcelas.placod = ttcondicoes.placod.
 
-        /* helio 27042023 - fixo today + 3, cuidando se for final de semana */
-        ttparcelas.dtven  = today +  7. /*Helio 27/05/2024 */ 
+        def var vlistadias as int.
+        def var vdiasentrada as int.
+        def var vdata as date.
+        vlistadias = num-entries(acoplanos.listadiasparaentrada).
+        if vlistadias = 0 
+        then vdiasentrada = 7.
+        else vdiasentrada = int(entry(1,acoplanos.listadiasparaentrada)).
+        vdata = today + vdiasentrada.
+        
+        ttcondicoes.dtvenc1     = vdata + acoplanos.dias_max_primeira.
+        ttcondicoes.dtvenc1     = date(month(ttcondicoes.dtvenc1),day(vdata),year(ttcondicoes.dtvenc1)).
+        ttparcelas.dtven  = vdata.
         if weekday(ttparcelas.dtven) = 7 /* sabado */ 
         then ttparcelas.dtven = ttparcelas.dtven + 2.
         if weekday(ttparcelas.dtven) = 1 /* domingo */ 
@@ -840,9 +853,9 @@ def var vano as int.
     find acoplanos where acoplanos.negcod = ttcondicoes.negcod and 
                 acoplanos.placod =  ttcondicoes.placod no-lock.
 
-    vdia = day(ttcondicoes.dtvenc).
-    vmes = month(ttcondicoes.dtvenc).
-    vano = year(ttcondicoes.dtvenc).
+    vdia = day(ttcondicoes.dtvenc1).
+    vmes = month(ttcondicoes.dtvenc1).
+    vano = year(ttcondicoes.dtvenc1).
 
     for each acoplanparcel of acoplanos no-lock
         by acoplanparcel.titpar.
@@ -871,6 +884,11 @@ def var vano as int.
         
         ttparcelas.perc_parcela = acoplanparcel.perc_parcel.
         ttparcelas.vlr_parcela = round((ttcondicoes.vlr_acordo - ttcondicoes.vlr_entrada) * acoplanparcel.perc_parcel / 100,2). 
+        
+
+        if ttparcelas.vlr_parcela <= 0
+        then delete ttparcelas.
+
         vmes = vmes + 1.
         if vmes > 12 
         then assign vano = vano + 1
