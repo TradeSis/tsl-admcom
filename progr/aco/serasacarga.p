@@ -1,6 +1,6 @@
 
-/* Programa de carga */
-
+def var varqcsv as char format "x(65)".
+                
 for each titulo where titnat = no and titdtpag = ? and titdtven < today - 60 no-lock.
     if (titulo.modcod = "CRE" and titulo.tpcontrato = "") or titulo.modcod = "CP1" or titulo.modcod = "CP2"
     then.
@@ -24,7 +24,39 @@ for each titulo where titnat = no and titdtpag = ? and titdtven < today - 60 no-
     
 end.
 
-/* Gera arquivo para os não envidos */
-/* saida /admcom/tmp/serasa/   */
+
+varqcsv = "/admcom/tmp/serasa/" + 
+           "CA_" + string(today,"99999999") + "_001" + ".csv".
+
+                
+output to value(varqcsv).
+put unformatted  "CNPJ_CREDOR;" 
+                 "DOCUMENTO;"
+                 skip.
+
+
+
+for each serasacli where serasacli.dtenvio = ? NO-LOCK.
+
+    FIND clien OF serasacli NO-LOCK NO-ERROR.
+    IF AVAIL clien
+    THEN DO:
+        put unformatted
+            "96662168000131" ";"
+            clien.ciccgc ";"
+            skip.
+    END.
+end.  
+
+output close.
+
+do on error undo:
+    for each serasacli where serasacli.dtenvio = ?.
+        serasacli.dtenvio = today.
+    end.
+end.
+
+
+
 
 
