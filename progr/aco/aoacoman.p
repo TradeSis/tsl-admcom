@@ -449,6 +449,21 @@ for each aoacparcela of aoacordo no-lock
                 find banboleto of banbolorigem no-lock no-error.
             end.
         end.
+        /* serasa 15102024 */
+        if not avail banboleto
+        then do:
+            find first banbolOrigem  where 
+                banbolorigem.tabelaOrigem = "SERASA" and
+                banbolorigem.chaveOrigem  = "idacordo,parcela" and
+                banbolorigem.dadosOrigem  = string(aoacordo.idacordo) + "," + 
+                           string(aoacparcela.parcela)
+                no-lock no-error.
+            if avail banbolorigem
+            then do:
+                find banboleto of banbolorigem no-lock no-error.
+            end.
+        end.
+        
 
     end.
     display 

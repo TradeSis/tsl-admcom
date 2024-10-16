@@ -256,25 +256,58 @@ hide frame f-dados no-pause.
 procedure frame-a.
 
 
-    if aoacordo.situacao <> "A"
+    if true /*aoacordo.situacao <> "A"*/
     then do:
-
         find first banbolOrigem  where 
-            banbolorigem.tabelaOrigem = "aoacparcela" and             banbolorigem.chaveOrigem  = "idacordo,parcela" and                         banbolorigem.dadosOrigem  = string(aoacordo.idacordo) + "," +
-                           string(aoacparcela.parcela)
-            no-lock no-error.
-    if not avail banbolorigem
-    then
-            find first banbolOrigem  where 
-            banbolorigem.tabelaOrigem = "promessa" and
-            banbolorigem.chaveOrigem  = "idacordo,contnum,parcela" and
-            banbolorigem.dadosOrigem  = string(aoacordo.idacordo) + "," + string(aoacparcela.contnum) + "," +
+            banbolorigem.tabelaOrigem = "aoacparcela" and
+            banbolorigem.chaveOrigem  = "idacordo,parcela" and
+            banbolorigem.dadosOrigem  = string(aoacordo.idacordo) + "," +
                            string(aoacparcela.parcela)
             no-lock no-error.
         if avail banbolorigem
         then do:
             find banboleto of banbolorigem no-lock no-error.
         end.                    
+        else do:
+            find first banbolOrigem  where 
+                banbolorigem.tabelaOrigem = "promessa" and
+                banbolorigem.chaveOrigem  = "idacordo,contnum,parcela" and
+                banbolorigem.dadosOrigem  = string(aoacordo.idacordo) + "," + 
+                    string(aoacparcela.contnum) + "," +
+                           string(aoacparcela.parcela)
+                no-lock no-error.
+            if avail banbolorigem
+            then do:
+                find banboleto of banbolorigem no-lock no-error.
+            end.                    
+        end.
+        if not avail banboleto
+        then do:
+            find first banbolOrigem  where 
+                banbolorigem.tabelaOrigem = "api/acordo,negociacaoboleto" and
+                banbolorigem.chaveOrigem  = "idacordo,parcela" and
+                banbolorigem.dadosOrigem  = string(aoacordo.idacordo) + "," + 
+                           string(aoacparcela.parcela)
+                no-lock no-error.
+            if avail banbolorigem
+            then do:
+                find banboleto of banbolorigem no-lock no-error.
+            end.
+        end.
+        /* serasa 15102024 */
+        if not avail banboleto
+        then do:
+            find first banbolOrigem  where 
+                banbolorigem.tabelaOrigem = "SERASA" and
+                banbolorigem.chaveOrigem  = "idacordo,parcela" and
+                banbolorigem.dadosOrigem  = string(aoacordo.idacordo) + "," + 
+                           string(aoacparcela.parcela)
+                no-lock no-error.
+            if avail banbolorigem
+            then do:
+                find banboleto of banbolorigem no-lock no-error.
+            end.
+        end.
     end.
     display 
         aoacparcela.parcela 

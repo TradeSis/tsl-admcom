@@ -12,13 +12,14 @@ def var vhostname as char.
 input through hostname.
 import vhostname.
 input close. 
+
 if vhostname = "SV-CA-DB-DEV" or 
-   vhostname = "SV-CA-DB-QA"
+   vhostname = "SV-CA-DB-QA" or
+   opsys <> "UNIX"
 then do: 
-    vstatus = "S".  
-    vmensagem = "". 
+    vstatus = "S".
     return.
-end.    /* helio 14032022 - Ajuste Boletos em QA */
+end.
 
 def var vlcentrada as longchar.
 def var vlcsaida as longchar.
@@ -92,14 +93,14 @@ vsaida  = "/u/bsweb/works/boletoemitir" + string(banboleto.nossonumero) + "_" +
 
 output to value(vsaida + ".sh").
 put unformatted
-    "curl -s \"http://localhost/bsweb/api/boleto/barramentoEmitir" + "\" " +
-    " -H \"Content-Type: application/json\" " +
+    "curl -s ~"http://localhost/bsweb/api/boleto/barramentoEmitir" + "~" " +
+    " -H ~"Content-Type: application/json~" " +
     " -d '" + string(vLCEntrada) + "' " + 
     " -o "  + vsaida.
 output close.
 
 unix silent value("sh " + vsaida + ".sh " + ">" + vsaida + ".erro").
-unix silent value("echo \"\n\">>"+ vsaida).
+unix silent value("echo ~"\n~">>"+ vsaida).
 
 input from value(vsaida) no-echo.
 import unformatted vresposta.
