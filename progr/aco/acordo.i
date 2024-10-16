@@ -68,20 +68,21 @@ def {1} shared temp-table ttcondicoes no-undo serialize-name "acoofertacond"
     field calc_juro as log
     field qtd_vezes as dec
     field dias_max_primeira as dec
+    field vlr_Seguro as dec
+    field vlr_acordoOriginal as dec
     index idx is unique primary negcod asc placod asc planom asc.
 
 def {1} shared temp-table ttparcelas no-undo serialize-name "parcelas"
-    field negcod        like aconegoc.negcod
-    field planom        like acoplanos.planom
-    field placod        like acoplanos.placod
-    field titpar        as int format ">>9" label "parc"
-    field perc_parcela  as dec decimals 6 format ">>>9.999999%" label "perc"
-    field dtvenc        as date format "99/99/9999"
-    field vlr_parcela   as dec format ">>>>>9.99" label "vlr parcela"
+    field negcod                like aconegoc.negcod
+    field planom                like acoplanos.planom
+    field placod                like acoplanos.placod
+    field titpar                as int format ">>9" label "parc"
+    field perc_parcela          as dec decimals 6 format ">>>9.999999%" label "perc"
+    field dtvenc                as date format "99/99/9999"
+    field vlr_parcelaOriginal   as dec
+    field segprestamista        as dec
+    field vlr_parcela           as dec format ">>>>>9.99" label "vlr parcela"
     index idx is unique primary negcod asc placod asc planom asc titpar asc.
-    
-
-
 
 
 
@@ -853,8 +854,17 @@ for each acoplanos where acoplanos.negcod = par-negcod
         ttparcelas.titpar = 0.
         ttparcelas.vlr_parcela = ttcondicoes.vlr_entrada.
     end.
-    run pparcelas (input recid(ttcondicoes)).
-     
+    find aconegoc where aconegoc.negcod = par-negcod no-lock.
+    ttcondicoes.vlr_acordoOriginal = ttcondicoes.vlr_acordo.
+
+    ttcondicoes.vlr_Seguro = 0.
+    run pparcelas (input recid(ttcondicoes), 
+                   input aconegoc.calculaSeguroPrestamista,
+                   output ttcondicoes.vlr_Seguro).
+    if ttcondicoes.vlr_Seguro > 0
+    then do:
+        ttcondicoes.vlr_acordo = ttcondicoes.vlr_acordo + ttcondicoes.vlr_Seguro.
+    end.
 end.
    
 end procedure.
@@ -864,11 +874,17 @@ end procedure.
 
 procedure pparcelas.
 def input param prec as recid.
+def input param temseguroprestamista as log.
+def output param ptotalSeguro as dec.
 
 def var vtitdtven as date.
 def var vmes as int.
 def var vdia as int.
 def var vano as int.
+def var ptpseguro as int.
+
+ptpseguro = 1.
+
 
     find ttcondicoes where recid(ttcondicoes) = prec.
     find acoplanos where acoplanos.negcod = ttcondicoes.negcod and 
@@ -905,7 +921,24 @@ def var vano as int.
         
         ttparcelas.perc_parcela = acoplanparcel.perc_parcel.
         ttparcelas.vlr_parcela = round((ttcondicoes.vlr_acordo - ttcondicoes.vlr_entrada) * acoplanparcel.perc_parcel / 100,2). 
-        
+        ttparcelas.vlr_parcelaOriginal = ttparcelas.vlr_parcela.
+
+        if temseguroprestamista = true
+        then do:
+
+            find first segprestpar where 
+                segprestpar.tpseguro  = ptpseguro and
+                segprestpar.categoria = "MOVEIS" and
+                segprestpar.etbcod    = 0
+            no-lock no-error.
+                    
+            if avail segprestpar 
+            then do: 
+                ttparcelas.segprestamista = ttparcelas.vlr_parcela * segprestpar.percentualSeguro / 100.
+                ptotalSeguro = ptotalSeguro + ttparcelas.segprestamista.
+                ttparcelas.vlr_parcela = ttparcelas.vlr_parcela + ttparcelas.segprestamista.
+            end.
+        end.
 
         if ttparcelas.vlr_parcela <= 0
         then delete ttparcelas.
