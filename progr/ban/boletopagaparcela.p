@@ -87,7 +87,7 @@ do on error undo:
     find current boletagbol exclusive no-wait no-error.
     if avail boletagbol
     then do:
-        boletagbol.dtpagamento = par-titdtpag.
+        boletagbol.dtpagamento = if par-titdtpag = ? then today else  par-titdtpag.
         boletagbol.situacao    = "P". /* PAGO */  
         boletagbol.etbpag       = pdvmov.etbcod.  
         boletagbol.ctmcod       = pdvmov.ctmcod. 

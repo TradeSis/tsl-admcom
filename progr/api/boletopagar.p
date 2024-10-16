@@ -106,7 +106,7 @@ then do:
 end.
 ttentrada.valor_movimento = vvalor_movimento.
 ttentrada.cpf_cnpj_pagador_final = clien.ciccgc.
-ttentrada.nome_pagador_final = clien.clinom.
+ttentrada.nome_pagador_final = substring(clien.clinom,1,30).
 
 hEntrada = TEMP-TABLE ttentrada:handle.
 
