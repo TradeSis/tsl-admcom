@@ -1,14 +1,15 @@
-def var vi as int.
-for each serasacli.
-    delete serasacli.
-end.    
-for each titulo where titnat = no and titdtpag = ? and titdtven < today - 30 no-lock.
-    if titulo.modcod = "CRE" and titulo.tpcontrato = ""
+
+/* Programa de carga */
+
+for each titulo where titnat = no and titdtpag = ? and titdtven < today - 60 no-lock.
+    if (titulo.modcod = "CRE" and titulo.tpcontrato = "") or titulo.modcod = "CP1" or titulo.modcod = "CP2"
     then.
     else next.
     if titulo.titsit = "LIB"
     then.
     else next.
+
+
     find clien where clien.clicod = titulo.clifor no-lock no-error.
     if not avail clien then next.
     if clien.ciccgc = "" or clien.ciccgc = ? then next.
@@ -20,11 +21,10 @@ for each titulo where titnat = no and titdtpag = ? and titdtven < today - 30 no-
     
     create serasacli.
     serasacli.clicod = titulo.clifor.
-    vi = vi + 1.
-        
-    if vi > 15
-    then leave.
     
 end.
+
+/* Gera arquivo para os não envidos */
+/* saida /admcom/tmp/serasa/   */
 
 
