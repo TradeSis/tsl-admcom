@@ -71,13 +71,15 @@ def {1} shared temp-table ttcondicoes no-undo serialize-name "acoofertacond"
     index idx is unique primary negcod asc placod asc planom asc.
 
 def {1} shared temp-table ttparcelas no-undo serialize-name "parcelas"
-    field negcod        like aconegoc.negcod
-    field planom        like acoplanos.planom
-    field placod        like acoplanos.placod
-    field titpar        as int format ">>9" label "parc"
-    field perc_parcela  as dec decimals 6 format ">>>9.999999%" label "perc"
-    field dtvenc        as date format "99/99/9999"
-    field vlr_parcela   as dec format ">>>>>9.99" label "vlr parcela"
+    field negcod                like aconegoc.negcod
+    field planom                like acoplanos.planom
+    field placod                like acoplanos.placod
+    field titpar                as int format ">>9" label "parc"
+    field perc_parcela          as dec decimals 6 format ">>>9.999999%" label "perc"
+    field dtvenc                as date format "99/99/9999"
+    field vlr_parcela           as dec format ">>>>>9.99" label "vlr parcela"
+    field segprestamista        as dec
+    field totalsegprestamista   as dec
     index idx is unique primary negcod asc placod asc planom asc titpar asc.
     
 
