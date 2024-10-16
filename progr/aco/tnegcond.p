@@ -120,10 +120,7 @@ ptpnegociacao = aconegoc.tpnegociacao.
         with frame frame-b.
         
 run montacondicoes (input par-negcod, ?).
-for each ttparcelas.
-disp ttparcelas.
-end.
-pause.
+
 
 
 
