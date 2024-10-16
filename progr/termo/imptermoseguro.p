@@ -71,6 +71,7 @@ def var vcatnom  as char.
             vvalorSeguroPrestamista29 = 65.34.
        end.
        else do:
+            find termos where termos.idtermo = "ADESAO-SEGURO-PRESTAMISTA-MOVEIS" no-lock.
             find contrato where contrato.contnum = vndseguro.contnum no-lock no-error.
             if contrato.modcod begins "CP"
             then do:
