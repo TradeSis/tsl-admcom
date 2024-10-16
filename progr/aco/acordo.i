@@ -839,7 +839,8 @@ for each acoplanos where acoplanos.negcod = par-negcod
         ttparcelas.titpar = 0.
         ttparcelas.vlr_parcela = ttcondicoes.vlr_entrada.
     end.
-    run pparcelas (input recid(ttcondicoes)).
+    find aconegoc where aconegoc.negcod = par-negcod no-lock.
+    run pparcelas (input recid(ttcondicoes), input aconegoc.calculaSeguroPrestamista).
      
 end.
    
@@ -850,11 +851,17 @@ end procedure.
 
 procedure pparcelas.
 def input param prec as recid.
+def input param temseguroprestamista as log.
 
 def var vtitdtven as date.
 def var vmes as int.
 def var vdia as int.
 def var vano as int.
+def var pvalorTotalSeguroPrestamista as dec.
+def var ptpseguro as int.
+
+ptpseguro = 1.
+
 
     find ttcondicoes where recid(ttcondicoes) = prec.
     find acoplanos where acoplanos.negcod = ttcondicoes.negcod and 
@@ -891,7 +898,25 @@ def var vano as int.
         
         ttparcelas.perc_parcela = acoplanparcel.perc_parcel.
         ttparcelas.vlr_parcela = round((ttcondicoes.vlr_acordo - ttcondicoes.vlr_entrada) * acoplanparcel.perc_parcel / 100,2). 
-        
+
+        if temseguroprestamista = true
+        then do:
+
+            find first segprestpar where 
+                segprestpar.tpseguro  = ptpseguro and
+                segprestpar.categoria = "MOVEIS" and
+                segprestpar.etbcod    = 0
+            no-lock no-error.
+                    
+            pvalorTotalSeguroPrestamista = 0.
+            
+            if avail segprestpar 
+            then do: 
+                pvalorTotalSeguroPrestamista = ttparcelas.vlr_parcela * segprestpar.percentualSeguro / 100.
+                ttparcelas.segprestamista = pvalorTotalSeguroPrestamista. 
+                ttparcelas.totalsegprestamista = ttparcelas.vlr_parcela + pvalorTotalSeguroPrestamista.
+            end.
+        end.
 
         if ttparcelas.vlr_parcela <= 0
         then delete ttparcelas.
