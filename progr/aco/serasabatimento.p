@@ -70,14 +70,13 @@ put unformatted  "CNPJ_CREDOR;"
                      
 FOR EACH serasacli NO-LOCK:
 
-    FIND clien OF serasacli NO-LOCK NO-ERROR.
-    IF AVAIL clien
-    THEN DO:
-        put unformatted
-            "96662168000131" ";"
-            clien.ciccgc ";"
-            skip.
-    END.
+    FIND clien OF serasacli NO-LOCK.
+
+    put unformatted
+        "96662168000131" ";"
+        clien.ciccgc ";"
+        skip.
+   
 END.      
 
 output close.
