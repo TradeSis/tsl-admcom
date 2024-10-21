@@ -1,7 +1,18 @@
 /* helio 17092024 - processa pagamento boletos boletagem */
 /* programa inicio do processo */
+
+
+
 def var vretorno as char.
 pause 0 before-hide.
+
+IF TIME > 84500 OR TIME < 13000
+THEN do:
+    message string(today,"99/99/9999") string(time,"HH:MM:SS") "Nao processar Banrisul".
+    RETURN.
+end.    
+
+
 def var vi as int.
 vi = 0.
 for each boletagbol where boletagbol.situacao = "P" and dtpagamento = ? and dtbaixa = ? no-lock.

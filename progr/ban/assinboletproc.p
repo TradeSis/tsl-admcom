@@ -5,6 +5,12 @@ def input param petbini as int.
 def input param petbfim as int.
 pause 0 before-hide.
 
+IF TIME > 84500 OR TIME < 13000
+THEN do:
+    message string(today,"99/99/9999") string(time,"HH:MM:SS") "Nao processar Banrisul".
+    RETURN.
+end.    
+
 
 find first contrassin where dtproc = ? and 
             contrassin.etbcod >= petbini and 
