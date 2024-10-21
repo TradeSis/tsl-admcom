@@ -275,6 +275,9 @@ for each tt-arq.
 
                     if banbolorigem.tabelaorigem = "api/acordo,negociacaoboleto"  
                     then vgeramov = "BAO".
+                    
+                    if banbolorigem.tabelaorigem = "SERASA"  
+                    then vgeramov = "BSE".
 
                     if banbolorigem.tabelaOrigem = "titulo" or
                        banbolorigem.tabelaOrigem = ?        or     
@@ -376,8 +379,23 @@ for each tt-arq.
                         if vok = no
                         then verro = "Erro Baixa Acordo ".
                         par-titjuro = 0.
-                    end.    
+                    end.     
                     
+                    else
+                    if  banbolorigem.tabelaorigem = "SERASA" /*helio 21102024 - serasa*/
+                    then do:
+                        run bol/efetivaacordose.p (     prec, 
+                                                        vseqreg, 
+                                                        recid(banbolorigem),
+                                                        par-titdtpag, 
+                                                        banbolorigem.valor, 
+                                                        par-titjuro, 
+                                                        output vok).
+
+                        if vok = no
+                        then verro = "Erro Baixa Acordo ".
+                        par-titjuro = 0.
+                    end.    
                     else if (banbolorigem.tabelaOrigem = "titulo" or banbolorigem.tabelaOrigem = ?) and
                             banBolOrigem.ChaveOrigem  = "contnum,titpar"
                     then do:
