@@ -280,7 +280,10 @@ for each tt-cont.
                 end.
                 else run gera-tt-env.
             end.
-            else run gera-tt-env.
+            else do:
+                if titulo.bolcod = ? /* Helio 17102024 */
+                then run gera-tt-env.
+            end.    
         end.
         if vcompgto 
         then vctrpago = vctrpago + 1.

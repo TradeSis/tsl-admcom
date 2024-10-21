@@ -160,7 +160,7 @@ repeat:
         if not avail titulo then next.                      
         if titulo.titsit <> "PAG" 
         then next.
-
+        if titulo.bolcod <> ? then next. /* helio 171024 */
         run gera-tt-env (input recid(titulo)).
                             
         /*create tt-tit.
