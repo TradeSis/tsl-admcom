@@ -150,6 +150,14 @@ end FUNCTION.
         if not avail contrato
         then next.   
 
+        /* PROJETO DPGE - COMUNICACAO SICRED */
+        find first contrassin where contrassin.contnum = contrato.contnum no-lock  no-error.
+        if avail contrassin
+        then do:
+            if contrassin.dtproc = ?
+            then next.
+        end.
+
         /*helio 51077 122020
         if contrato.dtinicial >= today
         then next.*/
