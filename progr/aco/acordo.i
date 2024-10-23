@@ -40,12 +40,12 @@ def {1} shared temp-table ttnegociacao no-undo serialize-name "acooferta"
     field negcod    like aconegoc.negcod
     field negnom    like aconegoc.negnom
     field qtd       as int 
-    field vlr_aberto like ttcontrato.vlr_aberto
-    field vlr_divida like ttcontrato.vlr_divida
+    field vlr_aberto like ttcontrato.vlr_aberto decimals 2
+    field vlr_divida like ttcontrato.vlr_divida decimals 2
     field qtd_selecionado as int 
-    field vlr_selaberto   like ttcontrato.vlr_aberto
+    field vlr_selaberto   like ttcontrato.vlr_aberto decimals 2
 /*    field vlr_seldivida   like ttcontrato.vlr_divida */
-    field vlr_selecionado like ttcontrato.vlr_divida
+    field vlr_selecionado like ttcontrato.vlr_divida decimals 2
     
     field dt_venc        like ttcontrato.dt_venc
     field dias_atraso   like ttcontrato.dias_atraso
@@ -56,12 +56,12 @@ def {1} shared temp-table ttcondicoes no-undo serialize-name "acoofertacond"
     field negcod        like aconegoc.negcod
     field planom        like acoplanos.planom
     field placod        like acoplanos.placod
-    field vlr_entrada   as dec
+    field vlr_entrada   as dec  decimals 2
     field min_entrada    as dec
-    field vlr_acordo    as dec
+    field vlr_acordo    as dec decimals 2
     field vlr_juroacordo as dec
     field dtvenc1       as date
-    field vlr_parcela   as dec
+    field vlr_parcela   as dec decimals 2
     field especial as log
     field perc_desc as dec
     field perc_acres as dec
@@ -79,9 +79,9 @@ def {1} shared temp-table ttparcelas no-undo serialize-name "parcelas"
     field titpar                as int format ">>9" label "parc"
     field perc_parcela          as dec decimals 6 format ">>>9.999999%" label "perc"
     field dtvenc                as date format "99/99/9999"
-    field vlr_parcelaOriginal   as dec
-    field segprestamista        as dec
-    field vlr_parcela           as dec format ">>>>>9.99" label "vlr parcela"
+    field vlr_parcelaOriginal   as dec decimals 2
+    field segprestamista        as dec decimals 2
+    field vlr_parcela           as dec format ">>>>>9.99" label "vlr parcela" decimals 2
     index idx is unique primary negcod asc placod asc planom asc titpar asc.
 
 
@@ -744,43 +744,41 @@ for each acoplanos where acoplanos.negcod = par-negcod
         then do: 
             if acoplanos.perc_desc > 0
             then
-            ttcondicoes.vlr_acordo =  ttnegociacao.vlr_selecionado - (ttnegociacao.vlr_selecionado * acoplanos.perc_desconto / 100).
+            ttcondicoes.vlr_acordo =  round(ttnegociacao.vlr_selecionado - (ttnegociacao.vlr_selecionado * acoplanos.perc_desconto / 100),2).
             else             
-            ttcondicoes.vlr_acordo =  ttnegociacao.vlr_selecionado - (
-                            acoplanos.valor_desc ).
+            ttcondicoes.vlr_acordo =  round(ttnegociacao.vlr_selecionado - ( acoplanos.valor_desc ),2).
 
         end.    
         else do:
         
             if acoplanos.perc_desc > 0
             then
-            ttcondicoes.vlr_acordo =  ttnegociacao.vlr_selaberto   - (ttnegociacao.vlr_selaberto   * acoplanos.perc_desconto / 100).
+            ttcondicoes.vlr_acordo =  round(ttnegociacao.vlr_selaberto   - (ttnegociacao.vlr_selaberto   * acoplanos.perc_desconto / 100),2).
             else 
-            ttcondicoes.vlr_acordo =  ttnegociacao.vlr_selaberto   - (
-                            acoplanos.valor_desc ).
+            ttcondicoes.vlr_acordo =  round(ttnegociacao.vlr_selaberto   - ( acoplanos.valor_desc ),2).
 
         end.    
     end.    
     else do:
         if acoplanos.calc_juro
         then do:
-            ttcondicoes.vlr_acordo =  ttnegociacao.vlr_selecionado. 
+            ttcondicoes.vlr_acordo =  round(ttnegociacao.vlr_selecionado,2). 
         end.    
         else do:
-            ttcondicoes.vlr_acordo =  ttnegociacao.vlr_selaberto. 
+            ttcondicoes.vlr_acordo =  round(ttnegociacao.vlr_selaberto,2). 
         end.    
     end.        
     
     if acoplanos.perc_acres > 0
     then do:
-        ttcondicoes.vlr_juroacordo = (ttcondicoes.vlr_acordo * (acoplanos.perc_acres) / 100).
-        ttcondicoes.vlr_acordo     =  ttcondicoes.vlr_acordo + ttcondicoes.vlr_juroacordo.
+        ttcondicoes.vlr_juroacordo = round(ttcondicoes.vlr_acordo * (acoplanos.perc_acres) / 100,2).
+        ttcondicoes.vlr_acordo     = round(ttcondicoes.vlr_acordo + ttcondicoes.vlr_juroacordo,2).
     end.    
     else
         if acoplanos.valor_acres > 0
         then do:
             ttcondicoes.vlr_juroacordo =  acoplanos.valor_acres.
-            ttcondicoes.vlr_acordo     =  ttcondicoes.vlr_acordo + ttcondicoes.vlr_juroacordo.
+            ttcondicoes.vlr_acordo     =  round(ttcondicoes.vlr_acordo + ttcondicoes.vlr_juroacordo,2).
         end.    
     
     
@@ -949,7 +947,12 @@ ptpseguro = 1.
                     vmes = 1.
 
     end.
-    
+    def var vparcelas as dec decimals 2.
+    vparcelas = 0.
+    for each ttparcelas.
+        vparcelas = vparcelas + ttparcelas.vlr_parcela.
+    end. 
+    ttcondicoes.vlr_acordo = vparcelas.
 
 
 end procedure.
