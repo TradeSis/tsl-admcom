@@ -8,6 +8,8 @@
 /* helio #16062022 - ID 148949 - Ajuste Data Admissão Cliente */
 /* helio #02092022 - reativacao projeto cria produto adm */
 
+def buffer bestab for estab.
+
 def var vvaloroperacao as dec.
 def var vvalorseguro   as dec.
 
@@ -207,6 +209,7 @@ end FUNCTION.
             run p-registro-13.
             /*run p-registro-14.*/
         end.
+        run p-registro-15.
         
         run p-registro-98.
     end.
@@ -499,9 +502,10 @@ procedure p-registro-07.
         
 end procedure.
 
-
 /* OPERACAO */
 procedure p-registro-10.
+    def var lcontratoeletronico as log.
+    
   def var vcod-produto  as integer.
   def var vplano-fin like contrato.crecod.
   vseq = vseq + 1.
@@ -524,9 +528,17 @@ procedure p-registro-10.
                     titulo.titpar     >= 1 and
                     titulo.titdtemi   = contrato.dtinicial
                     no-lock no-error.
-                    
                 end.
-    if not avail titulo then next.                     /* helio 25042023 - ID 24709 - arquivo exportação com falha. */
+
+    if not avail titulo then next.                     /* helio 25042023 - ID 24709 - arquivo exportaï¿½ï¿½o com falha. */
+
+    /* PROJETO DPGE - COMUNICACAO SICRED */
+    lcontratoeletronico = no.
+    find first contrassin where contrassin.contnum = contrato.contnum no-lock  no-error.
+    if avail contrassin
+    then do:
+        lcontratoeletronico = contrassin.dtproc <> ?.
+    end.
     
     /* helio 13072022 - projeto Criar Produtos - ADM */
     vcod-produto = sicred_contr.codProduto. 
@@ -543,7 +555,7 @@ procedure p-registro-10.
                 run achacobcod(output vcod-produto).
                 vservicos = contrato.vlseguro. 
             end.     
-        end.     
+        end.  
         /***https://trello.com/c/YRnrxmXd/62-produto-nova%C3%A7ao-arquivo-importado-sicr ed ***/
         if (contrato.tpcontrato = "N" or (avail titulo and titulo.tpcontrato = "N")) and contrato.modcod = "CRE"
         then vcod-produto = 2.
@@ -561,17 +573,18 @@ procedure p-registro-10.
         find contrsite where contrsite.contnum = contrato.contnum no-lock no-error. 
         if avail contrsite 
         then do: 
-            vcod-produto = 13. /* 06042021 helio - Crediário Digital . Int. Financeira - Codigo produto */
+            vcod-produto = 13. /* 06042021 helio - Crediï¿½rio Digital . Int. Financeira - Codigo produto */
         end.
     end.
-
-    vplano-fin = contrato.crecod.
-    if vplano-fin = 0     /* 122020 helio 46030 */
+  
+    vplano-fin = sicred_contr.fincod .   /* helio 12072024 contrato.crecod. */
+    /* helio 12072024 */
+    if vplano-fin = 0     
     then do:
-        if vcod-produto = 2 or vcod-produto = 12
+        if vcod-produto = 2 or vcod-produto = 12 or vcod-produto = 5    
         then vplano-fin = 500.
-        else if vcod-produto = 5
-             then vplano-fin = 501.
+        if vcod-produto = 19 or vcod-produto = 20
+        then vplano-fin = 501.
     end.
     
     /* 17.06 le a nota para pegar o valor dos servicos */
@@ -616,7 +629,7 @@ procedure p-registro-10.
                           then contrato.vlf_principal /*- contrato.vlentra helio 06042022*/
                           else contrato.vlf_principal.
     
-    /* ID 139269 - ADMCOM - "PRINCIPAL" CONTENDO Valores/Exportação de arquivo PRINCIPAL=0 */
+    /* ID 139269 - ADMCOM - "PRINCIPAL" CONTENDO Valores/Exportaï¿½ï¿½o de arquivo PRINCIPAL=0 */
     if contrato.modcod = "CRE" /* ID 139269 acrescentei teste so para CRE */
     then do:
         if vvlf_principal <= vservicos        /* ID 139269 era < ficou <= */
@@ -632,7 +645,7 @@ procedure p-registro-10.
                           else "N ".
 
   /*  vtipocontratosicred =  "N ". #02092022 */
-
+    
     def var v-data-comerc as log init yes.
     def var v-data-retorno as date.
     def var vdtinicial like contrato.dtinicial.
@@ -640,7 +653,7 @@ procedure p-registro-10.
     vdtinicial = contrato.dtinicial.
     vtitdtven = titulo.titdtven.
 
-    /* 14042021 card ID 67095 - Exportação Novação 
+    /* 14042021 card ID 67095 - Exgportaï¿½ï¿½o Novaï¿½ï¿½o 
         voltando atras 
     if poperacao = "NOVACAO" /* 19/02/2021 */
     then do:
@@ -654,7 +667,7 @@ procedure p-registro-10.
     
     if titulo.titdtven = contrato.dtinicial 
     then vtitdtven = vdtinicial + 1.
-  
+    
     /* helio 18012023 - alterado para pegar dados do contrato */
       vvaloroperacao = contrato.vlf_principal /*+ contrato.vlf_acrescimo*/.
       if contrato.vlseguro > 0
@@ -687,11 +700,55 @@ procedure p-registro-10.
           end.        
           vvaloroperacao = vvaloroperacao - vvalorseguro.
     end.
-    
+
+  /* helio 12/07/2024 - Carol solicitou - para todos os contratos */
+    /*   vai sobrescrever a variavel valoroperacao, com esta nova formula */
+  if contrato.modcod = "CPN" or (contrato.modcod = "CRE" and contrato.tpcontrato = "N")
+  then do:  
+    vvaloroperacao = contrato.vlf_principal - contrato.vlentra . /* helio 16/07/2024 nao subtrai o seguro*/
+    if vvaloroperacao < 0
+    then vvaloroperacao = 0.
+  end.
+  /**/
+  /* helio 29082024 - dpge - regra campo produto */
+  /* helio 09092024 - desfazer regra campo - deixar standby
+  *if lcontratoeletronico
+  *then do:
+  *      /*
+  *      Hoje temos 
+  *      1 - CDC Com acréscimo
+  *      18 - CDC sem acréscimo
+  *      4 - EP Saque em loja
+  *      3 - EP deposito 
+  *       
+  *       Precisamos acrescentar
+  *       23 - CDC Com acréscimo assinado digital
+  *       24 - CDC sem acréscimo assinado digital
+  *       25 - EP Saque em loja assinado digital
+  *       26 - EP deposito a assinado digital 
+  *       
+  *      */
+  *
+  *      if contrato.modcod = "CRE"
+  *      then do:
+  *          if vcod-produto = 1
+  *          then vcod-produto = 23.
+  *          if vcod-produto = 18
+  *          then  vcod-produto = 24.
+  *      end.
+  *      if contrato.modcod begins "CP"
+  *      then do:
+  *          if vcod-produto = 4
+  *          then vcod-produto = 25.
+  *          if vcod-produto = 3
+  *          then vcod-produto = 26.
+  *      end.    
+  *end.  
+  **/
   put unformat skip 
-      "10"            /* 01  - 02  TIPO  FIXO –1  */
-      contrato.contnum format "9999999999" /* 03 - 12 NÚMERO OPERAÇÃO  */
-      "0001"           /* 13 - 16 AGÊNCIA          */
+      "10"            /* 01  - 02  TIPO  FIXO ï¿½1  */
+      contrato.contnum format "9999999999" /* 03 - 12 Nï¿½MERO OPERAï¿½ï¿½O  */
+      "0001"           /* 13 - 16 AGï¿½NCIA          */
       "06"            /* 17 - 18 MIDIA            */
       "000001"        /* 19 - 24 LOJISTA          */
       contrato.etbcod format "9999"      /* 25-28 LOJA  */
@@ -699,8 +756,8 @@ procedure p-registro-10.
       " " format "x(02)"                  /* 29-34 PRODUTO */
       vplano-fin /*contrato.crecod*/ format ">>>9"      /* 35-38 PLANO    */
       contrato.nro_parcelas format ">>9"   /* prazo */
-      vdtinicial format "99999999"  /* 42-49 DATA EMISSÃO */
-      vtitdtven format "99999999" /* 50-57 DATA 1° VENCIMENTO */ 
+      vdtinicial format "99999999"  /* 42-49 DATA EMISSï¿½O */
+      vtitdtven format "99999999" /* 50-57 DATA 1ï¿½ VENCIMENTO */ 
       
       /* helio 18/01/2023 - novo campo
         ((vvlf_principal /* Helio 29112022 ID 156242 retirado-> - vservicos*/) * 100) format "99999999999999999"
@@ -709,7 +766,7 @@ procedure p-registro-10.
       vvaloroperacao * 100 format "99999999999999999"
       /**/
 
-      ((vtitvltot /*- titulo.titdesc*/) * 100) format "999999999999999999" /* 75-92 VALOR PRESTAÇÃO */
+      ((vtitvltot /*- titulo.titdesc*/) * 100) format "999999999999999999" /* 75-92 VALOR PRESTAï¿½ï¿½O */
       " " format "x(20)"                 /* SOMENTE P/ CONVENIOS */
       vtipocontratosicred format "x(2)"    /* 113-114 TIPO CONTRATO */ /* helio 19072022 - projeto Criar Produtos - ADM - tipoontratoSicred */
 
@@ -724,13 +781,16 @@ procedure p-registro-10.
       vservicos * 100   format "99999999999999999" /* 215 - 231 VAL SEGURO*/
       **/
       /* helio 18/01/2023 - novo campo */
-      vvalorseguro * 100   format "99999999999999999"
-      /**/
-        
-      " "                 format "x(563)"            /* 238 - 794 FILLER */
+      vvalorseguro * 100   format "99999999999999999" /* 215-231 17 */
+      "          " /* 232-241 10 */
+      "    "           /* 245-242 4 */   
+      lcontratoeletronico   format "S/N" /* 246-246 */
+      " "                 format "x(548)"            /* 247 - 794 FILLER */
       vseq format    "999999".
 
 end procedure.
+
+
 
 /* parcelas do contrato */
 procedure p-registro-11.
@@ -795,18 +855,22 @@ procedure p-registro-11.
         end.
     end.
   end.        
-  /*** ***/
+  find boletagbol where boletagbol.bolcod = btitulo.bolcod no-lock no-error.
 
   put unformat skip
      "11"                   /* 01-02 fixo "11" */
-     dec(btitulo.titnum) format "9999999999" /* 03 - 12 OPERAÇÃO */
-     "0001"                            /* 13 - 16 AGÊNCIA */
+     dec(btitulo.titnum) format "9999999999" /* 03 - 12 OPERAï¿½ï¿½O */
+     "0001"                            /* 13 - 16 AGï¿½NCIA */
      vparcela format "999"        /* 17 - 19 PARCELA */
      if btitulo.titdtven = btitulo.titdtemi then btitulo.titdtven + 1 else btitulo.titdtven  format "99999999" /* 20 - 27 dt VENCIMENTO */
      ((vtitvltot /*- btitulo.titdesc*/) * 100) 
                 format "999999999999" /* 28-39 VLR PRESTAcaO */
      fill("0",30) format "x(30)"       /* 40-69 CMC7: nro do cheque pre */
-     " " format "x(725)"               /* 70 - 794 FILLER */
+     (if avail boletagbol then string(boletagbol.NossoNumero) else " ") format "x(25)" /*NOSSONUMEROBANCO    070-094     ALFANUMï¿½RICO    025*/
+     (if avail boletagbol then "041"                          else " ") format "x(03)" /*CODIGOBANCOCORR     095-097     NUMERICO        003    */
+     (if avail boletagbol then "0878"                         else " ") format "x(04)" /*AGENCIABANCOCORR    098-101     numerico        004 */
+     (if avail boletagbol then "000000710844806"                   else " ") format "x(15)" /*CONTABANCOCORR      102-113     numerico        012 */
+     " " format "x(678)"               /* 114 - 794 FILLER */
      vseq format    "999999".
 
     /*** arquivo de controle 
@@ -1036,6 +1100,47 @@ def buffer bcontrato for contrato.
             vseq format    "999999".
 
     end.
+
+end procedure.
+
+/*OPERAï¿½AO . INF ELETRONICAS (SE TIPO 10 REG 246 = S)*/
+procedure p-registro-15.
+    def var lcontratoeletronico as log.
+    /* PROJETO DPGE - COMUNICACAO SICRED */
+    lcontratoeletronico = no.
+    find first contrassin where contrassin.contnum = contrato.contnum no-lock  no-error.
+    if avail contrassin
+    then do:
+        lcontratoeletronico = contrassin.dtproc <> ?.
+    end.
+    if lcontratoeletronico = no then return.
+    
+    vseq = vseq + 1.
+    find bestab where bestab.etbcod = contrato.etbcod no-lock.
+    put unformat skip
+      "15"                   /* 01-02 fixo "15" */
+      contrato.contnum format "9999999999" /* 03 - 12 Nï¿½MERO OPERAï¿½ï¿½O  */
+      "0001"           /* 13 - 16 AGï¿½NCIA          */
+      "05"              
+      "05"
+      "Sistema Operacional Linux Versao Storex " + contrassin.versaocomponente    format "x(60)"
+      contrassin.nomecomponente    format "x(15)"
+      "443            "    format "x(15)"
+      bestab.latitude     format "x(15)"        /* HELIO 17072024 - DPGE Latitude Longitude */
+      bestab.longitude    format "x(15)"
+        string(year(contrassin.dtinclu),"9999")  + "-" +
+        string(month(contrassin.dtinclu),"99")   + "-" +
+        string(day(contrassin.dtinclu),"99")     + " " + 
+        string(contrassin.hrincl,"HH:MM:SS") format "x(19)"
+      string(contrassin.hash1)   format "x(50)"
+        string(year(contrassin.dtproc),"9999")  + "-" +
+        string(month(contrassin.dtproc),"99")   + "-" +
+        string(day(contrassin.dtproc),"99")     + " " + 
+        string(contrassin.hrproc,"HH:MM:SS") format "x(19)"
+      string(contrassin.hash2)    format "x(50)"
+     " " format "x(516)"    /* 03-794 FILLER   */
+     vseq format    "999999".
+        
 
 end procedure.
 
