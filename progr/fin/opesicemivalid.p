@@ -320,33 +320,68 @@ pause 0 before-hide.
                     end.
                     
                 end.
- 
-            find first profin where profin.modcod = contrato.modcod no-lock no-error.
-      
-            if avail profin
-            then assign vcod-produto = profin.Codigo_Sicred.
-            else do:
-                assign vcod-produto = 1.
-                if sicred_contrato.operacao = "NOVACAO"
-                then do:
-                    run achacobcod(output vcod-produto).
-                    vservicos = contrato.vlseguro. 
-                end.     
-            end. 
+            
 
+            /* helio 24102024 - Melho Parametros Financeira */
+            voperacao       = "".
+            if contrato.modcod = "CRE" and contrato.tpcontrato = ""
+            then voperacao = "CDC".
+            if contrato.modcod = "CP0"
+            then voperacao = "EP SAQUE".
+            if contrato.modcod = "CP1"
+            then voperacao = "EP DEPOSITO".
+            if contrato.modcod = "CPN"
+            then voperacao = "NOVACAO EP".
+            if contrato.modcod = "CRE" and contrato.tpcontrato = ""
+            then voperacao = "NOVACAO".
+            vacrescimo      =  if contrato.vlf_acrescimo >= 1 then "SIM" else "NAO".
+            vasseletronico = "NAO".
+            vboletado      = "NAO".
+            find contrassin of contrato no-lock.
+            if avail contrassin
+            then do:
+                vasseletronico      = if contrassin.dtproc <> ? then "SIM" else "NAO".
+                vboletado           = if contrassin.dtboletagem <> ? then "SIM" else "NAO".
+            end.
+            vcod-produto = 0.
+            find first sicproparam where
+                sicproparam.tipooperacao = voperacao and
+                (sicproparam.acrescimo    = "TODOS" or icproparam.acrescimo    = vacrescimo) and
+                (sicproparam.assboletado  = "TODOS" or sicproparam.assboletado  = vassboletado) and
+                (sicproparam.boletado     = "TODOS" or sicproparam.boletado     = vboletado)
+                no-lock no-error.
+            if avail sicproparam
+            then vcod-produto = sicproparam.codpro.
+
+            find first profin where profin.modcod = contrato.modcod no-lock no-error.
+            if vcod-produto = 0 /* helio 24102024 - Melho Parametros Financeira */
+            then do:
+                if avail profin
+                then assign vcod-produto = profin.Codigo_Sicred.
+                else do:
+                    assign vcod-produto = 1.
+                    if sicred_contrato.operacao = "NOVACAO"
+                    then do:
+                        run achacobcod(output vcod-produto).
+                        vservicos = contrato.vlseguro. 
+                    end.     
+                end. 
+            end.
             vfincod = contrato.crecod.
             
-            /* helio 12/07/2024*/    
+            
             if contrato.modcod = "CPN" 
             then do:
                 if contrato.vlf_acrescimo >= 1
                 then do:
                     vfincod = 500.
-                    vcod-produto = 5.
+                    if vcod-produto = 0 /* helio 24102024 - Melho Parametros Financeira */
+                    then vcod-produto = 5.
                 end.
                 else do:
                     vfincod = 501.
-                    vcod-produto = 20.
+                    if vcod-produto = 0 /* helio 24102024 - Melho Parametros Financeira */
+                    then vcod-produto = 20.
                 end.
             end.
             if contrato.modcod = "CRE" and contrato.tpcontrato = "N"
@@ -354,14 +389,16 @@ pause 0 before-hide.
                 if contrato.vlf_acrescimo >= 1
                 then do:
                     vfincod = 500.
-                    vcod-produto = 2.
+                    if vcod-produto = 0 /* helio 24102024 - Melho Parametros Financeira */
+                    then vcod-produto = 2.
                 end.
                 else do:
                     vfincod = 501.
-                    vcod-produto = 19.
+                    if vcod-produto = 0 /* helio 24102024 - Melho Parametros Financeira */
+                    then vcod-produto = 19.
                 end.
             end.
-            
+
             if sicred_contrato.operacao = "TRANSFERE"
             then do:
                 if contrato.tpcontrato = "N"
